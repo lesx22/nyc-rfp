@@ -15,7 +15,9 @@
     "test:validate": "node --test scripts/validate-data.test.mjs",
     "scrape:solicitation": "node scripts/scrape-solicitation.mjs",
     "test:unit": "node --test --experimental-strip-types scripts/ics.test.ts",
-    "test": "node --test --experimental-strip-types --no-warnings=ExperimentalWarning tests/*.test.ts"
+    "test": "node --test --experimental-strip-types --no-warnings=ExperimentalWarning tests/*.test.ts",
+    "prebuild": "node scripts/sync-solicitations.mjs",
+    "sync:solicitations": "node scripts/sync-solicitations.mjs"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.133.0",
