@@ -6,6 +6,8 @@ import NavControls from './components/NavControls'
 import PromptBar from './components/PromptBar'
 import ResponseStudio from './components/ResponseStudio'
 import SidePanel from './components/SidePanel'
+import Toast from './components/Toast'
+import { useDeepLink } from './lib/deeplink'
 import { enrich } from './lib/score'
 import { useStore } from './store'
 import type { Rfp } from './types'
@@ -16,6 +18,7 @@ export default function App() {
   const setNodes = useStore((s) => s.setNodes)
   const [meta, setMeta] = useState<{ source: string; fetchedAt: string } | null>(null)
   const [error, setError] = useState<string | null>(null)
+  useDeepLink()
 
   useEffect(() => {
     // ?data=stress.json loads an alternate local file (dev/testing only; filename-only for safety).
@@ -41,6 +44,7 @@ export default function App() {
       <ResponseStudio />
       <NavControls />
       <HoverTag />
+      <Toast />
       <Legend source={meta ? `${meta.source} · ${new Date(meta.fetchedAt).toLocaleDateString()}` : null} />
       {error && <div className="absolute inset-0 grid place-items-center text-[13px] text-heat-3">Couldn't load opportunities: {error}</div>}
     </div>

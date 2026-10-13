@@ -9,9 +9,32 @@ export interface Filters {
   dueWithin: number | null // days
   minFit: number
   digitalOnly: boolean
+  savedOnly: boolean // shortlist: only listings the user saved
 }
 
-export const emptyFilters: Filters = { industry: [], agency: [], mainCommodity: [], method: [], dueWithin: null, minFit: 0, digitalOnly: false }
+export const emptyFilters: Filters = { industry: [], agency: [], mainCommodity: [], method: [], dueWithin: null, minFit: 0, digitalOnly: false, savedOnly: false }
+
+/* Shortlist persistence. Storage can be missing or throw (private mode, sandboxed iframes),
+   so every access is guarded and the app keeps working in memory. */
+const SAVED_KEY = 'og.saved'
+
+function readSaved(): Set<string> {
+  try {
+    const raw = localStorage.getItem(SAVED_KEY)
+    const arr: unknown = raw ? JSON.parse(raw) : []
+    return new Set(Array.isArray(arr) ? arr.filter((x): x is string => typeof x === 'string') : [])
+  } catch {
+    return new Set()
+  }
+}
+
+function writeSaved(saved: Set<string>) {
+  try {
+    localStorage.setItem(SAVED_KEY, JSON.stringify([...saved]))
+  } catch {
+    /* no storage: the shortlist lasts for this session only */
+  }
+}
 
 interface State {
   nodes: RfpNode[]
@@ -36,6 +59,12 @@ interface State {
   openStudio: (id: string | null) => void
   focusNonce: number // bump to make the camera re-frame the current highlight
   refocus: () => void
+  /** Shortlisted node ids. A new Set on every change, so selectors and frame loops can compare by reference. */
+  saved: Set<string>
+  toggleSaved: (id: string) => void
+  /** Short status message for the polite live region (see Toast). `n` makes repeats re-announce. */
+  toast: { msg: string; n: number } | null
+  notify: (msg: string) => void
 }
 
 export const useStore = create<State>((set) => ({
@@ -61,9 +90,21 @@ export const useStore = create<State>((set) => ({
   openStudio: (studioFor) => set({ studioFor }),
   focusNonce: 0,
   refocus: () => set((s) => ({ focusNonce: s.focusNonce + 1 })),
+  saved: readSaved(),
+  toggleSaved: (id) =>
+    set((s) => {
+      const saved = new Set(s.saved)
+      if (saved.has(id)) saved.delete(id)
+      else saved.add(id)
+      writeSaved(saved)
+      return { saved }
+    }),
+  toast: null,
+  notify: (msg) => set((s) => ({ toast: { msg, n: (s.toast?.n ?? 0) + 1 } })),
 }))
 
-export function passesFilters(n: RfpNode, f: Filters): boolean {
+export function passesFilters(n: RfpNode, f: Filters, saved: Set<string> = useStore.getState().saved): boolean {
+  if (f.savedOnly && !saved.has(n.id)) return false
   if (f.industry.length && !f.industry.includes(n.industry)) return false
   if (f.agency.length && !f.agency.includes(n.agency)) return false
   if (f.mainCommodity.length && !f.mainCommodity.includes(n.mainCommodity ?? '')) return false

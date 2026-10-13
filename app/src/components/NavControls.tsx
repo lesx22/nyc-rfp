@@ -2,13 +2,26 @@ import { useEffect } from 'react'
 import { cam } from '../lib/camera'
 import { useStore } from '../store'
 
-/** Click + keyboard alternatives to drag/pinch (Vercel guideline: no gesture-only interactions). */
+/**
+ * Click + keyboard alternatives to drag/pinch (Vercel guideline: no gesture-only interactions).
+ * Shortcuts: ← → ↑ ↓ orbit (Shift = bigger step) · + / − zoom · 0 reset view · Esc close ·
+ * S save/unsave the selected listing · ⌘K or / focus the prompt (PromptBar).
+ */
 export default function NavControls() {
   useEffect(() => {
     const h = (e: KeyboardEvent) => {
       const t = e.target as HTMLElement
       if (t.closest('input, textarea, select, [contenteditable]')) return
       const s = useStore.getState()
+      if ((e.key === 's' || e.key === 'S') && !e.metaKey && !e.ctrlKey && !e.altKey) {
+        if (s.selected?.kind !== 'node' || e.repeat) return
+        e.preventDefault()
+        const id = s.selected.id
+        const was = s.saved.has(id)
+        s.toggleSaved(id)
+        s.notify(was ? 'Removed from saved' : 'Saved')
+        return
+      }
       const step = e.shiftKey ? 0.6 : 0.25
       const act: Record<string, () => void> = {
         ArrowLeft: () => cam.orbit(step, 0),

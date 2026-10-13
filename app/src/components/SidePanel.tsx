@@ -1,5 +1,7 @@
 import { AnimatePresence, motion } from 'motion/react'
-import { useMemo } from 'react'
+import { useEffect, useId, useMemo, useRef, useState } from 'react'
+import { nodeUrl } from '../lib/deeplink'
+import { buildIcs } from '../lib/ics'
 import { buildLayout } from '../lib/layout'
 import { countdown, cx, date, passportUrl, usd } from '../lib/format'
 import { useStore } from '../store'
@@ -25,10 +27,107 @@ export default function SidePanel() {
   )
 }
 
+const ICON_BTN = 'grid size-8 shrink-0 place-items-center rounded-[2px] text-mute transition-colors duration-150 hover:bg-white/10 hover:text-white'
+
+function BookmarkIcon({ filled, size = 14 }: { filled: boolean; size?: number }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 14 14" aria-hidden="true">
+      <path d="M3.5 1.5h7v11L7 9.6l-3.5 2.9z" fill={filled ? 'currentColor' : 'none'} stroke="currentColor" strokeWidth="1.2" strokeLinejoin="round" />
+    </svg>
+  )
+}
+
+/** Shortlist toggle. Keyboard: S (see NavControls). */
+function SaveToggle({ id }: { id: string }) {
+  const on = useStore((s) => s.saved.has(id))
+  const toggle = useStore((s) => s.toggleSaved)
+  return (
+    <button
+      aria-label="Save listing"
+      aria-pressed={on}
+      aria-keyshortcuts="s"
+      title={on ? 'Saved. Click to remove (S)' : 'Save to your shortlist (S)'}
+      onClick={() => toggle(id)}
+      className={cx(ICON_BTN, on && 'text-phosphor hover:text-phosphor')}
+    >
+      <BookmarkIcon filled={on} />
+    </button>
+  )
+}
+
+/** Copy link with a visible read-only fallback when the clipboard API is missing or refused. */
+function CopyLink({ n }: { n: RfpNode }) {
+  const nodes = useStore((s) => s.nodes)
+  const notify = useStore((s) => s.notify)
+  const [fallback, setFallback] = useState<string | null>(null)
+  const input = useRef<HTMLInputElement>(null)
+  useEffect(() => {
+    if (fallback) input.current?.select()
+  }, [fallback])
+
+  const copy = () => {
+    const url = nodeUrl(n, nodes)
+    const show = () => setFallback(url)
+    try {
+      // Called synchronously inside the click so the user-activation requirement holds.
+      navigator.clipboard.writeText(url).then(() => (setFallback(null), notify('Link copied')), show)
+    } catch {
+      show()
+    }
+  }
+
+  return (
+    <>
+      <button onClick={copy} className={SECONDARY}>
+        Copy link
+      </button>
+      {fallback && (
+        <label className="col-span-2 flex flex-col gap-1 text-[11px] text-mute">
+          Copy this link (⌘C / Ctrl+C)
+          <input ref={input} readOnly value={fallback} onFocus={(e) => e.currentTarget.select()} className="h-8 rounded-[2px] border border-line bg-ink px-2 font-mono text-[11px] text-text outline-none focus-visible:border-phosphor" />
+        </label>
+      )}
+    </>
+  )
+}
+
+function CalendarButton({ n }: { n: RfpNode }) {
+  const hint = useId()
+  const download = () => {
+    const blob = new Blob([buildIcs(n)], { type: 'text/calendar;charset=utf-8' })
+    const url = URL.createObjectURL(blob)
+    const a = document.createElement('a')
+    a.href = url
+    a.download = `due-${(n.epin ?? n.id).replace(/[^A-Za-z0-9._~-]/g, '-')}.ics`
+    document.body.appendChild(a)
+    a.click()
+    a.remove()
+    setTimeout(() => URL.revokeObjectURL(url), 1000)
+  }
+  if (!n.dueDate)
+    return (
+      <>
+        <button disabled aria-describedby={hint} className={cx(SECONDARY, 'cursor-not-allowed opacity-40 hover:bg-transparent')}>
+          Add deadline to calendar
+        </button>
+        <p id={hint} className="col-span-2 text-[10px] text-mute">
+          No due date is published for this listing, so there is nothing to add to a calendar yet.
+        </p>
+      </>
+    )
+  return (
+    <button onClick={download} title="Downloads an .ics file with a reminder 3 days before" className={SECONDARY}>
+      Add deadline to calendar
+    </button>
+  )
+}
+
+const SECONDARY = 'grid min-h-9 place-items-center rounded-[2px] border border-line px-2 py-1.5 text-center text-[12px] leading-tight text-text/85 transition-colors duration-150 hover:border-white/30 hover:bg-white/5'
+
 function Close() {
   const select = useStore((s) => s.select)
   return (
-    <button aria-label="Close panel" onClick={() => select(null)} className="grid size-8 shrink-0 place-items-center rounded-[2px] text-mute hover:bg-white/10 hover:text-white">
+    <button aria-label="Close panel" onClick={() => select(null)} className={ICON_BTN}>
       ✕
     </button>
   )
@@ -64,6 +163,7 @@ function NodeView({ id }: { id: string }) {
           <div className="eyebrow mb-1.5 truncate">{n.agency}</div>
           <h2 className="font-display text-[18px] font-semibold leading-snug text-balance">{n.title}</h2>
         </div>
+        <SaveToggle id={n.id} />
         <Close />
       </div>
 
@@ -106,6 +206,10 @@ function NodeView({ id }: { id: string }) {
         <a href={passportUrl(n)} target="_blank" rel="noreferrer" className="grid h-11 place-items-center rounded-[2px] border border-white/15 text-[13px] hover:bg-white/5">
           {n.onPassport === false ? 'View source listing ↗' : 'View listing on PASSPort ↗'}
         </a>
+        <div className="grid grid-cols-2 gap-2">
+          <CopyLink key={n.id} n={n} />
+          <CalendarButton n={n} />
+        </div>
         {n.onPassport === false && <p className="text-center text-[10px] text-mute">Not procured through PASSPort ({n.agencyNote ?? 'see source'}).</p>}
         {n.confidence && n.confidence !== 'high' && <p className="text-center text-[10px] text-mute">Data confidence: {n.confidence}. Verify on PASSPort before bidding.</p>}
       </div>
@@ -206,13 +310,17 @@ function Stat({ k, v }: { k: string; v: string }) {
 }
 
 function Row({ n, onClick }: { n: RfpNode; onClick: () => void }) {
+  const saved = useStore((s) => s.saved.has(n.id))
   return (
     <li>
       <button onClick={onClick} className="flex w-full items-center gap-3 py-2.5 text-left hover:bg-white/[.03]">
         <span className="w-7 shrink-0 font-mono text-[12px] text-phosphor">{n.aiFit}</span>
         <span className="min-w-0 flex-1">
           <span className="line-clamp-2 text-[12px] leading-snug">{n.title}</span>
-          <span className="text-[10px] text-mute">{n.agency} · {countdown(n.daysLeft)}</span>
+          <span className="text-[10px] text-mute">
+            {saved && <span className="mr-1 inline-block align-[-2px] text-phosphor" title="Saved"><BookmarkIcon filled size={9} /><span className="sr-only">Saved · </span></span>}
+            {n.agency} · {countdown(n.daysLeft)}
+          </span>
         </span>
         <span className="shrink-0 font-mono text-[11px] text-white/60">{usd(n.estValueUSD)}</span>
       </button>

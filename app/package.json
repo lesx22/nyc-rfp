@@ -13,7 +13,8 @@
     "test:smoke": "node scripts/smoke.mjs",
     "validate": "node scripts/validate-data.mjs",
     "test:validate": "node --test scripts/validate-data.test.mjs",
-    "scrape:solicitation": "node scripts/scrape-solicitation.mjs"
+    "scrape:solicitation": "node scripts/scrape-solicitation.mjs",
+    "test:unit": "node --test --experimental-strip-types scripts/ics.test.ts"
   },
   "dependencies": {
     "@react-three/drei": "^10.7.9",
