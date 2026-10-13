@@ -4,7 +4,7 @@ import { EffectComposer, Vignette } from '@react-three/postprocessing'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import * as THREE from 'three'
 import { cam } from '../lib/camera'
-import { U, makeDotMaterial, makeEdgeMaterial } from '../lib/hud'
+import { U, gap, makeDotMaterial, makeEdgeMaterial } from '../lib/hud'
 import { buildLayout, heatColor, type Layout, type Vec3 } from '../lib/layout'
 import { passesFilters, useStore } from '../store'
 
@@ -87,8 +87,9 @@ function Clock() {
       c.getTarget(target)
       U.uFocus.value.copy(target)
       const d = c.distance
-      U.uFocusNear.value = d * 0.32
-      U.uFocusFar.value = d * 1.05
+      U.uFocusNear.value = d * gap.r0
+      U.uFocusFar.value = d * gap.r1
+      U.uTargetDepth.value = d
     }
   })
   return null
@@ -291,8 +292,15 @@ function Label({ id, level, text, count, lift, live }: { id: string; level: 1 | 
       // Fade labels as the camera closes in, and as they leave the focus area (same falloff as the dots).
       const d = camera.position.distanceTo(v)
       const near = level === 1 ? 55 : 14
-      const f = 1 - Math.min(1, Math.max(0, (v.distanceTo(U.uFocus.value) - U.uFocusNear.value) / Math.max(1, U.uFocusFar.value - U.uFocusNear.value)))
-      const floor = Math.max(0.12, U.uFocusFloor.value * 0.8)
+      // Same two cues as the shader: distance from focus, and being behind it (deeper than the target).
+      const smooth = (x: number) => x * x * (3 - 2 * x)
+      const clamp01 = (x: number) => Math.min(1, Math.max(0, x))
+      const inFocus = 1 - smooth(clamp01((v.distanceTo(U.uFocus.value) - U.uFocusNear.value) / Math.max(1, U.uFocusFar.value - U.uFocusNear.value)))
+      const depth = v.clone().applyMatrix4(camera.matrixWorldInverse).z * -1
+      const behind = smooth(clamp01((depth - U.uTargetDepth.value) / (U.uTargetDepth.value * 0.7)))
+      const f = inFocus * (1 - 0.6 * behind)
+      // Labels track the sphere opacity gap so far labels don't outshine their spheres.
+      const floor = Math.max(0.06, U.uOpacityFar.value * 1.5)
       el.current.style.opacity = String((floor + (1 - floor) * f) * Math.max(0, Math.min(1, (d - near) / (near * 0.8))))
     }
   })

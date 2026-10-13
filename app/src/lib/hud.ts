@@ -17,6 +17,32 @@ export const U = {
   uFocusFloor: { value: 0.32 }, // edges + labels: brightness of the most out-of-focus things (1 = no dimming)
   uOpacityNear: { value: 0.75 }, // dots: opacity in focus
   uOpacityFar: { value: 0.1 }, // dots: opacity at the far edge of focus
+  uTargetDepth: { value: 170 }, // camera-to-target distance; things deeper than this recede further
+}
+
+/**
+ * Depth gap between the closest and farthest spheres: opacity range plus how fast it falls off
+ * (focus radii as fractions of camera distance). Dev-only review switch: ?gap=v05|wide|wider|widest
+ */
+export const GAPS = {
+  v05: { near: 0.75, far: 0.1, r0: 0.32, r1: 1.05 },
+  wide: { near: 0.9, far: 0.06, r0: 0.3, r1: 0.95 },
+  wider: { near: 0.95, far: 0.04, r0: 0.25, r1: 0.8 },
+  widest: { near: 1.0, far: 0.025, r0: 0.2, r1: 0.65 },
+} as const
+export const gap: { r0: number; r1: number } = { r0: GAPS.wider.r0, r1: GAPS.wider.r1 }
+function applyGap(g: (typeof GAPS)[keyof typeof GAPS]) {
+  U.uOpacityNear.value = g.near
+  U.uOpacityFar.value = g.far
+  gap.r0 = g.r0
+  gap.r1 = g.r1
+}
+applyGap(GAPS.wider)
+try {
+  const g = new URLSearchParams(location.search).get('gap') as keyof typeof GAPS | null
+  if (g && g in GAPS) applyGap(GAPS[g])
+} catch {
+  /* no location (tests): keep default */
 }
 
 /** Dev-only look tuning for side-by-side reviews: ?focus=off|subtle|medium|strong */
@@ -30,11 +56,13 @@ try {
 
 /** Soft depth of focus: things far from the point you're looking at recede. */
 const COMMON_VERT = /* glsl */ `
-  uniform float uFogNear, uFogFar, uFocusNear, uFocusFar, uFocusFloor;
+  uniform float uFogNear, uFogFar, uFocusNear, uFocusFar, uFocusFloor, uTargetDepth;
   uniform vec3 uFocus;
   varying float vDim, vFocus, vFog;
   void applyFocus(vec3 world, vec4 mv) {
-    vFocus = 1.0 - smoothstep(uFocusNear, uFocusFar, distance(world, uFocus));
+    // Two cues combined: distance from the point you're looking at, and being behind it.
+    float behind = smoothstep(0.0, uTargetDepth * 0.7, -mv.z - uTargetDepth);
+    vFocus = (1.0 - smoothstep(uFocusNear, uFocusFar, distance(world, uFocus))) * (1.0 - 0.6 * behind);
     vFog = 1.0 - smoothstep(uFogNear, uFogFar, -mv.z);
     vDim = mix(uFocusFloor, 1.0, vFocus) * vFog;
   }
