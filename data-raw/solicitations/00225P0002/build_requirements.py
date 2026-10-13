@@ -11,7 +11,8 @@ def pages(pdf):
 TP = pages(T)
 def page_of(anchor, pg=TP):
     a = re.sub(r'\s+', ' ', anchor)
-    hits = [i + 1 for i, p in enumerate(pg) if a in p]
+    # Skip the cover and table of contents (PDF pp.1-3) so anchors resolve to the body text.
+    hits = [i + 1 for i, p in enumerate(pg) if a in p and (pg is not TP or i >= 3)] or [i + 1 for i, p in enumerate(pg) if a in p]
     if not hits:
         sys.exit(f'ANCHOR NOT FOUND: {anchor!r}')
     return hits[0]

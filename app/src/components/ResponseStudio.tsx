@@ -3,6 +3,7 @@ import { useEffect, useMemo, useRef, useState } from 'react'
 import { aiAvailable, projectDraftRfp, readTextFiles, streamDraft } from '../lib/ai'
 import { countdown, cx, date, passportUrl, usd } from '../lib/format'
 import { type Intake, OUTLINE_SECTIONS, outline } from '../lib/outline'
+import { loadSampleDraft, useSolicitation } from '../lib/solicitation'
 import { useStore } from '../store'
 import type { RfpNode } from '../types'
 
@@ -46,7 +47,9 @@ function Studio({ n, onClose }: { n: RfpNode; onClose: () => void }) {
   const [f, setF] = useState<Intake>({ org: '', team: '', capabilities: '', pastWork: '', mwbe: false, approach: '' })
   const template = useMemo(() => outline(n, f, files.map((x) => x.name)), [n, f, files])
   const ai = useClaudeDraft(n, f, files)
-  const draft = ai.text ?? template
+  const sol = useSolicitation(n.epin)
+  const sample = useSampleDraft(n.epin, f)
+  const draft = ai.text ?? sample.text ?? template
 
   return (
     <>
@@ -78,6 +81,30 @@ function Studio({ n, onClose }: { n: RfpNode; onClose: () => void }) {
                 <KV k="Value" v={usd(n.estValueUSD)} />
                 <KV k="AI fit" v={String(n.aiFit)} />
               </div>
+              {sol.data && (
+                <div className="grid gap-3 sm:grid-cols-2">
+                  <div className="rounded-[2px] border border-line p-4">
+                    <div className="mb-2 text-[12px] font-medium text-white">Evaluated on</div>
+                    <ol className="list-decimal space-y-0.5 pl-4 text-[12px]">
+                      {sol.data.evaluationCriteria.areas.map((a) => (
+                        <li key={a}>{a}</li>
+                      ))}
+                    </ol>
+                    {!sol.data.evaluationCriteria.weights && <p className="mt-2 text-[11px] text-mute">Weights are in the main RFS, which hasn't been captured yet.</p>}
+                  </div>
+                  <div className="rounded-[2px] border border-line p-4">
+                    <div className="mb-2 text-[12px] font-medium text-white">Key dates</div>
+                    <ul className="space-y-0.5 text-[12px]">
+                      {sol.data.keyDates.map((d) => (
+                        <li key={d.label} className="flex justify-between gap-3">
+                          <span className="min-w-0 truncate text-mute">{d.label}</span>
+                          <span className="shrink-0 font-mono">{d.date.slice(0, 10)}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                </div>
+              )}
               <div className="rounded-[2px] border border-line p-4">
                 <div className="mb-2 text-[12px] font-medium text-white">Before you start</div>
                 <ol className="list-decimal space-y-1 pl-4 text-[12px]">
@@ -152,19 +179,28 @@ function Studio({ n, onClose }: { n: RfpNode; onClose: () => void }) {
                     )}
                   </>
                 )}
+                {!ai.available && sample.available && (
+                  sample.streaming ? (
+                    <span className="h-8 px-1 text-[12px] leading-8 text-phosphor">Writing…</span>
+                  ) : (
+                    <button onClick={sample.start} className="h-8 rounded-[2px] bg-phosphor px-3 text-[12px] font-semibold text-ink transition-transform duration-150 ease-[var(--ease-out)] active:scale-[.97]">
+                      {sample.text != null ? 'Rewrite first draft' : 'Write first draft'}
+                    </button>
+                  )
+                )}
                 <button onClick={() => download(`${n.epin ?? n.id}-response.md`, draft)} disabled={ai.streaming} className="h-8 rounded-[2px] border border-white/15 px-3 text-[12px] enabled:hover:bg-white/5 disabled:opacity-40">Download .md</button>
               </div>
-              <p aria-live="polite" className="text-[11px] leading-snug text-mute empty:hidden">{ai.note}</p>
+              <p aria-live="polite" className="text-[11px] leading-snug text-mute empty:hidden">{ai.note || (sample.text != null ? 'Sample first draft for this demo, written against this solicitation\'s extracted requirements. Your answers fill the gaps; anything still marked NEEDS INPUT is yours to add.' : '')}</p>
               <pre aria-busy={ai.streaming} className="whitespace-pre-wrap rounded-[2px] border border-line bg-black/50 p-4 font-mono text-[12px] leading-relaxed text-white/80">
                 {draft}
-                {ai.streaming && <span aria-hidden="true" className="text-phosphor">▍</span>}
+                {(ai.streaming || sample.streaming) && <span aria-hidden="true" className="text-phosphor">▍</span>}
               </pre>
             </div>
           )}
           {step === 4 && (
             <div className="space-y-3 text-[13px] text-white/80">
               <h3 className="text-[17px] font-semibold text-white">Submission checklist</h3>
-              {['Proposal narrative follows the RFP section order', 'Price proposal in the required format', 'Doing Business Data Form(s)', 'M/WBE Utilization Plan (or waiver request)', 'Insurance certificates', 'Signed acknowledgement of all addenda', 'Uploaded in PASSPort before the deadline'].map((c) => (
+              {(sol.data?.submissionChecklist.map((c) => c.item) ?? ['Proposal narrative follows the RFP section order', 'Price proposal in the required format', 'Doing Business Data Form(s)', 'M/WBE Utilization Plan (or waiver request)', 'Insurance certificates', 'Signed acknowledgement of all addenda', 'Uploaded in PASSPort before the deadline']).map((c) => (
                 <label key={c} className="flex items-center gap-2.5 rounded-[2px] bg-white/[.03] px-3 py-2.5">
                   <input type="checkbox" className="accent-cyan-400" /> {c}
                 </label>
@@ -261,4 +297,34 @@ function download(name: string, text: string) {
   a.download = name
   a.click()
   URL.revokeObjectURL(a.href)
+}
+
+/**
+ * The pre-written sample first draft (no API, no tokens). Reveals progressively so it reads like
+ * a draft being written; instant under prefers-reduced-motion.
+ */
+function useSampleDraft(epin: string | null, f: Intake) {
+  const { hasSample } = useSolicitation(epin)
+  const [text, setText] = useState<string | null>(null)
+  const [streaming, setStreaming] = useState(false)
+  const timer = useRef<number | null>(null)
+  useEffect(() => () => void (timer.current && clearInterval(timer.current)), [])
+  const start = async () => {
+    if (!epin) return
+    const full = await loadSampleDraft(epin, { org: f.org, team: f.team, capabilities: f.capabilities, pastWork: f.pastWork, approach: f.approach })
+    if (full == null) return
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return setText(full)
+    setStreaming(true)
+    let i = 0
+    const step = Math.ceil(full.length / 90) // ~1.5s at 60 ticks/s
+    timer.current = window.setInterval(() => {
+      i = Math.min(full.length, i + step)
+      setText(full.slice(0, i))
+      if (i >= full.length) {
+        clearInterval(timer.current!)
+        setStreaming(false)
+      }
+    }, 16)
+  }
+  return { available: hasSample, text, streaming, start }
 }

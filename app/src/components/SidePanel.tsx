@@ -4,6 +4,7 @@ import { nodeUrl } from '../lib/deeplink'
 import { buildIcs } from '../lib/ics'
 import { buildLayout } from '../lib/layout'
 import { countdown, cx, date, passportUrl, usd } from '../lib/format'
+import { sectionRequirements, useSolicitation } from '../lib/solicitation'
 import { useStore } from '../store'
 import type { RfpNode } from '../types'
 
@@ -208,6 +209,8 @@ function NodeView({ id }: { id: string }) {
         </section>
       )}
 
+      <Requirements epin={n.epin} />
+
       <div className="mt-auto flex flex-col gap-2 pt-2">
         <button onClick={() => openStudio(n.id)} className="h-11 rounded-[2px] bg-phosphor text-[13px] font-semibold text-ink transition-transform duration-150 ease-[var(--ease-out)] active:scale-[.97]">
           Draft a response
@@ -223,6 +226,46 @@ function NodeView({ id }: { id: string }) {
         {n.confidence && n.confidence !== 'high' && <p className="text-center text-[10px] text-mute">Data confidence: {n.confidence}. Verify on PASSPort before bidding.</p>}
       </div>
     </div>
+  )
+}
+
+/** Requirements extracted from this listing's solicitation documents, when we have them. */
+function Requirements({ epin }: { epin: string | null }) {
+  const { data } = useSolicitation(epin)
+  if (!data) return null
+  const due = [...data.keyDates].reverse().find((d) => /due/i.test(d.label))
+  return (
+    <section aria-label="Requirements from the solicitation documents">
+      <div className="mb-2 flex items-baseline justify-between">
+        <h3 className="eyebrow">From the solicitation documents</h3>
+        <span className="font-mono text-[12px] text-phosphor">{data.counts.total} requirements</span>
+      </div>
+      <ul className="divide-y divide-white/5 rounded-[2px] border border-line">
+        {data.sections.map((s) => (
+          <li key={s.id} className="flex items-baseline justify-between gap-3 px-3 py-2 text-[12px]">
+            <span className="min-w-0 truncate text-text/85">{s.title}</span>
+            <span className="shrink-0 font-mono text-mute">{sectionRequirements(s).length}</span>
+          </li>
+        ))}
+      </ul>
+      <dl className="mt-2.5 grid grid-cols-2 gap-x-3 gap-y-1.5 text-[11px]">
+        {due && (
+          <>
+            <dt className="text-mute">Latest due date</dt>
+            <dd className="text-text/85">{due.date.replace('T', ' ')}</dd>
+          </>
+        )}
+        {data.mwbe && (
+          <>
+            <dt className="text-mute">M/WBE goal</dt>
+            <dd className="text-text/85">{Math.round(data.mwbe.participationGoal * 100)}%</dd>
+          </>
+        )}
+        <dt className="text-mute">Evaluated on</dt>
+        <dd className="text-text/85">{data.evaluationCriteria.areas.length} areas{data.evaluationCriteria.weights ? '' : ' (weights not published)'}</dd>
+      </dl>
+      <p className="mt-2 text-[10px] text-mute">Extracted from {data.sources.length} documents, each requirement cited to its page.</p>
+    </section>
   )
 }
 
