@@ -13,6 +13,11 @@ type Fetch = typeof fetch
 const env = (import.meta as unknown as { env?: Record<string, string | undefined> }).env
 /** Where the API lives. Same origin by default; set VITE_API_BASE to point elsewhere. */
 export const API_BASE = (env?.VITE_API_BASE ?? '').replace(/\/$/, '')
+/**
+ * AI is OFF unless the build sets VITE_AI_ENABLED=true. Off means the client never contacts /api:
+ * no token spend, no 404 noise on static hosts. The public demo ships with it off.
+ */
+export const AI_ENABLED = env?.VITE_AI_ENABLED === 'true'
 const SERVICE = 'opportunity-graph-ai'
 const DESC_MAX = 400
 
@@ -79,6 +84,7 @@ let probe: Promise<boolean> | null = null
  * that 404s/503s) keeps static hosts quiet: SPA fallbacks answer with HTML, which reads as "no".
  */
 export function aiAvailable(fetchImpl: Fetch = fetch): Promise<boolean> {
+  if (!AI_ENABLED && fetchImpl === fetch) return Promise.resolve(false)
   probe ??= fetchImpl(`${API_BASE}/api/match`, { headers: { accept: 'application/json' } })
     .then(async (r) => {
       if (!r.ok || !(r.headers.get('content-type') ?? '').includes('application/json')) return false
