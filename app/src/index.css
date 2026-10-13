@@ -1,0 +1,51 @@
+@import "tailwindcss";
+
+/* Brand kit v0 — see docs/BRAND.md */
+@theme {
+  --font-sans: "Geist", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "Geist Mono", ui-monospace, monospace;
+
+  --color-ink: #000000;
+  --color-panel: rgb(10 10 12 / 0.93);
+  --color-line: rgb(255 255 255 / 0.08);
+  --color-mute: #8a8f98;
+  --color-text: #ededef;
+
+  /* Cool data palette (industries) */
+  --color-cyan: #22d3ee;
+  --color-sky: #60a5fa;
+  --color-violet: #a78bfa;
+  --color-mint: #5eead4;
+  --color-ice: #c7d2fe;
+  --color-lime: #a3e635;
+
+  /* Warm heat palette (urgency / traffic) */
+  --color-heat-1: #fde68a;
+  --color-heat-2: #fb923c;
+  --color-heat-3: #f43f5e;
+}
+
+html, body, #root { height: 100%; }
+body {
+  margin: 0;
+  background: var(--color-ink);
+  color: var(--color-text);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  overflow: hidden;
+  overscroll-behavior: none;
+}
+::selection { background: rgb(34 211 238 / 0.35); }
+
+.glass {
+  background: var(--color-panel);
+  backdrop-filter: blur(18px) saturate(140%);
+  -webkit-backdrop-filter: blur(18px) saturate(140%);
+  border: 1px solid var(--color-line);
+}
+.scroll-thin { scrollbar-width: thin; scrollbar-color: rgb(255 255 255 / 0.15) transparent; }
+:focus-visible { outline: 2px solid var(--color-cyan); outline-offset: 2px; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+}
