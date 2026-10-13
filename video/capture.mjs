@@ -20,15 +20,20 @@ import { chromium } from '../app/node_modules/playwright/index.mjs'
  * toward that control (the move takes ~0.7s, then the click). Re-time these to the voice-over.
  */
 export const APP_CUES = {
-  aiOn: 4.2, // click AI-buildable (filter on)
-  aiOff: 9.3, // click AI-buildable again (off)
-  type: 11.2, // click the prompt input, then type APP_PROMPT (~3.2s)
-  match: 15.6, // click Match
-  openListing: 20, // click the E-Procurement match chip (listing 00225P0002)
-  draft: 25.6, // click "Draft a response"
-  draftStep: 28.2, // click the studio's Draft step
-  end: 32, // last frame
+  // Timed to the voice-over: the app segment plays from 0:26.1 to 0:57.8 of the final video.
+  aiOn: 7.7, // "You can narrow it down to software buildouts" (0:34.5)
+  aiOff: 10.0,
+  type: 10.4, // "or just describe what you do in plain language"
+  match: 14.0, // graph turns toward the match (0:40.8)
+  openListing: 15.6, // "Here's that listing for rebuilding PASSPort" (0:42.4)
+  showRequirements: 18.4, // scroll the panel to the requirements (0:44.5)
+  draft: 21.4, // "When you're ready, you can start your response right here" (0:48.2)
+  aboutYou: 23.0, // "Add your team and your experience"
+  draftStep: 25.6,
+  writeDraft: 26.8, // "you get a first draft shaped around exactly what the city asked for" (0:53.6)
+  end: 31.7, // last frame
 }
+export const APP_ORG = 'Example Studio LLC'
 export const APP_PROMPT = 'PASSPort e-procurement performance optimization'
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..')
@@ -69,7 +74,7 @@ async function film() {
   const p = await browser.newPage({ viewport: { width: W, height: H } })
   await p.goto('http://127.0.0.1:4300/video/film.html', { waitUntil: 'networkidle' })
   await p.evaluate(async () => { await window.ready; await document.fonts.ready })
-  for (const [name, a, b] of [['film-a', 0, 30], ['film-b', 62, 82]]) {
+  for (const [name, a, b] of [['film-a', 0, 26.1], ['film-b', 57.8, 72.5]]) {
     const enc = encoder(join(OUT, `${name}.mp4`))
     const n = Math.round((b - a) * FPS)
     for (let i = 0; i < n; i++) {
@@ -234,6 +239,21 @@ async function app() {
     await setCursor(cur.x, cur.y, false)
   }
 
+  // Smoothly scroll a container so a target sits near its top, over the given seconds.
+  const scrollInto = async (container, target, seconds) => {
+    await target.waitFor({ state: 'attached', timeout: 10000 })
+    const [from, to] = await container.evaluate((el, t) => {
+      const node = el.querySelector(t)
+      return [el.scrollTop, Math.min(el.scrollHeight - el.clientHeight, el.scrollTop + node.getBoundingClientRect().top - el.getBoundingClientRect().top - 24)]
+    }, 'section[aria-label^="Requirements"]')
+    const n = Math.round(seconds * FPS)
+    for (let i = 1; i <= n; i++) {
+      const k = 0.5 - Math.cos((Math.PI * i) / n) / 2
+      await container.evaluate((el, y) => (el.scrollTop = y), from + (to - from) * k)
+      await tick()
+    }
+  }
+
   const C = APP_CUES
   try {
     // 0–12s: the network drifts; AI-buildable filter on, then off.
@@ -250,13 +270,24 @@ async function app() {
     }
     await until(C.match)
     await click(p.getByRole('button', { name: 'Match' }))
-    // 20–32s: open the listing, then start a response.
+    // Open the listing, show its requirements, then start a response and write the first draft.
     await until(C.openListing)
     await click(p.locator('button[data-match]', { hasText: 'E-Procurement' }).first())
+    await until(C.showRequirements)
+    await scrollInto(p.locator('aside'), p.locator('aside section[aria-label^="Requirements"]'), 1.2)
     await until(C.draft)
     await click(p.getByRole('button', { name: 'Draft a response' }))
+    await until(C.aboutYou)
+    await click(p.getByRole('dialog').locator('nav button', { hasText: 'About you' }))
+    await click(p.getByLabel('Organization name'))
+    for (const ch of APP_ORG) {
+      await p.keyboard.type(ch)
+      await tick()
+    }
     await until(C.draftStep)
-    await click(p.getByRole('dialog').getByRole('button', { name: 'Draft', exact: false }).filter({ hasText: /^4?Draft$/ }).first())
+    await click(p.getByRole('dialog').locator('nav button', { hasText: 'Draft' }))
+    await until(C.writeDraft)
+    await click(p.getByRole('button', { name: 'Write first draft' }))
     await until(C.end)
   } catch (e) {
     if (!(e instanceof Stop)) throw e

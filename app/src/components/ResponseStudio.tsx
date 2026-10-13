@@ -151,7 +151,7 @@ function Studio({ n, onClose }: { n: RfpNode; onClose: () => void }) {
           {step === 3 && (
             <div className="space-y-3">
               <div className="flex flex-wrap items-center gap-2">
-                <h3 className="mr-auto text-[17px] font-semibold">{ai.text != null ? 'Draft' : 'Draft outline'}</h3>
+                <h3 className="mr-auto text-[17px] font-semibold">{ai.text != null || sample.text != null ? 'First draft' : 'Draft outline'}</h3>
                 {ai.available && (
                   <>
                     <label className="sr-only" htmlFor="draft-section">Section to draft</label>
@@ -211,7 +211,7 @@ function Studio({ n, onClose }: { n: RfpNode; onClose: () => void }) {
         </main>
       </div>
       <footer className="flex items-center justify-between border-t border-line px-5 py-3">
-        <span className="text-[11px] text-mute">{ai.available ? 'Claude drafts from your intake and .txt/.md files. You verify every claim.' : 'Template outline. Claude drafting appears when the server is configured.'}</span>
+        <span className="text-[11px] text-mute">{ai.available ? 'Claude drafts from your intake and .txt/.md files. You verify every claim.' : sample.available ? 'Demo mode: a sample first draft for this listing. No AI calls are made.' : 'Template outline. Claude drafting appears when the server is configured.'}</span>
         <div className="flex gap-2">
           <button disabled={step === 0} onClick={() => setStep(step - 1)} className="h-9 rounded-[2px] px-3 text-[13px] text-mute enabled:hover:text-white disabled:opacity-30">Back</button>
           <button onClick={() => (step < STEPS.length - 1 ? setStep(step + 1) : onClose())} className="h-9 rounded-[2px] bg-white px-4 text-[13px] font-medium text-black">{step < STEPS.length - 1 ? 'Continue' : 'Done'}</button>
