@@ -1,0 +1,550 @@
+{
+  "source": {
+    "file": "files/05-Appendix_A_2018_with_Addendum.pdf",
+    "title": "Appendix A - General Provisions Governing Contracts for Consultants, Professional, Technical, Human, and Client Services",
+    "version": "Appendix A January 2018 Final (running header on pp. 1-69); PDF page = printed page + 4 for the body (printed p.1 = PDF p.5, printed p.57 = PDF p.61)",
+    "addendum": "Two modifications are bundled after the body. (1) PDF pp. 70-75: 'NYC Earned Safe and Sick Time Act Contract Rider', stated to supersede Section 4.06 (Paid Sick Leave Law) of the January 2018 Appendix A; adds safe time, 56 hours for employers with 100+ employees (40 hours otherwise), DCWP (not DCA) enforcement, a copy of complaint/investigation notices to ComplianceMonitoring@dcwp.nyc.gov, pay-statement balance reporting, reimbursement of documentation costs, and termination for non-payment of DCWP relief within 30 days. (2) PDF pp. 76-77: 'Addendum to Appendix A January 2018 Final' deletes and replaces Section 5.08(B) (Confidentiality - breach of security): trigger broadened from SSNs/personal identifying information to 'private information' (Admin. Code 10-501(b)); 3-day written notice runs from the earlier of discovery or notification; notice must state nature and scope; adds duties to determine cause, cooperate with City investigation (prompt access to records, logs, files in human- and machine-readable format) and coordinate on notifications to affected individuals; City set-off rights retained (identity-theft monitoring costs). Neither addendum page is dated."
+  },
+  "items": [
+    {
+      "id": "A-001",
+      "article": "Article 2, Section 2.01",
+      "title": "Lobbying Law compliance in procurement",
+      "obligation": "Contractor represents and warrants that in securing or soliciting the Agreement it complied with the NYS Lobbying Law (Legislative Law 1-a et seq.); breach lets the Commissioner annul the Agreement and recover all monies paid.",
+      "when": "proposal",
+      "type": "must",
+      "page": 6
+    },
+    {
+      "id": "A-002",
+      "article": "Article 2, Section 2.02(A)",
+      "title": "No conflicts of interest",
+      "obligation": "Contractor represents and warrants that neither it nor its directors, officers, members, partners or employees has or will acquire any interest conflicting with performance, and that no person with such an interest will be employed by or connected with the Contractor in performing the Agreement.",
+      "when": "proposal",
+      "type": "must",
+      "page": 6
+    },
+    {
+      "id": "A-003",
+      "article": "Article 2, Section 2.03",
+      "title": "Fair practices / non-collusion certification",
+      "obligation": "Contractor and each signer certify under penalty of perjury that prices were arrived at independently without collusion, were not knowingly disclosed to any other proposer or competitor before proposal opening, and that no one was induced to submit or not submit a proposal to restrict competition.",
+      "when": "proposal",
+      "type": "must",
+      "page": 7
+    },
+    {
+      "id": "A-004",
+      "article": "Article 2, Section 2.04",
+      "title": "Vendor responsibility disclosures (PASSPort)",
+      "obligation": "Contractor represents that it has executed and filed all disclosures required by Admin. Code 6-116.2, PPB Rule 2-08 and MOCS policies, and that information from it and its principals is accurate and complete; the Department's reliance on these is a material condition of execution.",
+      "when": "proposal",
+      "type": "must",
+      "page": 7
+    },
+    {
+      "id": "A-005",
+      "article": "Article 2, Section 2.05",
+      "title": "Bankruptcy disclosure",
+      "obligation": "Contractor must disclose any Chapter 7 or Chapter 11 bankruptcy/reorganization filing to the Department within seven days of filing.",
+      "when": "performance",
+      "type": "must",
+      "page": 7
+    },
+    {
+      "id": "A-006",
+      "article": "Article 3, Section 3.01(A)-(C)",
+      "title": "No assignment without consent",
+      "obligation": "Contractor may not assign, transfer or dispose of the Agreement or monies due without the Commissioner's prior written consent; it must submit a written request naming the assignee, and the assignee's PPB 2-08(e) disclosure is due within 30 Days of preliminary ACCO approval. Unconsented assignment is void and may cause annulment and forfeiture of monies earned.",
+      "when": "performance",
+      "type": "must",
+      "page": 8
+    },
+    {
+      "id": "A-007",
+      "article": "Article 3, Section 3.02(A)(1)",
+      "title": "Subcontracts of $20,000 or less",
+      "obligation": "Subcontractors at or under $20,000 are pre-approved, but the Contractor must submit monthly reports listing them and list each subcontractor in the City's Payee Information Portal (www.nyc.gov/pip).",
+      "when": "performance",
+      "type": "must",
+      "page": 9
+    },
+    {
+      "id": "A-008",
+      "article": "Article 3, Section 3.02(A)(2)(a)-(b)",
+      "title": "Prior approval of subcontracts over $20,000",
+      "obligation": "Before any subcontract over $20,000 the Contractor must request written approval giving the subcontractor's name, address, portion of work, and estimated cost; submit proof of the subcontractor's professional liability insurance where applicable; and list the subcontractor in PIP with maximum value, work description, start/end dates and industry.",
+      "when": "performance",
+      "type": "must",
+      "page": 9
+    },
+    {
+      "id": "A-009",
+      "article": "Article 3, Section 3.02(B)-(C)",
+      "title": "Required subcontract terms; responsibility for subs",
+      "obligation": "All subcontracts must be in writing and state that work conforms to the prime Agreement, City rights are not impaired, no privity with the City is created, and the subcontractor is bound by Section 4.05(D) and Article 5 enforceable directly by the City. Contractor is fully responsible for its subcontractors' acts and omissions.",
+      "when": "performance",
+      "type": "must",
+      "page": 10
+    },
+    {
+      "id": "A-010",
+      "article": "Article 3, Section 3.02(D)-(F)",
+      "title": "Aggregation, revocation, copies of subcontracts",
+      "obligation": "All subcontracts with the same subcontractor are aggregated for value thresholds; the Department may revoke a subcontractor approval on 10 Days' notice and the Contractor must then stop that subcontractor's work; Contractor must provide copies of subcontracts on request.",
+      "when": "performance",
+      "type": "must",
+      "page": 11
+    },
+    {
+      "id": "A-011",
+      "article": "Article 3, Section 3.02(H); Schedule A (Section 10.07)",
+      "title": "PIP subcontractor payment reporting; $100/day liquidated damages",
+      "obligation": "Contractor must report each subcontractor payment in the Payee Information Portal within 30 days of payment and keep PIP subcontractor data current; failure may be declared a default and incurs liquidated damages of $100 per day.",
+      "when": "performance",
+      "type": "must",
+      "page": 11
+    },
+    {
+      "id": "A-012",
+      "article": "Article 4, Sections 4.01-4.02",
+      "title": "Independent contractor; responsibility for staff",
+      "obligation": "Contractor is an independent contractor and is solely responsible for the work, direction, compensation and conduct of its employees and subcontractors; neither it nor its staff may hold themselves out as City officials or employees or claim City employee benefits.",
+      "when": "performance",
+      "type": "must",
+      "page": 11
+    },
+    {
+      "id": "A-013",
+      "article": "Article 4, Section 4.03",
+      "title": "Competent staff; removal on request",
+      "obligation": "Contractor may only use competent, faithful and skilled individuals; anyone the Commissioner finds incompetent, unfaithful or unskilled (after an opportunity to be heard on at least five Days' notice) must stop working on the Agreement.",
+      "when": "performance",
+      "type": "must",
+      "page": 12
+    },
+    {
+      "id": "A-014",
+      "article": "Article 4, Section 4.04(A)",
+      "title": "Minimum wage",
+      "obligation": "All persons employed in performing the Agreement must be paid at least the legal minimum wage without deduction or rebate; breach is a material breach.",
+      "when": "performance",
+      "type": "must",
+      "page": 13
+    },
+    {
+      "id": "A-015",
+      "article": "Article 4, Section 4.05(A)",
+      "title": "Non-discrimination in employment",
+      "obligation": "Contractor shall not unlawfully discriminate against employees or applicants on any listed protected basis (including salary history, credit history, arrest/conviction record, caregiver status, etc.) and must provide legally required reasonable accommodations.",
+      "when": "performance",
+      "type": "must",
+      "page": 15
+    },
+    {
+      "id": "A-016",
+      "article": "Article 4, Section 4.05(D)(1)(a)-(d)",
+      "title": "E.O. 50 Equal Employment Opportunity commitments",
+      "obligation": "Contractor agrees not to discriminate in employment or in selecting subcontractors; to state in all job advertisements that it is an equal employment opportunity employer; and to notify its unions/worker representatives in writing of its E.O. 50 commitments. No agreement will be awarded until E.O. 50 requirements are met in their entirety.",
+      "when": "award",
+      "type": "must",
+      "page": 16
+    },
+    {
+      "id": "A-017",
+      "article": "Article 4, Section 4.05(D)(1)(e)-(f)",
+      "title": "E.O. 50 Employment Report before award; DLS access",
+      "obligation": "Contractor must furnish, before award, all information and reports required by E.O. 50, including an Employment Report, and must permit SBS Division of Labor Services access to relevant books and records.",
+      "when": "award",
+      "type": "must",
+      "page": 17
+    },
+    {
+      "id": "A-018",
+      "article": "Article 4, Section 4.05(D)(2)-(5)",
+      "title": "E.O. 50 sanctions and flow-down",
+      "obligation": "Noncompliance is a material breach (sanctions: disapproval, suspension/termination, default, or an employment program) and may lead to a non-responsibility finding; Contractor must include 4.05(D)(1)-(3) in every subcontract or purchase order over $100,000 and not subcontract with non-compliant subcontractors.",
+      "when": "performance",
+      "type": "must",
+      "page": 18
+    },
+    {
+      "id": "A-019",
+      "article": "Article 4, Section 4.06 (superseded by ESSTA Rider, Section A)",
+      "title": "Paid safe and sick leave compliance (ESSTA Rider)",
+      "obligation": "Contractor agrees to comply with the Earned Safe and Sick Time Act and DCWP Rules as a material term; must notify the ACCO (copy to ComplianceMonitoring@dcwp.nyc.gov) in writing within 10 days of any ESSTA complaint or notice of investigation and comply with DCWP subpoenas and document demands. Original Section 4.06 (pp. 18-22) is superseded by the Rider.",
+      "when": "performance",
+      "type": "must",
+      "page": 70
+    },
+    {
+      "id": "A-020",
+      "article": "ESSTA Rider, Sections B(1), B(5)-B(6), E, F",
+      "title": "ESSTA accrual, written policy, notices, 3-year records",
+      "obligation": "Employers with 100+ employees provide 56 hours (fewer than 100: 40 hours) of safe/sick time per calendar year at 1 hour per 30 worked; must give employees a written policy, a written notice of rights, and pay-statement balances, and retain compliance records at least three years.",
+      "when": "performance",
+      "type": "must",
+      "page": 71
+    },
+    {
+      "id": "A-021",
+      "article": "Article 4, Section 4.07(A)(1)-(3)",
+      "title": "Whistleblower Protection Expansion Act (Local Laws 30 and 33 of 2012)",
+      "obligation": "Contractor shall not retaliate against officers or employees who report corruption, criminal activity, conflict of interest, gross mismanagement or abuse of authority relating to the Agreement to DOI and other listed officials, and must post the City-provided DOI notice (poster at PDF pp. 68-69) at every work site.",
+      "when": "performance",
+      "type": "must",
+      "page": 22
+    },
+    {
+      "id": "A-022",
+      "article": "Article 4, Section 4.07(A)(5), (B)",
+      "title": "Whistleblower applicability and flow-down",
+      "obligation": "Section 4.07 applies only to agreements over $100,000; Contractor must include Section 4.07 in all subcontracts valued over $100,000.",
+      "when": "performance",
+      "type": "must",
+      "page": 23
+    },
+    {
+      "id": "A-023",
+      "article": "Article 5, Sections 5.01-5.02",
+      "title": "Books, records and six-year retention",
+      "obligation": "Maintain separate, accurate books and records reflecting all direct and indirect costs, and retain all records for six years after final payment, expiration or termination (or longer if required by law or if litigation, claim or audit is pending); electronic copies of paper must meet CPLR 4539(b).",
+      "when": "closeout",
+      "type": "must",
+      "page": 24
+    },
+    {
+      "id": "A-024",
+      "article": "Article 5, Section 5.03",
+      "title": "Inspection and observation",
+      "obligation": "City, Department IG, Comptroller, and State/federal auditors may inspect and copy records on reasonable notice (IG, Comptroller and federal auditors immediately, without notice); records must be made available in NYC or Contractor reimburses out-of-City inspection costs; the Department may observe services. No final payment until inspection requests are met.",
+      "when": "performance",
+      "type": "must",
+      "page": 24
+    },
+    {
+      "id": "A-025",
+      "article": "Article 5, Section 5.04",
+      "title": "Audit",
+      "obligation": "The Agreement, invoices and supporting records are subject to audit by the City, Comptroller, Department IG, State and federal government; Contractor must submit documentation and justification supporting expenditures or fees on request, and is not entitled to final payment until it complies.",
+      "when": "performance",
+      "type": "must",
+      "page": 25
+    },
+    {
+      "id": "A-026",
+      "article": "Article 5, Sections 5.05-5.06",
+      "title": "No removal of City records/data",
+      "obligation": "Contractor may not remove City books, records, documents or data (any format, including derived formats) from City facilities without prior written approval, and must return any removed items on request; 'records' includes electronic versions.",
+      "when": "performance",
+      "type": "must",
+      "page": 25
+    },
+    {
+      "id": "A-027",
+      "article": "Article 5, Section 5.07(A)-(E)",
+      "title": "Investigations clause - full cooperation",
+      "obligation": "Contractor must cooperate fully and faithfully with any investigation, audit or inquiry by a State or City agency with subpoena power or by an Inspector General; refusal to testify can lead to a hearing and penalties up to five-year disqualification from City contracting and cancellation of contracts.",
+      "when": "performance",
+      "type": "must",
+      "page": 26
+    },
+    {
+      "id": "A-028",
+      "article": "Article 5, Section 5.07(G)",
+      "title": "Report solicitations of benefits to DOI",
+      "obligation": "Contractor must promptly report in writing to the Commissioner of Investigation any solicitation of money, goods, future employment or other benefit by or for any City employee or other person related to obtaining or performing the Agreement; failure allows termination on three Days' notice.",
+      "when": "proposal",
+      "type": "must",
+      "page": 28
+    },
+    {
+      "id": "A-029",
+      "article": "Article 5, Section 5.08(A), (C)",
+      "title": "Confidentiality of all contract information",
+      "obligation": "Hold confidential, during and after the Agreement, all reports, information and data furnished to or prepared/used by the Contractor, using at least the care it uses for its own confidential information; no disclosure without prior written Department approval; restrict access to persons with a legitimate work purpose and instruct staff accordingly. For legally compelled disclosure, give advance notice to the Commissioner and, if asked, wait until the City exhausts its rights to block it.",
+      "when": "performance",
+      "type": "must",
+      "page": 28
+    },
+    {
+      "id": "A-030",
+      "article": "Article 5, Section 5.08(B) as replaced by Addendum",
+      "title": "Data breach notice within three days (private information)",
+      "obligation": "Where Contractor or its staff, subcontractors or agents access, acquire, disclose or use data containing private information (Admin. Code 10-501(b)), Contractor must give written notice to the Department within three days of the earlier of discovery or notification of a breach of security, stating its nature and scope.",
+      "when": "performance",
+      "type": "must",
+      "page": 76
+    },
+    {
+      "id": "A-031",
+      "article": "Article 5, Section 5.08(B)(1)-(2) as replaced by Addendum",
+      "title": "Breach remediation, investigation cooperation, notifications",
+      "obligation": "On a breach, Contractor must determine and remediate the cause, give written notice of those steps, cooperate with any City investigation (including prompt access in human- and machine-readable format to records, logs, files and data reporting), and coordinate with the City on notifications to affected individuals.",
+      "when": "performance",
+      "type": "must",
+      "page": 76
+    },
+    {
+      "id": "A-032",
+      "article": "Article 5, Section 5.08(B)(3) as replaced by Addendum",
+      "title": "Breach cost set-off / direct payment",
+      "obligation": "City may withhold payments to cover breach notification costs, legally mandated actions, government fines or disallowances, and identity theft monitoring; if remaining monies are insufficient, or at the City's discretion, Contractor pays these costs directly.",
+      "when": "performance",
+      "type": "info",
+      "page": 76
+    },
+    {
+      "id": "A-033",
+      "article": "Article 5, Section 5.08(D)",
+      "title": "Press and publication notice",
+      "obligation": "Notify the Department at least 24 hours before any press statement and at least five business days before submitting material for publication about the services or data collected, during or after the Agreement; no confidential information may be included.",
+      "when": "performance",
+      "type": "must",
+      "page": 29
+    },
+    {
+      "id": "A-034",
+      "article": "Article 5, Section 5.08(E)-(F)",
+      "title": "Return of confidential information; material breach",
+      "obligation": "On request, return all confidential information held by the Contractor or its subcontractors (or notify in writing what must be retained by law and why); otherwise retain per Section 5.02. Breach of Section 5.08 is a material breach permitting termination.",
+      "when": "closeout",
+      "type": "must",
+      "page": 30
+    },
+    {
+      "id": "A-035",
+      "article": "Article 6, Section 6.01(A)-(C)",
+      "title": "City owns work product (work-made-for-hire)",
+      "obligation": "All reports, documents, data, deliverables and drafts produced under the Agreement become the City's exclusive property on creation and are work-made-for-hire; to the extent not, Contractor irrevocably assigns copyright to the City, retains no IP interest, may use them only to perform the Agreement absent written permission, and must cooperate with copyright registration.",
+      "when": "performance",
+      "type": "must",
+      "page": 30
+    },
+    {
+      "id": "A-036",
+      "article": "Article 6, Section 6.01(D)",
+      "title": "Originality warranty; third-party permissions at execution",
+      "obligation": "Contractor warrants deliverables are original, non-infringing and not defamatory; for any non-original material it must have obtained written permissions and clearances, copies of which must be provided to the City upon execution of the Agreement.",
+      "when": "award",
+      "type": "must",
+      "page": 31
+    },
+    {
+      "id": "A-037",
+      "article": "Article 6, Sections 6.02-6.03",
+      "title": "Report inventions; pre-existing rights carve-out",
+      "obligation": "Contractor must promptly and fully report to the Department any discovery or invention arising in performance. Sections 6.01-6.02 do not apply to material that existed before, or was developed independently of, the Agreement.",
+      "when": "performance",
+      "type": "must",
+      "page": 31
+    },
+    {
+      "id": "A-038",
+      "article": "Article 7, Section 7.01; Schedule A",
+      "title": "Insurance per Schedule A",
+      "obligation": "Contractor must maintain the insurance types checked in Schedule A at the listed minimum limits throughout the term. In this copy Schedule A checks Workers' Compensation, Disability Benefits, Employers' Liability (statutory) and Commercial General Liability ($1,000,000 per occurrence, $1,000,000 personal and advertising injury, $2,000,000 aggregate, $0 products/completed operations; City as additional insured). Commercial Auto, Professional Liability/E&O, Crime and Cyber are unchecked.",
+      "when": "award",
+      "type": "must",
+      "page": 63
+    },
+    {
+      "id": "A-039",
+      "article": "Article 7, Section 7.02",
+      "title": "Workers' comp and disability proof within 10 Days of award",
+      "obligation": "Within 10 Days of award, submit proof of workers' compensation and disability benefits insurance (or exemption) on NYS WCB-accepted forms (e.g., C-105.2, U-26.3, SI-12, DB-120.1, CE-200); ACORD forms are not acceptable.",
+      "when": "award",
+      "type": "must",
+      "page": 32
+    },
+    {
+      "id": "A-040",
+      "article": "Article 7, Section 7.03(A), 7.04",
+      "title": "CGL form and insurer requirements",
+      "obligation": "CGL must be at least as broad as ISO CG 00 01, primary and non-contributory, occurrence-based, with the City as additional insured (ISO CG 20 10 or CG 20 26); insurers must be rated at least A.M. Best A-/VII (or equivalent); self-insured retentions over $10,000 need Commissioner approval; Contractor pays all premiums and deductibles.",
+      "when": "award",
+      "type": "must",
+      "page": 33
+    },
+    {
+      "id": "A-041",
+      "article": "Article 7, Section 7.05",
+      "title": "Proof of insurance within ten Days of award; renewals",
+      "obligation": "File proof of each required policy and of the City's additional insured status within ten Days of award (certificate plus the broker/agent certification form at PDF p. 67 and endorsements, or a certified policy copy); submit renewal proof before expiration; forward any cancellation notice immediately to the Department and the Comptroller.",
+      "when": "award",
+      "type": "must",
+      "page": 35
+    },
+    {
+      "id": "A-042",
+      "article": "Article 7, Section 7.06",
+      "title": "Claim notice on City's behalf; failure to insure is material breach",
+      "obligation": "Give insurers timely notice of losses/claims on behalf of the City as additional insured (copy to the NYC Law Department) or indemnify the City for late-notice disclaimers; failure to maintain required insurance is a material breach; Contractor waives subrogation against the City and must make subs who name it as additional insured also name the City.",
+      "when": "performance",
+      "type": "must",
+      "page": 36
+    },
+    {
+      "id": "A-043",
+      "article": "Article 8, Sections 8.03-8.05",
+      "title": "Indemnification incl. IP infringement; not limited by insurance",
+      "obligation": "To the fullest extent permitted by law, defend, indemnify and hold harmless the City against claims arising from Contractor/subcontractor negligence, intentional torts or non-compliance, and against any IP infringement claims, even if the infringement arises from complying with the scope of work; indemnity is not limited by insurance.",
+      "when": "performance",
+      "type": "must",
+      "page": 37
+    },
+    {
+      "id": "A-044",
+      "article": "Article 8, Sections 8.06-8.07",
+      "title": "Third-party actions; report lawsuits in five business days; set-off",
+      "obligation": "Assist the City without additional compensation in third-party claims relating to the Agreement and report in writing within five business days any legal action by or against the Contractor relating to the Agreement; City may withhold payments for indemnifiable claims, property damage, and audit disallowances or overpayments.",
+      "when": "performance",
+      "type": "must",
+      "page": 38
+    },
+    {
+      "id": "A-045",
+      "article": "Article 9, Sections 9.01-9.02",
+      "title": "Written change orders only; no pay for own errors",
+      "obligation": "Changes are valid only if authorized by the ACCO and made in writing signed by both parties; deviating without an executed change order is at Contractor's risk; changes needed because of Contractor negligence or error are made without additional compensation.",
+      "when": "performance",
+      "type": "must",
+      "page": 39
+    },
+    {
+      "id": "A-046",
+      "article": "Article 10, Sections 10.01-10.02",
+      "title": "Termination without cause; funding reductions",
+      "obligation": "City may terminate in whole or part without cause (paying for services rendered and obligations necessarily incurred, excluding leases) or reduce funding and services on at least 30 Days' notice if federal, State or City funds are reduced; Contractor gets seven Days to suggest which services to cut.",
+      "when": "performance",
+      "type": "info",
+      "page": 39
+    },
+    {
+      "id": "A-047",
+      "article": "Article 10, Section 10.03",
+      "title": "Default, cure and excess re-procurement costs",
+      "obligation": "Grounds for default include material breach, unsatisfactory performance, insolvency, indictment/conviction of principals for listed offenses, or false material statements in any bid or proposal; Contractor has ten Days to cure after a Notice to Cure and must pay any excess cost of completing the work by others.",
+      "when": "performance",
+      "type": "info",
+      "page": 41
+    },
+    {
+      "id": "A-048",
+      "article": "Article 10, Section 10.05(B)",
+      "title": "Close-out procedures",
+      "obligation": "On termination or expiration: within 45 Days refund unexpended advances and furnish an inventory of City-funded equipment/property; turn over requested records; within 90 Days submit a final statement and report prepared by a CPA or licensed public accountant (unless waived in writing); and reasonably assist transition to a new contractor.",
+      "when": "closeout",
+      "type": "must",
+      "page": 44
+    },
+    {
+      "id": "A-049",
+      "article": "Article 11, Section 11.01",
+      "title": "Proper invoice; prompt payment interest",
+      "obligation": "Contractor must submit a proper invoice to be paid (unless paid at predetermined intervals); PPB Rule 4-06 prompt payment provisions apply, generally providing interest on late payments.",
+      "when": "performance",
+      "type": "must",
+      "page": 45
+    },
+    {
+      "id": "A-050",
+      "article": "Article 11, Section 11.02",
+      "title": "Electronic funds transfer enrollment",
+      "obligation": "For contracts of $25,000 and above, Contractor must accept payment by EFT and, before the first payment, designate a financial institution and complete the 'EFT Vendor Payment Enrollment Form'.",
+      "when": "award",
+      "type": "must",
+      "page": 45
+    },
+    {
+      "id": "A-051",
+      "article": "Article 12, Sections 12.01-12.03(C)-(D)",
+      "title": "NY law, NYC venue; keep working during disputes",
+      "obligation": "New York law governs and claims are heard only in federal or State courts in NYC; disputes follow PPB Rule 4-09 (Notice of Dispute to the Agency Head within 30 Days with all supporting facts and a detailed computation), and the Contractor must continue performing during a dispute or waive its claims.",
+      "when": "performance",
+      "type": "must",
+      "page": 46
+    },
+    {
+      "id": "A-052",
+      "article": "Article 13, Sections 13.01-13.04",
+      "title": "Compliance with laws; PPB Rules control",
+      "obligation": "Contractor must perform all services in accordance with all applicable Laws in effect at the time of performance; the PPB Rules take precedence over conflicting Agreement terms.",
+      "when": "performance",
+      "type": "must",
+      "page": 52
+    },
+    {
+      "id": "A-053",
+      "article": "Article 13, Section 13.05 (Unlawful Discrimination in the Provision of Services)",
+      "title": "Non-discrimination in services; Admin. Code 6-123 flow-down; immigration status",
+      "obligation": "Contractor shall not unlawfully discriminate in providing services, must not engage in discriminatory practices under Admin. Code Title 8, must include that obligation in first-level subcontracts over $50,000, and shall not inquire about recipients' immigration status unless necessary for eligibility or required by law.",
+      "when": "performance",
+      "type": "must",
+      "page": 53
+    },
+    {
+      "id": "A-054",
+      "article": "Article 13, Section 13.05 (Americans with Disabilities Act) [duplicate number as printed]",
+      "title": "ADA compliance plan on request",
+      "obligation": "Contractor shall not discriminate against individuals with disabilities in services (ADA Title II); if directed, must submit a Compliance Plan describing accessibility to the ACCO within ten Days and implement it; failure may be a material breach.",
+      "when": "performance",
+      "type": "must",
+      "page": 53
+    },
+    {
+      "id": "A-055",
+      "article": "Article 13, Sections 13.06, 13.11, 13.12",
+      "title": "Voter registration, health-insurance pamphlet, ID materials (participating agencies only)",
+      "obligation": "These distribution duties apply only to contracts with listed participating agencies where the Contractor has regular public contact (13.11 also requires value over $250,000 and written applications). MOCS is not in any of the printed agency lists.",
+      "when": "performance",
+      "type": "info",
+      "page": 54
+    },
+    {
+      "id": "A-056",
+      "article": "Article 13, Section 13.09",
+      "title": "No international boycott participation",
+      "obligation": "Contractor and substantially-owned affiliates are not and will not participate in an international boycott in violation of the federal Export Administration Act, and must comply with Admin. Code 6-114; a violation lets the Comptroller void the Agreement.",
+      "when": "proposal",
+      "type": "must",
+      "page": 57
+    },
+    {
+      "id": "A-057",
+      "article": "Article 13, Section 13.10",
+      "title": "MacBride Principles stipulation",
+      "obligation": "To the extent required by Admin. Code 6-115.1, Contractor and any entity with a 10%+ ownership link either have no business operations in Northern Ireland or will conduct them in accordance with the MacBride Principles and permit independent monitoring; this is a material condition (not applicable to not-for-profits).",
+      "when": "proposal",
+      "type": "must",
+      "page": 57
+    },
+    {
+      "id": "A-058",
+      "article": "Article 14, Section 14.01",
+      "title": "Not binding until registered",
+      "obligation": "The Agreement is neither binding nor effective until registered under Charter 328 (Comptroller registration); work before registration is not covered.",
+      "when": "award",
+      "type": "info",
+      "page": 60
+    },
+    {
+      "id": "A-059",
+      "article": "Article 14, Section 14.04; Schedule A",
+      "title": "Notice addresses",
+      "obligation": "Contractor must designate a business mailing address and email address for notices in Schedule A (Section 14.04 block, PDF p. 65); notices are effective by personal delivery, certified mail, courier, or email plus mailed copy unless email receipt is acknowledged.",
+      "when": "award",
+      "type": "must",
+      "page": 60
+    },
+    {
+      "id": "A-060",
+      "article": "Affirmation (unnumbered form)",
+      "title": "Affirmation of no arrears / no default / responsibility",
+      "obligation": "Proposer affirms it is not in arrears to the City on debt, contract or taxes, not a defaulter on City obligations, not declared non-responsible or disqualified, and has no pending responsibility proceeding, except as listed; signed by an officer with EIN (SSN optional for individuals).",
+      "when": "proposal",
+      "type": "must",
+      "page": 62
+    }
+  ]
+}
