@@ -59,33 +59,11 @@
   </div>
 </section>
 
-<section class="scene" id="s6">
-  <div class="center">
-    <div class="eyebrow">Live now</div>
-    <h1 style="font-size:84px;line-height:1.05" id="live-url">nyc-rfp-app.vercel.app</h1>
-    <div id="live-sub" style="display:flex;gap:14px;justify-content:center;flex-wrap:wrap;margin-top:18px">
-      <span class="chip">New PASSPort listings every night</span>
-      <span class="chip">Checked before they ship</span>
-      <span class="chip">Built with Claude Code</span>
-    </div>
-  </div>
-</section>
-
-<section class="scene" id="s8">
-  <div class="center">
-    <h1 style="font-size:104px;line-height:1.05" id="tag">Find it. Match it. Answer it.</h1>
-    <div id="mark" style="display:flex;gap:22px;align-items:center;justify-content:center;margin-top:36px">
-      <svg width="64" height="64" viewBox="0 0 32 32" aria-hidden="true"><g stroke="#5eead4" stroke-width="1.5" opacity=".7"><line x1="16" y1="16" x2="8" y2="9"/><line x1="16" y1="16" x2="24" y2="10"/><line x1="16" y1="16" x2="11" y2="24"/><line x1="16" y1="16" x2="23" y2="23"/></g><circle cx="16" cy="16" r="3.5" fill="#fff"/><circle cx="8" cy="9" r="2.2" fill="#38bdf8"/><circle cx="24" cy="10" r="2.2" fill="#a78bfa"/><circle cx="11" cy="24" r="2.2" fill="#5eead4"/><circle cx="23" cy="23" r="2.2" fill="#22d3ee"/></svg>
-      <span style="font-size:52px;font-weight:650;font-stretch:115%">Opportunity Graph</span>
-    </div>
-    <div class="eyebrow" id="sub" style="color:var(--mute)">Built for New York's builders</div>
-  </div>
-</section>
 
 <script>
-  // Scene windows in seconds (the app footage fills 30–62).
-  // Timed to the recorded voice-over (71s); the app footage fills 26.1–57.8.
-  const SCENES = { s1: [0, 14.2], s2: [14.2, 26.1], s6: [57.8, 63.7], s8: [63.7, 72.5] }
+  // Placeholder intro for beats 1–5 (BEATS.md), VO 0–21.2. The PASSPort screen recordings replace it;
+  // the app footage (capture.mjs) starts at 21.2 and runs to the end.
+  const SCENES = { s1: [0, 14.2], s2: [14.2, 21.2] }
   const clamp = (x) => Math.max(0, Math.min(1, x))
   const easeOut = (x) => 1 - Math.pow(1 - clamp(x), 3)
   const io = (t, a, b, f = 0.6) => clamp((t - a) / f) * clamp((b - t) / f) // fade in/out window
@@ -134,14 +112,7 @@
     rise(s('s2').querySelector('.card'), t, 14.4, 30, 0.9)
     rise(s('s2-scope'), t, 17.4)
     rise(s('cat1'), t, 19.6)
-    rise(s('cat2'), t, 21)
-    // S6: "The site's live on Vercel, and a script pulls the newest opportunities every night".
-    rise(s('live-url'), t, 58.1, 30, 0.9)
-    rise(s('live-sub'), t, 60.2)
-    // S8: "Essentially, I just wanted to make it easier…" then the mark.
-    rise(s('tag'), t, 64, 30, 1)
-    rise(s('mark'), t, 67.5)
-    rise(s('sub'), t, 68.6)
+    rise(s('cat2'), t, 20.1)
   }
 </script>
 </body>

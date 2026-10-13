@@ -9,6 +9,8 @@ import { buildLayout, heatColor, type Layout, type Vec3 } from '../lib/layout'
 import { passesFilters, useStore } from '../store'
 
 const reducedMotion = typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches
+/** ?capture=1: expose a camera/projection handle for the video capture (video/capture.mjs). Off otherwise. */
+const CAPTURE = typeof window !== 'undefined' && new URLSearchParams(location.search).get('capture') === '1'
 
 /** Live (animated) positions shared between nodes, hubs, edges and the reticle. */
 type Live = Map<string, THREE.Vector3>
@@ -62,6 +64,7 @@ function Scene() {
       <Hubs layout={layout} live={live} />
       <Nodes layout={layout} live={live} />
       <Reticle live={live} />
+      {CAPTURE && <CaptureHook layout={layout} live={live} />}
     </>
   )
 }
@@ -167,6 +170,50 @@ function Rig({ layout }: { layout: Layout }) {
   })
 
   return <CameraControls ref={ref} makeDefault minDistance={6} maxDistance={1400} smoothTime={0.6} draggingSmoothTime={0.12} dollySpeed={0.6} />
+}
+
+/**
+ * Capture-only handle (window.__cap), mounted only with ?capture=1. The capture script drives the
+ * camera with lookAt() once per stepped frame and projects node/hub positions to click them with
+ * real mouse events. No React state; reads happen on demand.
+ */
+function CaptureHook({ layout, live }: { layout: Layout; live: Live }) {
+  const camera = useThree((s) => s.camera)
+  const size = useThree((s) => s.size)
+  useEffect(() => {
+    const v = new THREE.Vector3()
+    const p = new THREE.Vector3()
+    const t = new THREE.Vector3()
+    ;(window as unknown as { __cap: unknown }).__cap = {
+      store: useStore,
+      homeDist: () => cam.homeDist,
+      /** World position of a cluster or node id (its layout target). */
+      pos: (id: string) => layout.clusterPos.get(id) ?? layout.nodePos.get(id) ?? null,
+      clusters: () => layout.clusters.map((c) => ({ id: c.id, level: c.level, label: c.label, members: c.members })),
+      lookAt(eye: Vec3, target: Vec3) {
+        cam.controls?.setLookAt(eye[0], eye[1], eye[2], target[0], target[1], target[2], false)
+        cam.touch()
+      },
+      view() {
+        cam.controls?.getPosition(p)
+        cam.controls?.getTarget(t)
+        return { eye: p.toArray(), target: t.toArray() }
+      },
+      /** Screen position (CSS px) of a world point, with the camera as last rendered. */
+      projectAt(w: Vec3) {
+        v.set(w[0], w[1], w[2]).project(camera)
+        return { x: ((v.x + 1) / 2) * size.width, y: ((1 - v.y) / 2) * size.height, z: v.z }
+      },
+      /** Screen position (CSS px) of a live node/hub as last rendered; z > 1 means behind the camera. */
+      project(id: string) {
+        const w = live.get(id)
+        if (!w) return null
+        v.copy(w).project(camera)
+        return { x: ((v.x + 1) / 2) * size.width, y: ((1 - v.y) / 2) * size.height, z: v.z }
+      },
+    }
+  }, [layout, live, camera, size])
+  return null
 }
 
 /* ---------------- shared dot-sprite buffer helper ---------------- */

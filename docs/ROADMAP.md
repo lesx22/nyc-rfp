@@ -89,6 +89,8 @@ Phases ship in order. Each phase ends with an explicit **validation gate**. Don'
 - ◻︎ Response Studio: load the listing's real checklist and evaluation criteria; draft each required section against its requirement; compliance matrix
 - ◻︎ Export a submission package (narrative .docx/.md, forms list, attachments index)
 - ✅ Video: 72s walkthrough cut to the recorded voice-over; the listing panel shows the extracted requirements and the studio writes the sample first draft (`video/`)
+- ✅ Video v2 app section (beats 6–14 of `video/BEATS.md`): cut on the voice-over's pauses, scripted camera moves, hub/agency/node clicks in the graph, browser frame with the live URL, ends on the graph
+- [ ] Video v2 intro: replace the placeholder (beats 1–5) with the PASSPort screen recordings
 - ✅ Listing panel and Response Studio use `requirements.json` (requirement counts, key dates, evaluation areas, submission checklist); sample first draft for 00225P0002
 
 **Gate:** every requirement in `requirements.json` cites its source, and the draft shows each required section mapped to a requirement or marked `[NEEDS INPUT]`.
