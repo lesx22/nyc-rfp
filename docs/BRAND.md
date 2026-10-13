@@ -1,4 +1,21 @@
-# Brand kit v1: Instrument Panel
+# Brand kit v1.1: Quiet Instrument
+
+v1 ("Instrument Panel", direction C) went too far. v1.1 keeps its palette and data honesty and drops the theatre: no radar, no scanlines, no boot log, no telemetry text. **The network is the subject, and the chrome recedes.** The before/after review is published as the "Graph Look Review" artifact.
+
+## What changed from v1
+
+| v1 Instrument Panel | v1.1 Quiet Instrument |
+|---|---|
+| Hollow rings with dashes and ticks | **Shaded spheres**: point-sprite impostors lit from the upper left, one draw call |
+| Radar sweep, pings, polar grid, boot log | Removed. The slow idle rotation stays |
+| Uniform brightness | **Focus dimming:** dots are 75% opaque near the camera target, fading to 10% at the edge. Lines and labels use the "medium" falloff (32% floor). The focus radius scales with zoom |
+| Uppercase mono everywhere, sector codes | Sentence-case Archivo for UI; mono only for numbers; no codes |
+| Bracketed panels, ruler ticks, scanlines, grain | Plain 1px hairline panels; vignette only |
+| Telemetry readout, crosshair data tag | Hover tag shows the name only |
+
+Everything below from v1 still applies unless the table above overrides it.
+
+## v1 reference: Instrument Panel
 
 **Concept:** you're an operator scanning the city's procurement spectrum, and every readout is a real number. Chosen from [`VISUAL_DIRECTIONS.md`](./VISUAL_DIRECTIONS.md) (direction C).
 

@@ -227,7 +227,7 @@ function Hubs({ layout, live }: { layout: Layout; live: Live }) {
       v.toArray(buf.pos, i * 3)
       col.set(layout.clusterColor.get(c.id)!).toArray(buf.color, i * 3)
       buf.size[i] = sizes[i]
-      buf.alpha[i] = c.level === 1 ? 0.9 : 0.6
+      buf.alpha[i] = c.level === 1 ? 1 : 0.85
       buf.halo[i] = 0
     })
     // Root: a small white dot at the centre.
@@ -235,7 +235,7 @@ function Hubs({ layout, live }: { layout: Layout; live: Live }) {
     buf.pos.set([0, 0, 0], r * 3)
     buf.color.set([1, 1, 1], r * 3)
     buf.size[r] = 2.4
-    buf.alpha[r] = 0.9
+    buf.alpha[r] = 1
     buf.halo[r] = 0
     buf.g.setDrawRange(0, n)
     buf.flush()
@@ -349,7 +349,7 @@ function Nodes({ layout, live }: { layout: Layout; live: Live }) {
       else col.set(layout.nodeColor.get(n.id) ?? '#fff')
       col.toArray(buf.color, i * 3)
 
-      buf.alpha[i] = !on ? 0.1 : hasQ && !hot ? 0.3 : 0.95
+      buf.alpha[i] = !on ? 0.15 : hasQ && !hot ? 0.4 : 1
       buf.halo[i] = hot || selected?.id === n.id ? 1 : 0
     })
     buf.flush()

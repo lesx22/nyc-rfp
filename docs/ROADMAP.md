@@ -45,6 +45,7 @@ Phases ship in order. Each phase ends with an explicit **validation gate**. Don'
 16. ✅ Scale pass: all cluster hubs in one draw call, low-poly nodes, layout + camera scale with row count, EPIN → procurement type + Type filter; tested with a synthetic 1,500-row set (`scripts/stress-data.mjs`, never shipped)
 17. ✅ **Visual direction C, Instrument Panel**: SDF ring nodes (value/confidence/match encodings), signal-packet edges, polar grid + radar sweep with urgency pings, one-time boot sweep, HUD readout + crosshair tag, mono/expanded type, bracketed chrome (see [`BRAND.md`](./BRAND.md))
 18. ✅ Agent skills installed and reviewed: `.claude/skills/` (see `SOURCES.md`)
+19. ✅ v1.1 "Quiet Instrument" after review: radar removed, shaded sphere dots, focus dimming (75%→10% opacity), less text. Reviewed step by step before shipping
 
 **Gate (usability test with 5 target users):**
 - 4 of 5 can find a relevant opportunity in under 60 seconds without help

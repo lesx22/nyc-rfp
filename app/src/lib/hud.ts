@@ -14,7 +14,9 @@ export const U = {
   uFocus: { value: new THREE.Vector3() }, // camera target: what the viewer is looking at
   uFocusNear: { value: 40 }, // full brightness inside this radius of the focus point
   uFocusFar: { value: 160 }, // dimmest beyond this radius
-  uFocusFloor: { value: 0.32 }, // brightness of the most out-of-focus things (1 = no dimming)
+  uFocusFloor: { value: 0.32 }, // edges + labels: brightness of the most out-of-focus things (1 = no dimming)
+  uOpacityNear: { value: 0.75 }, // dots: opacity in focus
+  uOpacityFar: { value: 0.1 }, // dots: opacity at the far edge of focus
 }
 
 /** Dev-only look tuning for side-by-side reviews: ?focus=off|subtle|medium|strong */
@@ -30,15 +32,19 @@ try {
 const COMMON_VERT = /* glsl */ `
   uniform float uFogNear, uFogFar, uFocusNear, uFocusFar, uFocusFloor;
   uniform vec3 uFocus;
-  varying float vDim;
+  varying float vDim, vFocus, vFog;
   void applyFocus(vec3 world, vec4 mv) {
-    float focus = 1.0 - smoothstep(uFocusNear, uFocusFar, distance(world, uFocus));
-    float fog = 1.0 - smoothstep(uFogNear, uFogFar, -mv.z);
-    vDim = mix(uFocusFloor, 1.0, focus) * fog;
+    vFocus = 1.0 - smoothstep(uFocusNear, uFocusFar, distance(world, uFocus));
+    vFog = 1.0 - smoothstep(uFogNear, uFogFar, -mv.z);
+    vDim = mix(uFocusFloor, 1.0, vFocus) * vFog;
   }
 `
 
-/** Filled dots with a soft edge. Matches get a faint halo. */
+/**
+ * Sphere impostors: each point sprite is shaded as a lit ball (normal rebuilt from the sprite
+ * coordinate), so 2,000 spheres still cost one draw call. Opacity ramps with focus:
+ * uOpacityNear in focus, uOpacityFar at the edge. Matches get a faint halo.
+ */
 export function makeDotMaterial() {
   return new THREE.ShaderMaterial({
     uniforms: U,
@@ -54,25 +60,36 @@ export function makeDotMaterial() {
       void main() {
         vec4 mv = modelViewMatrix * vec4(position, 1.0);
         gl_Position = projectionMatrix * mv;
-        // Sprite is 1.6x the dot so a halo fits around matches.
+        // Sprite is 1.6x the sphere so a halo fits around matches.
         gl_PointSize = aSize * 1.6 * uScale / max(-mv.z, 0.1);
         applyFocus(position, mv);
         vColor = aColor; vAlpha = aAlpha; vHalo = aHalo;
       }
     `,
     fragmentShader: /* glsl */ `
+      uniform float uOpacityNear, uOpacityFar;
       varying vec3 vColor;
-      varying float vAlpha, vHalo, vDim;
+      varying float vAlpha, vHalo, vFocus, vFog;
       void main() {
-        float r = length(gl_PointCoord * 2.0 - 1.0) * 1.6;
+        vec2 q = (gl_PointCoord * 2.0 - 1.0) * 1.6;
+        q.y = -q.y;
+        float r = length(q);
         if (r > 1.6) discard;
         float aa = fwidth(r) * 1.2;
-        float dot = 1.0 - smoothstep(1.0 - aa, 1.0, r);
-        float halo = vHalo * (1.0 - smoothstep(1.0, 1.6, r)) * 0.35;
-        vec3 col = mix(vColor, vec3(1.0), (1.0 - r) * 0.18);
-        float a = max(dot, halo) * vAlpha * vDim;
-        if (a < 0.01) discard;
-        gl_FragColor = vec4(col, a);
+        float disc = 1.0 - smoothstep(1.0 - aa, 1.0, r);
+        // Rebuild the sphere normal and light it from the upper left.
+        vec3 n = vec3(q, sqrt(max(0.0, 1.0 - dot(q, q))));
+        vec3 L = normalize(vec3(-0.45, 0.55, 0.7));
+        float diffuse = max(dot(n, L), 0.0);
+        float spec = pow(max(dot(reflect(-L, n), vec3(0.0, 0.0, 1.0)), 0.0), 24.0);
+        float rim = pow(1.0 - n.z, 2.0);
+        vec3 col = vColor * (0.3 + 0.85 * diffuse) + vec3(spec * 0.35) + vColor * rim * 0.2;
+        // Halo starts just inside the rim so the shaded edge blends into it instead of outlining.
+        float halo = vHalo * smoothstep(0.85, 1.0, r) * (1.0 - smoothstep(1.0, 1.6, r)) * 0.28;
+        float opacity = mix(uOpacityFar, uOpacityNear, vFocus) * vFog;
+        float a = max(disc * opacity, halo * vFocus) * vAlpha;
+        if (a < 0.005) discard;
+        gl_FragColor = vec4(mix(col, vColor * 0.8, halo / max(a, 0.001) * (1.0 - disc * 0.6)), a);
       }
     `,
   })
