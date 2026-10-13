@@ -83,8 +83,10 @@ await saveDebug('first page snapshot (saved on every run)')
 // How many listings does the page say there are? ("1 - 15 of 432", "432 results", ...)
 const expected = await page.evaluate(() => {
   const t = document.body.innerText
-  const m = t.match(/\bof\s+([\d,]{2,})\b/i) ?? t.match(/([\d,]{2,})\s+(?:results|records|items|rows)\b/i)
-  return m ? Number(m[1].replace(/,/g, '')) : null
+  const m = t.match(/\bof\s+([\d,]{2,})\b/i) ?? t.match(/([\d,]{2,})\s+(?:results?|records|items|rows)\b/i)
+  // "More than 150 Results" is a lower bound, not a total: don't stop paging at it.
+  if (!m || /more than\s*$/i.test(t.slice(0, m.index + m[0].indexOf(m[1])))) return null
+  return Number(m[1].replace(/,/g, ''))
 })
 console.log('Listings the page reports:', expected ?? 'unknown')
 
@@ -135,29 +137,46 @@ for (let p = 1; p <= MAX_PAGES; p++) {
   console.log(`page ${p}: +${batch.length} (total ${rows.length})`)
 
   if (expected && rows.length >= expected) break
-  // Find the pager's "next" control: by label/title/text, then by the next page number.
+  // Find the pager: prefer the next page number (PASSPort shows "1 2 3 … 7"), then a "next" control.
+  // Only look below the listings table so filter-form widgets can't match.
   const handle = await page.evaluateHandle((target) => {
-    const disabled = (el) => el.disabled || /disabled/i.test(el.className) || el.getAttribute('aria-disabled') === 'true' || /disabled/i.test(el.parentElement?.className ?? '')
+    const epins = (t) => (t.innerText.match(/\b\d{3}\d{2}[A-Z]\d{4}\b/g) ?? []).length
+    const grid = [...document.querySelectorAll('table')].sort((a, b) => epins(b) - epins(a))[0]
+    const below = (el) => !grid || !!(grid.compareDocumentPosition(el) & Node.DOCUMENT_POSITION_FOLLOWING) && !grid.contains(el)
+    const disabled = (el) => el.disabled || /disabled|active|current|selected/i.test(el.className) || el.getAttribute('aria-disabled') === 'true' || el.getAttribute('aria-current') != null || /disabled/i.test(el.parentElement?.className ?? '')
     const visible = (el) => !!(el.offsetWidth || el.offsetHeight || el.getClientRects().length)
-    const clickable = [...document.querySelectorAll('a, button, [role="button"], li[onclick], span[onclick]')].filter(visible)
-    const label = (el) => `${el.getAttribute('aria-label') ?? ''} ${el.getAttribute('title') ?? ''} ${el.textContent ?? ''} ${el.className ?? ''}`.trim()
-    const byName = clickable.find((el) => /(^|\b)(next( page)?|›|»|>)(\b|$)/i.test(label(el)) && !/prev|last|first/i.test(label(el)) && !disabled(el))
-    if (byName) return byName
-    return clickable.find((el) => el.textContent?.trim() === String(target) && /pag/i.test(el.closest('[class*="pag" i], nav, ul')?.className ?? 'pag') && !disabled(el)) ?? null
+    const clickable = [...document.querySelectorAll('a, button, [role="button"], li[onclick], span[onclick]')].filter((el) => visible(el) && below(el))
+    const byNumber = clickable.find((el) => el.textContent?.trim() === String(target) && !disabled(el))
+    if (byNumber) return byNumber
+    const label = (el) => `${el.getAttribute('aria-label') ?? ''} ${el.getAttribute('title') ?? ''} ${el.textContent ?? ''}`.trim()
+    return clickable.find((el) => /^(next( page)?|›|»|>)$/i.test(label(el)) && !disabled(el)) ?? null
   }, p + 1)
   const next = handle.asElement()
   if (!next) {
     console.log(`No next-page control found after page ${p}.`)
+    if (p === 1) console.log('Controls after the grid:', await page.evaluate(() => [...document.querySelectorAll('a, button')].slice(-40).map((el) => el.outerHTML.slice(0, 160))))
     break
   }
-  const before = await page.evaluate(() => [...document.querySelectorAll('table tbody tr')].map((r) => r.textContent).join('|').slice(0, 2000))
+  if (p === 1) console.log('Pager control:', await next.evaluate((el) => el.outerHTML.slice(0, 300)))
+  // Compare the listing table's EPINs, not every table: the page's layout tables never change.
+  const gridEpins = () => {
+    const epins = (t) => t.innerText.match(/\b\d{3}\d{2}[A-Z]\d{4}\b/g) ?? []
+    const grid = [...document.querySelectorAll('table')].sort((a, b) => epins(b).length - epins(a).length)[0]
+    return grid ? epins(grid).join(',') : ''
+  }
+  const before = await page.evaluate(gridEpins)
   await next.click()
   const changed = await page
-    .waitForFunction((b) => [...document.querySelectorAll('table tbody tr')].map((r) => r.textContent).join('|').slice(0, 2000) !== b, before, { timeout: 30_000 })
+    .waitForFunction((b) => {
+      const epins = (t) => t.innerText.match(/\b\d{3}\d{2}[A-Z]\d{4}\b/g) ?? []
+      const grid = [...document.querySelectorAll('table')].sort((x, y) => epins(y).length - epins(x).length)[0]
+      return (grid ? epins(grid).join(',') : '') !== b
+    }, before, { timeout: 30_000 })
     .then(() => true)
     .catch(() => false)
   if (!changed) {
     console.log(`Clicking next didn't change the grid after page ${p}.`)
+    if (p === 1) await saveDebug('grid unchanged after clicking the pager')
     break
   }
   await page.waitForTimeout(800)
