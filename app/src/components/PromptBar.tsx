@@ -70,10 +70,10 @@ export default function PromptBar() {
       <AnimatePresence>
         {top.length > 0 && (
           <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 8 }} className="pointer-events-auto flex max-w-full gap-1.5 overflow-x-auto pb-1 scroll-thin">
-            <span className="glass shrink-0 self-center rounded-full px-2.5 py-1 text-[11px] text-mute">{asked ? 'Best matches' : 'Picked for you'}</span>
+            <span className="eyebrow shrink-0 self-center px-1.5 py-1 text-phosphor">{asked ? 'Matches' : 'Picked for you'} ▸</span>
             {top.map((n) => (
-              <button key={n.id} onClick={() => select({ kind: 'node', id: n.id })} className="glass group shrink-0 rounded-full px-3 py-1 text-left text-[12px] hover:border-white/30">
-                <span className="mr-1.5 inline-block size-1.5 rounded-full bg-cyan align-middle shadow-[0_0_8px_var(--color-cyan)]" />
+              <button key={n.id} onClick={() => select({ kind: 'node', id: n.id })} className="glass group shrink-0 rounded-[2px] px-3 py-1 text-left text-[12px] hover:border-phosphor/50">
+                <span className="mr-1.5 inline-block size-1.5 rounded-full bg-phosphor align-middle" />
                 <span className="inline-block max-w-56 truncate align-middle">{n.title}</span>
                 <span className="ml-2 font-mono text-[10px] text-mute">{countdown(n.daysLeft)}</span>
               </button>
@@ -87,23 +87,23 @@ export default function PromptBar() {
           e.preventDefault()
           run(q.trim())
         }}
-        className="glass pointer-events-auto flex w-full max-w-2xl items-center gap-2 rounded-2xl p-1.5 pl-4 shadow-[0_0_60px_-20px_rgba(34,211,238,.45)]"
+        className="glass pointer-events-auto flex w-full max-w-2xl items-center gap-2 rounded-[2px] p-1.5 pl-4 shadow-[0_0_40px_-24px_rgba(92,225,230,.6)]"
       >
-        <span className="text-cyan">✦</span>
+        <span className="font-semibold text-phosphor" aria-hidden="true">&gt;</span>
         <input
           ref={input}
           value={q}
           onChange={(e) => setQ(e.target.value)}
-          placeholder="Tell me about you — skills, team size, what you want to build for NYC…"
+          placeholder="describe your team: skills, size, what you want to build for NYC"
           aria-label="Describe yourself to find matching opportunities"
           className="h-10 min-w-0 flex-1 bg-transparent text-[14px] outline-none placeholder:text-mute"
         />
         <kbd className="hidden rounded border border-white/15 px-1.5 font-mono text-[10px] text-mute sm:block">⌘K</kbd>
-        <button className="h-10 rounded-xl bg-white px-4 text-[13px] font-medium text-black transition-transform active:scale-95">Match</button>
+        <button className="h-10 rounded-[2px] bg-phosphor px-4 text-[11px] font-semibold uppercase tracking-[0.1em] text-ink transition-transform duration-150 active:scale-[.97]">Match ⏎</button>
       </form>
       <div className="pointer-events-auto flex flex-wrap justify-center gap-1.5">
         {SUGGESTIONS.map((s) => (
-          <button key={s} onClick={() => run(s)} className="rounded-full border border-white/10 px-2.5 py-1 text-[11px] text-white/60 transition-colors hover:border-white/30 hover:text-white">
+          <button key={s} onClick={() => run(s)} className="rounded-[2px] border border-line px-2.5 py-1 text-[11px] text-text/60 transition-colors duration-150 hover:border-phosphor/50 hover:text-text">
             {s}
           </button>
         ))}

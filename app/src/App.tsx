@@ -1,5 +1,6 @@
 import { lazy, Suspense, useEffect, useState } from 'react'
 import FilterBar from './components/FilterBar'
+import { BootLog, HoverTag, Readout } from './components/Hud'
 import Legend from './components/Legend'
 import NavControls from './components/NavControls'
 import PromptBar from './components/PromptBar'
@@ -39,6 +40,9 @@ export default function App() {
       <PromptBar />
       <ResponseStudio />
       <NavControls />
+      <Readout />
+      <HoverTag />
+      <BootLog source={meta?.source ?? null} />
       <Legend source={meta ? `${meta.source} · ${new Date(meta.fetchedAt).toLocaleDateString()}` : null} />
       {error && <div className="absolute inset-0 grid place-items-center text-[13px] text-heat-3">Couldn't load opportunities: {error}</div>}
     </div>

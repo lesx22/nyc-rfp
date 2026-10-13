@@ -1,17 +1,23 @@
 @import "tailwindcss";
 
-/* Brand kit v0 — see docs/BRAND.md */
+/*
+ * Brand kit v1: "Instrument Panel" (docs/BRAND.md).
+ * Layout concept: a dark instrument with the network as the scope; chrome is hairline,
+ * square-cornered, bracketed, and every number is set in mono.
+ */
 @theme {
-  --font-sans: "Geist", ui-sans-serif, system-ui, sans-serif;
-  --font-mono: "Geist Mono", ui-monospace, monospace;
+  --font-sans: "JetBrains Mono", ui-monospace, "SF Mono", Menlo, monospace;
+  --font-mono: "JetBrains Mono", ui-monospace, "SF Mono", Menlo, monospace;
+  --font-display: "Archivo", "Helvetica Neue", Arial, sans-serif;
 
-  --color-ink: #000000;
-  --color-panel: rgb(10 10 12 / 0.93);
-  --color-line: rgb(255 255 255 / 0.08);
-  --color-mute: #8a8f98;
-  --color-text: #ededef;
+  --color-ink: #020405;
+  --color-panel: rgb(3 8 10 / 0.9);
+  --color-line: rgb(120 220 230 / 0.16);
+  --color-mute: #6b8388;
+  --color-text: #d8eef0;
+  --color-phosphor: #5ce1e6; /* primary instrument accent */
 
-  /* Cool data palette (industries) */
+  /* Cool data palette (categories) */
   --color-cyan: #22d3ee;
   --color-sky: #60a5fa;
   --color-violet: #a78bfa;
@@ -19,33 +25,97 @@
   --color-ice: #c7d2fe;
   --color-lime: #a3e635;
 
-  /* Warm heat palette (urgency / traffic) */
+  /* Warm heat palette (urgency / traffic) — never used for categories */
   --color-heat-1: #fde68a;
   --color-heat-2: #fb923c;
   --color-heat-3: #f43f5e;
+
+  /* Motion tokens (from the emil-design-eng skill); UI motion stays under 300ms */
+  --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+  --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
 }
 
+:root { color-scheme: dark; }
 html, body, #root { height: 100%; }
 body {
   margin: 0;
   background: var(--color-ink);
   color: var(--color-text);
   font-family: var(--font-sans);
+  font-size: 13px;
   -webkit-font-smoothing: antialiased;
   overflow: hidden;
   overscroll-behavior: none;
+  font-variant-numeric: tabular-nums;
 }
-::selection { background: rgb(34 211 238 / 0.35); }
+::selection { background: rgb(92 225 230 / 0.35); }
+:focus-visible { outline: 1px solid var(--color-phosphor); outline-offset: 2px; }
 
+.font-display { font-family: var(--font-display); font-stretch: 125%; letter-spacing: -0.01em; }
+.eyebrow { font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--color-mute); }
+
+/* Instrument panel: hairline frame, corner brackets, no frosted glass.
+   Lives in the components layer so Tailwind utilities (absolute, etc.) still win. */
+@layer components {
 .glass {
   background: var(--color-panel);
-  backdrop-filter: blur(18px) saturate(140%);
-  -webkit-backdrop-filter: blur(18px) saturate(140%);
   border: 1px solid var(--color-line);
+  border-radius: 2px;
+  --bk: rgb(92 225 230 / 0.75);
+  background-image:
+    linear-gradient(var(--bk), var(--bk)), linear-gradient(var(--bk), var(--bk)),
+    linear-gradient(var(--bk), var(--bk)), linear-gradient(var(--bk), var(--bk)),
+    linear-gradient(var(--bk), var(--bk)), linear-gradient(var(--bk), var(--bk)),
+    linear-gradient(var(--bk), var(--bk)), linear-gradient(var(--bk), var(--bk));
+  background-repeat: no-repeat;
+  background-size: 8px 1px, 1px 8px, 8px 1px, 1px 8px, 8px 1px, 1px 8px, 8px 1px, 1px 8px;
+  background-position: 0 0, 0 0, 100% 0, 100% 0, 0 100%, 0 100%, 100% 100%, 100% 100%;
 }
-.scroll-thin { scrollbar-width: thin; scrollbar-color: rgb(255 255 255 / 0.15) transparent; }
-:focus-visible { outline: 2px solid var(--color-cyan); outline-offset: 2px; }
+}
+/* Ruler ticks along the top edge of large panels. */
+.ruler::before {
+  content: "";
+  position: absolute;
+  inset: 0 12px auto 12px;
+  height: 4px;
+  background: repeating-linear-gradient(90deg, rgb(92 225 230 / 0.35) 0 1px, transparent 1px 8px);
+  pointer-events: none;
+}
+
+.scroll-thin { scrollbar-width: thin; scrollbar-color: rgb(92 225 230 / 0.2) transparent; }
+
+/* In-scene labels */
+.hud-label {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  white-space: nowrap;
+  font-family: var(--font-mono);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  text-shadow: 0 0 10px #000, 0 0 2px #000;
+  transition: opacity 200ms var(--ease-out);
+}
+.hud-label-l1 { font-size: 15px; color: var(--color-text); }
+.hud-label-l2 { font-size: 11px; color: rgb(216 238 240 / 0.75); }
+.hud-code {
+  padding: 0 4px;
+  border: 1px solid rgb(92 225 230 / 0.6);
+  color: var(--color-phosphor);
+  font-weight: 600;
+}
+.hud-count { color: var(--color-mute); }
+
+/* Boot log */
+@keyframes hud-fade-out { to { opacity: 0; visibility: hidden; } }
+.boot-log { animation: hud-fade-out 300ms var(--ease-out) 2.7s forwards; }
 
 @media (prefers-reduced-motion: reduce) {
-  *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+  *, *::before, *::after { animation-duration: 0.01ms !important; animation-delay: 0ms !important; transition-duration: 0.01ms !important; }
+}
+@keyframes boot-line { to { opacity: 1; } }
+/* Phones: sector labels collapse to their code + count, like a compact instrument. */
+@media (max-width: 640px) {
+  .hud-label-l1 .hud-name { display: none; }
+  .hud-label-l1 { font-size: 13px; }
 }

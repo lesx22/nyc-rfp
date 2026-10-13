@@ -37,7 +37,7 @@ export default function ResponseStudio() {
             exit={{ y: 24, scale: 0.98 }}
             transition={{ type: 'spring', stiffness: 320, damping: 32 }}
             onClick={(e) => e.stopPropagation()}
-            className="glass flex h-[min(720px,100%)] w-[min(980px,100%)] flex-col overflow-hidden rounded-2xl"
+            className="glass flex h-[min(720px,100%)] w-[min(980px,100%)] flex-col overflow-hidden rounded-[2px]"
           >
             <Studio n={n} onClose={() => close(null)} />
           </motion.div>
@@ -61,12 +61,12 @@ function Studio({ n, onClose }: { n: RfpNode; onClose: () => void }) {
           <div className="truncate text-[14px] font-medium">{n.title}</div>
         </div>
         <span className="hidden font-mono text-[11px] text-heat-2 sm:block">{countdown(n.daysLeft)}</span>
-        <button aria-label="Close" onClick={onClose} className="grid size-8 place-items-center rounded-lg text-mute hover:bg-white/10 hover:text-white">✕</button>
+        <button aria-label="Close" onClick={onClose} className="grid size-8 place-items-center rounded-[2px] text-mute hover:bg-white/10 hover:text-white">✕</button>
       </header>
       <div className="flex min-h-0 flex-1">
         <nav className="hidden w-44 shrink-0 flex-col gap-1 border-r border-line p-3 sm:flex">
           {STEPS.map((s, i) => (
-            <button key={s} onClick={() => setStep(i)} className={cx('flex items-center gap-2.5 rounded-lg px-2.5 py-2 text-left text-[13px]', i === step ? 'bg-white/10 text-white' : 'text-mute hover:text-white')}>
+            <button key={s} onClick={() => setStep(i)} className={cx('flex items-center gap-2.5 rounded-[2px] px-2.5 py-2 text-left text-[13px]', i === step ? 'bg-white/10 text-white' : 'text-mute hover:text-white')}>
               <span className={cx('grid size-5 place-items-center rounded-full border font-mono text-[10px]', i < step ? 'border-mint bg-mint text-black' : i === step ? 'border-white' : 'border-white/20')}>{i < step ? '✓' : i + 1}</span>
               {s}
             </button>
@@ -83,7 +83,7 @@ function Studio({ n, onClose }: { n: RfpNode; onClose: () => void }) {
                 <KV k="Value" v={usd(n.estValueUSD)} />
                 <KV k="AI fit" v={String(n.aiFit)} />
               </div>
-              <div className="rounded-xl border border-line p-4">
+              <div className="rounded-[2px] border border-line p-4">
                 <div className="mb-2 text-[12px] font-medium text-white">Before you start</div>
                 <ol className="list-decimal space-y-1 pl-4 text-[12px]">
                   <li>Create or confirm your <b>PASSPort vendor account</b> and filed Vendor Enrollment.</li>
@@ -112,13 +112,13 @@ function Studio({ n, onClose }: { n: RfpNode; onClose: () => void }) {
             <div className="space-y-4">
               <h3 className="text-[17px] font-semibold">Supporting documents</h3>
               <p className="text-[13px] text-mute">Add your capability statement, résumés, case studies, insurance certificates and the RFP PDF. Files stay in your browser in this version.</p>
-              <label className="grid h-36 cursor-pointer place-items-center rounded-xl border border-dashed border-white/20 text-[13px] text-mute hover:border-white/40 hover:text-white">
+              <label className="grid h-36 cursor-pointer place-items-center rounded-[2px] border border-dashed border-white/20 text-[13px] text-mute hover:border-white/40 hover:text-white">
                 <span>Drop files or click to upload</span>
                 <input type="file" multiple className="hidden" onChange={(e) => setFiles([...files, ...Array.from(e.target.files ?? [])])} />
               </label>
               <ul className="space-y-1 font-mono text-[12px]">
                 {files.map((x, i) => (
-                  <li key={i} className="flex justify-between rounded-lg bg-white/5 px-3 py-2">
+                  <li key={i} className="flex justify-between rounded-[2px] bg-white/5 px-3 py-2">
                     <span className="truncate">{x.name}</span>
                     <span className="text-mute">{Math.ceil(x.size / 1024)} KB</span>
                   </li>
@@ -130,16 +130,16 @@ function Studio({ n, onClose }: { n: RfpNode; onClose: () => void }) {
             <div className="space-y-3">
               <div className="flex items-center justify-between">
                 <h3 className="text-[17px] font-semibold">Draft outline</h3>
-                <button onClick={() => download(`${n.epin ?? n.id}-response.md`, draft)} className="rounded-lg border border-white/15 px-3 py-1.5 text-[12px] hover:bg-white/5">Download .md</button>
+                <button onClick={() => download(`${n.epin ?? n.id}-response.md`, draft)} className="rounded-[2px] border border-white/15 px-3 py-1.5 text-[12px] hover:bg-white/5">Download .md</button>
               </div>
-              <pre className="whitespace-pre-wrap rounded-xl border border-line bg-black/50 p-4 font-mono text-[12px] leading-relaxed text-white/80">{draft}</pre>
+              <pre className="whitespace-pre-wrap rounded-[2px] border border-line bg-black/50 p-4 font-mono text-[12px] leading-relaxed text-white/80">{draft}</pre>
             </div>
           )}
           {step === 4 && (
             <div className="space-y-3 text-[13px] text-white/80">
               <h3 className="text-[17px] font-semibold text-white">Submission checklist</h3>
               {['Proposal narrative follows the RFP section order', 'Price proposal in the required format', 'Doing Business Data Form(s)', 'M/WBE Utilization Plan (or waiver request)', 'Insurance certificates', 'Signed acknowledgement of all addenda', 'Uploaded in PASSPort before the deadline'].map((c) => (
-                <label key={c} className="flex items-center gap-2.5 rounded-lg bg-white/[.03] px-3 py-2.5">
+                <label key={c} className="flex items-center gap-2.5 rounded-[2px] bg-white/[.03] px-3 py-2.5">
                   <input type="checkbox" className="accent-cyan-400" /> {c}
                 </label>
               ))}
@@ -151,8 +151,8 @@ function Studio({ n, onClose }: { n: RfpNode; onClose: () => void }) {
       <footer className="flex items-center justify-between border-t border-line px-5 py-3">
         <span className="text-[11px] text-mute">Chat with Claude to write sections: coming in Phase 3</span>
         <div className="flex gap-2">
-          <button disabled={step === 0} onClick={() => setStep(step - 1)} className="h-9 rounded-lg px-3 text-[13px] text-mute enabled:hover:text-white disabled:opacity-30">Back</button>
-          <button onClick={() => (step < STEPS.length - 1 ? setStep(step + 1) : onClose())} className="h-9 rounded-lg bg-white px-4 text-[13px] font-medium text-black">{step < STEPS.length - 1 ? 'Continue' : 'Done'}</button>
+          <button disabled={step === 0} onClick={() => setStep(step - 1)} className="h-9 rounded-[2px] px-3 text-[13px] text-mute enabled:hover:text-white disabled:opacity-30">Back</button>
+          <button onClick={() => (step < STEPS.length - 1 ? setStep(step + 1) : onClose())} className="h-9 rounded-[2px] bg-white px-4 text-[13px] font-medium text-black">{step < STEPS.length - 1 ? 'Continue' : 'Done'}</button>
         </div>
       </footer>
     </>
@@ -161,7 +161,7 @@ function Studio({ n, onClose }: { n: RfpNode; onClose: () => void }) {
 
 function KV({ k, v }: { k: string; v: string }) {
   return (
-    <div className="rounded-lg bg-white/5 p-2.5">
+    <div className="rounded-[2px] bg-white/5 p-2.5">
       <div className="text-[10px] uppercase text-mute">{k}</div>
       <div className="truncate text-white">{v}</div>
     </div>
@@ -169,7 +169,7 @@ function KV({ k, v }: { k: string; v: string }) {
 }
 
 function Field({ label, v, on, area }: { label: string; v: string; on: (v: string) => void; area?: boolean }) {
-  const cls = 'w-full rounded-xl border border-line bg-white/[.03] px-3 py-2.5 text-[13px] outline-none focus:border-white/30'
+  const cls = 'w-full rounded-[2px] border border-line bg-white/[.03] px-3 py-2.5 text-[13px] outline-none focus:border-white/30'
   return (
     <label className="grid gap-1.5 text-[12px] text-mute">
       {label}

@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { cx } from '../lib/format'
-import { emptyFilters, passesFilters, useStore, type Filters } from '../store'
+import { emptyFilters, useStore, type Filters } from '../store'
 import type { GroupKey } from '../types'
 
 const LABEL: Record<GroupKey, string> = { industry: 'Industry', agency: 'Agency', mainCommodity: 'Commodity', program: 'Program', method: 'Type' }
@@ -10,8 +10,7 @@ export default function FilterBar() {
   const filters = useStore((s) => s.filters)
   const setFilters = useStore((s) => s.setFilters)
   const { l1, l2, setHierarchy, heat, toggleHeat } = useStore()
-  const shown = nodes.filter((n) => passesFilters(n, filters)).length
-
+  
   const opts = useMemo(() => {
     const u = (k: GroupKey) => [...new Set(nodes.map((n) => (n[k] as string | null) ?? '').filter(Boolean))].sort()
     return { industry: u('industry'), agency: u('agency'), mainCommodity: u('mainCommodity'), method: u('method') }
@@ -23,12 +22,12 @@ export default function FilterBar() {
       <div className="pointer-events-auto mr-2 flex items-center gap-2.5">
         <img src="./favicon.svg" alt="" className="size-7" />
         <div className="leading-tight">
-          <div className="text-[13px] font-semibold tracking-tight">Opportunity Graph</div>
-          <div className="text-[11px] text-mute">NYC procurement, mapped</div>
+          <div className="font-display text-[14px] font-bold uppercase">Opportunity Graph</div>
+          <div className="eyebrow">NYC procurement scope</div>
         </div>
       </div>
 
-      <div className="glass pointer-events-auto flex flex-wrap items-center gap-1 rounded-xl p-1">
+      <div className="glass pointer-events-auto flex flex-wrap items-center gap-1 rounded-[2px] p-1">
         <Multi label="Industry" values={opts.industry} sel={filters.industry} onChange={(industry) => setFilters({ industry })} />
         <Multi label="Agency" values={opts.agency} sel={filters.agency} onChange={(agency) => setFilters({ agency })} />
         <Multi label="Commodity" values={opts.mainCommodity} sel={filters.mainCommodity} onChange={(mainCommodity) => setFilters({ mainCommodity })} />
@@ -49,8 +48,8 @@ export default function FilterBar() {
         )}
       </div>
 
-      <div className="glass pointer-events-auto flex items-center gap-1 rounded-xl p-1">
-        <span className="pl-2 text-[11px] uppercase tracking-wider text-mute">Cluster</span>
+      <div className="glass pointer-events-auto flex items-center gap-1 rounded-[2px] p-1">
+        <span className="eyebrow pl-2">Cluster</span>
         <Select label="" value={l1} options={(['industry', 'agency', 'method', 'mainCommodity'] as GroupKey[]).map((k) => [k, LABEL[k]])} onChange={(v) => setHierarchy(v as GroupKey, v === l2 ? l1 : l2)} />
         <span className="text-mute">→</span>
         <Select label="" value={l2} options={(['agency', 'industry', 'method', 'mainCommodity'] as GroupKey[]).filter((k) => k !== l1).map((k) => [k, LABEL[k]])} onChange={(v) => setHierarchy(l1, v as GroupKey)} />
@@ -59,16 +58,14 @@ export default function FilterBar() {
         </Chip>
       </div>
 
-      <div className="pointer-events-auto ml-auto font-mono text-[11px] text-mute">
-        {shown}/{nodes.length} open opportunities
-      </div>
+
     </header>
   )
 }
 
 function Chip({ on, children, ...p }: { on: boolean; children: React.ReactNode } & React.ButtonHTMLAttributes<HTMLButtonElement>) {
   return (
-    <button {...p} aria-pressed={on} className={cx('flex h-8 items-center gap-1.5 rounded-lg px-2.5 text-[12px] transition-colors', on ? 'bg-white text-black' : 'text-white/80 hover:bg-white/10')}>
+    <button {...p} aria-pressed={on} className={cx('flex h-8 items-center gap-1.5 rounded-[2px] px-2.5 text-[11px] uppercase tracking-[0.08em] transition-colors duration-150', on ? 'bg-phosphor text-ink' : 'text-text/80 hover:bg-phosphor/10')}>
       {children}
     </button>
   )
@@ -98,13 +95,13 @@ function Multi({ label, values, sel, onChange }: { label: string; values: string
         <span className="text-[9px] opacity-60">▼</span>
       </Chip>
       {open && (
-        <div className="glass scroll-thin absolute left-0 top-10 z-30 max-h-80 w-72 overflow-auto rounded-xl p-1.5 shadow-2xl">
-          {values.length > 8 && <input autoFocus value={q} onChange={(e) => setQ(e.target.value)} placeholder={`Search ${label.toLowerCase()}…`} className="mb-1 w-full rounded-lg bg-white/5 px-2.5 py-1.5 text-[12px] outline-none placeholder:text-mute" />}
+        <div className="glass scroll-thin absolute left-0 top-10 z-30 max-h-80 w-72 overflow-auto rounded-[2px] p-1.5 shadow-2xl">
+          {values.length > 8 && <input autoFocus value={q} onChange={(e) => setQ(e.target.value)} placeholder={`Search ${label.toLowerCase()}…`} className="mb-1 w-full rounded-[2px] bg-white/5 px-2.5 py-1.5 text-[12px] outline-none placeholder:text-mute" />}
           {list.map((v) => {
             const on = sel.includes(v)
             return (
-              <button key={v} onClick={() => onChange(on ? sel.filter((x) => x !== v) : [...sel, v])} className="flex w-full items-center gap-2 rounded-lg px-2.5 py-1.5 text-left text-[12px] hover:bg-white/10">
-                <span className={cx('grid size-3.5 shrink-0 place-items-center rounded border text-[9px]', on ? 'border-white bg-white text-black' : 'border-white/30')}>{on && '✓'}</span>
+              <button key={v} onClick={() => onChange(on ? sel.filter((x) => x !== v) : [...sel, v])} className="flex w-full items-center gap-2 rounded-[2px] px-2.5 py-1.5 text-left text-[12px] hover:bg-white/10">
+                <span className={cx('grid size-3.5 shrink-0 place-items-center border text-[9px]', on ? 'border-phosphor bg-phosphor text-ink' : 'border-white/30')}>{on && '✓'}</span>
                 <span className="truncate">{v}</span>
               </button>
             )
@@ -118,7 +115,7 @@ function Multi({ label, values, sel, onChange }: { label: string; values: string
 
 function Select<T extends string | number | null>({ label, value, options, onChange }: { label: string; value: T; options: [T, string][]; onChange: (v: T) => void }) {
   return (
-    <label className="flex h-8 items-center gap-1 rounded-lg px-1.5 text-[12px] text-white/80 hover:bg-white/10">
+    <label className="flex h-8 items-center gap-1 rounded-[2px] px-1.5 text-[11px] uppercase tracking-[0.08em] text-text/80 hover:bg-phosphor/10">
       {label && <span>{label}</span>}
       <select value={String(value)} onChange={(e) => onChange(options.find(([v]) => String(v) === e.target.value)![0])} className="cursor-pointer bg-transparent text-white outline-none [&>option]:bg-zinc-900">
         {options.map(([v, l]) => (

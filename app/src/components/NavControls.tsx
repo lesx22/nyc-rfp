@@ -32,7 +32,7 @@ export default function NavControls() {
 
   const btn = 'grid size-10 place-items-center text-[15px] text-white/80 hover:bg-white/10 hover:text-white active:bg-white/15 sm:size-9'
   return (
-    <div className="glass pointer-events-auto absolute right-3 top-1/2 z-20 flex -translate-y-1/2 flex-col overflow-hidden rounded-xl sm:bottom-28 sm:top-auto sm:translate-y-0" role="toolbar" aria-label="Camera">
+    <div className="glass pointer-events-auto absolute right-3 top-1/2 z-20 flex -translate-y-1/2 flex-col overflow-hidden rounded-[2px] sm:bottom-28 sm:top-auto sm:translate-y-0" role="toolbar" aria-label="Camera">
       <button className={btn} aria-label="Zoom in (+)" title="Zoom in (+)" onClick={() => cam.zoom(18)}>+</button>
       <button className={btn} aria-label="Zoom out (−)" title="Zoom out (−)" onClick={() => cam.zoom(-18)}>−</button>
       <button className={btn} aria-label="Rotate left (←)" title="Rotate (← →)" onClick={() => cam.orbit(0.35, 0)}>↻</button>

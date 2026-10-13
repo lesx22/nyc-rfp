@@ -16,7 +16,7 @@ export default function SidePanel() {
           animate={{ x: 0, opacity: 1 }}
           exit={{ x: 40, opacity: 0 }}
           transition={{ type: 'spring', stiffness: 380, damping: 36 }}
-          className="glass scroll-thin absolute inset-x-2 bottom-2 z-30 flex max-h-[72vh] flex-col overflow-y-auto rounded-2xl sm:inset-x-auto sm:bottom-3 sm:right-3 sm:top-20 sm:max-h-none sm:w-[400px]"
+          className="glass ruler scroll-thin absolute inset-x-2 bottom-2 z-30 flex max-h-[72vh] flex-col overflow-y-auto rounded-[2px] sm:inset-x-auto sm:bottom-3 sm:right-3 sm:top-20 sm:max-h-none sm:w-[400px]"
         >
           {selected.kind === 'node' ? <NodeView id={selected.id} /> : <ClusterView id={selected.id} />}
         </motion.aside>
@@ -28,20 +28,31 @@ export default function SidePanel() {
 function Close() {
   const select = useStore((s) => s.select)
   return (
-    <button aria-label="Close panel" onClick={() => select(null)} className="grid size-8 shrink-0 place-items-center rounded-lg text-mute hover:bg-white/10 hover:text-white">
+    <button aria-label="Close panel" onClick={() => select(null)} className="grid size-8 shrink-0 place-items-center rounded-[2px] text-mute hover:bg-white/10 hover:text-white">
       ✕
     </button>
   )
 }
 
+/** Segmented 20-tick meter, like an instrument bar graph. Lit segments stagger in once (<300ms). */
 function FitMeter({ v }: { v: number }) {
-  const tone = v >= 70 ? 'from-cyan to-mint' : v >= 45 ? 'from-sky to-violet' : 'from-zinc-500 to-zinc-400'
+  const lit = Math.round(v / 5)
   return (
-    <div className="h-1.5 w-full overflow-hidden rounded-full bg-white/10">
-      <motion.div initial={{ width: 0 }} animate={{ width: `${v}%` }} transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }} className={cx('h-full rounded-full bg-gradient-to-r', tone)} />
+    <div className="flex h-3 gap-[3px]" role="meter" aria-valuenow={v} aria-valuemin={0} aria-valuemax={100} aria-label="AI-buildable fit">
+      {Array.from({ length: 20 }, (_, i) => (
+        <motion.span
+          key={i}
+          initial={{ opacity: 0.15 }}
+          animate={{ opacity: i < lit ? 1 : 0.15 }}
+          transition={{ duration: 0.12, delay: i < lit ? i * 0.008 : 0, ease: [0.23, 1, 0.32, 1] }}
+          className={cx('flex-1', i < lit ? (v >= 70 ? 'bg-phosphor' : v >= 45 ? 'bg-sky' : 'bg-mute') : 'bg-white/20')}
+        />
+      ))}
     </div>
   )
 }
+
+const tMinus = (d: number | null) => (d == null ? 'T– —' : d < 0 ? 'CLOSED' : `T–${String(d).padStart(2, '0')}D`)
 
 function NodeView({ id }: { id: string }) {
   const n = useStore((s) => s.nodes.find((x) => x.id === id))
@@ -52,14 +63,18 @@ function NodeView({ id }: { id: string }) {
     <div className="flex flex-col gap-5 p-5">
       <div className="flex items-start gap-3">
         <div className="min-w-0 flex-1">
-          <div className="mb-1.5 text-[11px] uppercase tracking-wider text-mute">{n.agency}</div>
-          <h2 className="text-[19px] font-semibold leading-snug tracking-tight text-balance">{n.title}</h2>
+          <div className="eyebrow mb-2 flex gap-2">
+            <span className="shrink-0 whitespace-nowrap text-phosphor">REC {n.epin ?? n.id}</span>
+            <span>//</span>
+            <span className="truncate">{n.agency}</span>
+          </div>
+          <h2 className="font-display text-[18px] font-semibold leading-snug text-balance">{n.title}</h2>
         </div>
         <Close />
       </div>
 
-      <div className="grid grid-cols-2 gap-px overflow-hidden rounded-xl border border-line bg-line text-[12px]">
-        <Cell k="Due" v={<span className={cx(urgent && 'text-heat-2')}>{date(n.dueDate)}<div className="text-[11px] text-mute">{countdown(n.daysLeft)}</div></span>} />
+      <div className="grid grid-cols-2 gap-px overflow-hidden rounded-[2px] border border-line bg-line text-[12px]">
+        <Cell k="Due" v={<span className={cx(urgent && 'text-heat-2')}>{date(n.dueDate)}<div className="text-[11px]">{tMinus(n.daysLeft)} · {countdown(n.daysLeft)}</div></span>} />
         <Cell k="Released" v={date(n.releaseDate)} />
         <Cell k={n.industryInferred ? 'Industry (inferred)' : 'Industry'} v={n.industry} />
         <Cell k="Est. value" v={usd(n.estValueUSD)} />
@@ -72,8 +87,8 @@ function NodeView({ id }: { id: string }) {
 
       <section>
         <div className="mb-2 flex items-baseline justify-between">
-          <h3 className="text-[12px] font-medium">AI-buildable fit</h3>
-          <span className="font-mono text-[13px]">{n.aiFit}</span>
+          <h3 className="eyebrow">AI-buildable fit</h3>
+          <span className="font-mono text-[15px] text-phosphor">{String(n.aiFit).padStart(3, '0')}</span>
         </div>
         <FitMeter v={n.aiFit} />
         <ul className="mt-2.5 space-y-1 text-[11px] text-mute">
@@ -85,16 +100,16 @@ function NodeView({ id }: { id: string }) {
 
       {n.description && (
         <section>
-          <h3 className="mb-1.5 text-[12px] font-medium">Summary</h3>
+          <h3 className="eyebrow mb-1.5">Summary</h3>
           <p className="text-[13px] leading-relaxed text-white/75">{n.description}</p>
         </section>
       )}
 
       <div className="mt-auto flex flex-col gap-2 pt-2">
-        <button onClick={() => openStudio(n.id)} className="h-11 rounded-xl bg-white text-[13px] font-medium text-black transition-transform active:scale-[.98]">
-          ✦ Generate RFP response
+        <button onClick={() => openStudio(n.id)} className="h-11 rounded-[2px] bg-phosphor text-[12px] font-semibold uppercase tracking-[0.1em] text-ink transition-transform duration-150 ease-[var(--ease-out)] active:scale-[.97]">
+          Generate RFP response →
         </button>
-        <a href={passportUrl(n)} target="_blank" rel="noreferrer" className="grid h-11 place-items-center rounded-xl border border-white/15 text-[13px] hover:bg-white/5">
+        <a href={passportUrl(n)} target="_blank" rel="noreferrer" className="grid h-11 place-items-center rounded-[2px] border border-white/15 text-[13px] hover:bg-white/5">
           {n.onPassport === false ? 'View source listing ↗' : 'View listing on PASSPort ↗'}
         </a>
         {n.onPassport === false && <p className="text-center text-[10px] text-mute">Not procured through PASSPort ({n.agencyNote ?? 'see source'}).</p>}
@@ -106,8 +121,8 @@ function NodeView({ id }: { id: string }) {
 
 function Cell({ k, v }: { k: string; v: React.ReactNode }) {
   return (
-    <div className="bg-black/60 p-3">
-      <div className="mb-0.5 text-[10px] uppercase tracking-wider text-mute">{k}</div>
+    <div className="bg-ink/80 p-3">
+      <div className="eyebrow mb-0.5">{k}</div>
       <div className="text-white/90">{v}</div>
     </div>
   )
@@ -141,7 +156,7 @@ function ClusterView({ id }: { id: string }) {
             )}
             <span>{c.level === 1 ? labelOf(l1) : labelOf(l2)}</span>
           </div>
-          <h2 className="flex items-center gap-2 text-[19px] font-semibold tracking-tight">
+          <h2 className="font-display flex items-center gap-2 text-[18px] font-semibold">
             <span className="size-2.5 rounded-full" style={{ background: color, boxShadow: `0 0 12px ${color}` }} />
             {c.label}
           </h2>
@@ -149,7 +164,7 @@ function ClusterView({ id }: { id: string }) {
         <Close />
       </div>
 
-      <div className="grid grid-cols-3 gap-px overflow-hidden rounded-xl border border-line bg-line text-center">
+      <div className="grid grid-cols-3 gap-px overflow-hidden rounded-[2px] border border-line bg-line text-center">
         <Stat k="Open" v={String(members.length)} />
         <Stat k="Avg AI fit" v={String(avg)} />
         <Stat k={`Value (${known.length} known)`} v={usd(known.length ? total : null)} />
@@ -162,10 +177,10 @@ function ClusterView({ id }: { id: string }) {
 
       {children.length > 0 && (
         <section>
-          <h3 className="mb-2 text-[12px] font-medium">Sub-clusters</h3>
+          <h3 className="eyebrow mb-2">Sub-clusters</h3>
           <div className="flex flex-wrap gap-1.5">
             {children.map((ch) => (
-              <button key={ch.id} onClick={() => select({ kind: 'cluster', id: ch.id })} className="rounded-full border border-white/10 px-2.5 py-1 text-[11px] hover:border-white/30">
+              <button key={ch.id} onClick={() => select({ kind: 'cluster', id: ch.id })} className="rounded-[2px] border border-white/10 px-2.5 py-1 text-[11px] hover:border-white/30">
                 {ch.label} <span className="font-mono text-mute">{ch.members.length}</span>
               </button>
             ))}
@@ -174,7 +189,7 @@ function ClusterView({ id }: { id: string }) {
       )}
 
       <section>
-        <h3 className="mb-2 text-[12px] font-medium">Opportunities, by AI fit</h3>
+        <h3 className="eyebrow mb-2">Opportunities, by AI fit</h3>
         <ul className="divide-y divide-white/5">
           {members.map((m) => (
             <Row key={m.id} n={m} onClick={() => select({ kind: 'node', id: m.id })} />
@@ -189,9 +204,9 @@ const labelOf = (k: string) => ({ industry: 'Industry', agency: 'Agency', mainCo
 
 function Stat({ k, v }: { k: string; v: string }) {
   return (
-    <div className="bg-black/60 px-2 py-3">
-      <div className="text-[17px] font-semibold tracking-tight">{v}</div>
-      <div className="text-[10px] uppercase tracking-wider text-mute">{k}</div>
+    <div className="bg-ink/80 px-2 py-3">
+      <div className="text-[17px] font-semibold text-phosphor">{v}</div>
+      <div className="eyebrow">{k}</div>
     </div>
   )
 }
@@ -200,7 +215,7 @@ function Row({ n, onClick }: { n: RfpNode; onClick: () => void }) {
   return (
     <li>
       <button onClick={onClick} className="flex w-full items-center gap-3 py-2.5 text-left hover:bg-white/[.03]">
-        <span className="w-7 shrink-0 font-mono text-[12px] text-cyan">{n.aiFit}</span>
+        <span className="w-7 shrink-0 font-mono text-[12px] text-phosphor">{String(n.aiFit).padStart(3, '0')}</span>
         <span className="min-w-0 flex-1">
           <span className="line-clamp-2 text-[12px] leading-snug">{n.title}</span>
           <span className="text-[10px] text-mute">{n.agency} · {countdown(n.daysLeft)}</span>

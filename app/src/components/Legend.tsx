@@ -2,6 +2,7 @@ import { AnimatePresence, motion } from 'motion/react'
 import { useMemo, useState } from 'react'
 import { BUILD, PHASES } from '../data/progress'
 import { cx } from '../lib/format'
+import { codeFor } from '../lib/codes'
 import { buildLayout } from '../lib/layout'
 import { useStore } from '../store'
 
@@ -18,18 +19,24 @@ export default function Legend({ source }: { source: string | null }) {
   return (
     <div className="pointer-events-none absolute bottom-36 left-3 z-20 hidden w-60 flex-col gap-2 sm:flex lg:bottom-3">
       <AnimatePresence>{open && <Progress onClose={() => setOpen(false)} />}</AnimatePresence>
-      <div className="glass pointer-events-auto rounded-xl p-3">
+      <div className="glass pointer-events-auto rounded-[2px] p-3">
+        <div className="eyebrow mb-2 flex justify-between"><span>Sectors</span><span>REC</span></div>
         <ul className="space-y-1">
           {l1s.map((c) => (
             <li key={c.id}>
-              <button onClick={() => select({ kind: 'cluster', id: c.id })} className="flex w-full items-center gap-2 rounded px-1 py-0.5 text-left text-[11px] text-white/75 hover:bg-white/5 hover:text-white">
-                <span className="size-2 shrink-0 rounded-full" style={{ background: c.color, boxShadow: `0 0 8px ${c.color}` }} />
+              <button onClick={() => select({ kind: 'cluster', id: c.id })} className="flex w-full items-center gap-2 px-1 py-0.5 text-left text-[11px] text-text/75 hover:bg-phosphor/10 hover:text-text">
+                <span className="w-9 shrink-0 border px-0.5 text-center font-mono text-[9px] font-semibold" style={{ color: c.color, borderColor: c.color }}>{codeFor(l1, c.label)}</span>
                 <span className="min-w-0 flex-1 truncate">{c.label}</span>
                 <span className="font-mono text-[10px] text-mute">{c.n}</span>
               </button>
             </li>
           ))}
         </ul>
+        <div className="mt-2.5 grid grid-cols-3 gap-1 border-t border-line pt-2.5 text-center text-[9px] uppercase tracking-[0.08em] text-mute">
+          <span><svg viewBox="0 0 20 20" className="mx-auto mb-0.5 size-4"><circle cx="10" cy="10" r="7" fill="none" stroke="currentColor" strokeWidth="1.6" className="text-phosphor" /></svg>verified</span>
+          <span><svg viewBox="0 0 20 20" className="mx-auto mb-0.5 size-4"><circle cx="10" cy="10" r="7" fill="none" stroke="currentColor" strokeWidth="1.6" strokeDasharray="3 2.5" className="text-phosphor" /></svg>inferred</span>
+          <span><svg viewBox="0 0 20 20" className="mx-auto mb-0.5 size-4"><circle cx="10" cy="10" r="7" fill="none" stroke="currentColor" strokeWidth="1.6" className="text-phosphor" /><circle cx="10" cy="10" r="2.6" fill="currentColor" className="text-phosphor" /></svg>match</span>
+        </div>
         {heat && (
           <div className="mt-2.5 border-t border-line pt-2.5">
             <div className="h-1.5 rounded-full bg-gradient-to-r from-heat-1 via-heat-2 to-heat-3" />
@@ -41,7 +48,7 @@ export default function Legend({ source }: { source: string | null }) {
         )}
         <div className="mt-2.5 flex items-center gap-2 border-t border-line pt-2.5 text-[10px] text-mute">
           <span className="min-w-0 flex-1 leading-snug">{source ?? 'Loading data…'}</span>
-          <button onClick={() => setOpen(!open)} aria-expanded={open} className="shrink-0 rounded-full border border-white/15 px-2 py-0.5 font-mono text-[10px] text-white/80 hover:border-white/40">
+          <button onClick={() => setOpen(!open)} aria-expanded={open} className="shrink-0 rounded-[2px] border border-white/15 px-2 py-0.5 font-mono text-[10px] text-white/80 hover:border-white/40">
             {BUILD} build
           </button>
         </div>
@@ -54,7 +61,7 @@ function Progress({ onClose }: { onClose: () => void }) {
   const all = PHASES.flatMap((p) => p.tasks)
   const done = all.filter(([, d]) => d).length
   return (
-    <motion.section initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 8 }} className="glass pointer-events-auto scroll-thin max-h-[60vh] overflow-y-auto rounded-xl p-3" aria-label="Build progress">
+    <motion.section initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 8 }} className="glass pointer-events-auto scroll-thin max-h-[60vh] overflow-y-auto rounded-[2px] p-3" aria-label="Build progress">
       <div className="mb-2 flex items-baseline justify-between">
         <h2 className="text-[12px] font-semibold">Build progress</h2>
         <button onClick={onClose} aria-label="Close build progress" className="text-[11px] text-mute hover:text-white">✕</button>

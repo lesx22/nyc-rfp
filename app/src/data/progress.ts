@@ -6,7 +6,7 @@ export interface Phase {
   tasks: [string, boolean][]
 }
 
-export const BUILD = 'v0.3'
+export const BUILD = 'v0.4'
 
 export const PHASES: Phase[] = [
   {
@@ -44,7 +44,8 @@ export const PHASES: Phase[] = [
       ['Playwright smoke test', true],
       ['Scale pass (1,500-row stress test)', true],
       ['EPIN → procurement type filter', true],
-      ['Visual direction chosen & applied', false],
+      ['Visual direction C: Instrument Panel', true],
+      ['Design & motion skills installed', true],
       ['Usability test with 5 target users', false],
     ],
   },
