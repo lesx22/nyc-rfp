@@ -1,5 +1,7 @@
 # Video v2: beat sheet
 
+> **v3 edit (current):** `vo_edit.py` tightens the voice-over from 71.0 s to 54.7 s. It drops three lines: "Hey, I've had this idea…", "So on a Tuesday night, in between cooking dinner and cleaning up," and "…and a script pulls the newest opportunities… every night, so it stays current. Essentially,". It also shrinks every long pause to 0.24 s. Times below are still on the **original** clock. `vo-map.json` maps them onto the edit, and both `capture.mjs` and `hf/build.py` read it. Intro shots crossfade (0.3 s) with eased moves. The prompt bar types "software for NYC schools"; 00225P0002 is opened from its node, not the prompt.
+
 Cuts land on the voice-over's pauses (measured with ffmpeg `silencedetect`, −35 dB, ≥0.25 s).
 Times are in the 71 s voice-over. Line text is the version B script; the split points are the real pauses.
 

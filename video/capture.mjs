@@ -15,14 +15,29 @@
  */
 import { spawn } from 'node:child_process'
 import { createServer } from 'node:net'
-import { mkdirSync } from 'node:fs'
+import { existsSync, mkdirSync, readFileSync } from 'node:fs'
 import { dirname, join } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { chromium } from '../app/node_modules/playwright/index.mjs'
 
-/** app.mp4 frame 0 is this voice-over time; every cue below is in VO seconds (BEATS.md). */
-export const APP_START = 21.2
-export const APP_END = 71.5
+/**
+ * Cues are written on the ORIGINAL voice-over clock (BEATS.md). If vo_edit.py has tightened the VO,
+ * vo-map.json maps them onto the edited clock; a time inside a removed span lands where speech resumes.
+ */
+const MAP_FILE = join(dirname(fileURLToPath(import.meta.url)), 'vo-map.json')
+const VO_MAP = existsSync(MAP_FILE) ? JSON.parse(readFileSync(MAP_FILE, 'utf8')) : null
+const remap = (t) => {
+  if (!VO_MAP) return t
+  for (const [a, b, n] of VO_MAP.segments) {
+    if (t < a) return n
+    if (t <= b) return n + (t - a)
+  }
+  const [, b, n] = VO_MAP.segments.at(-1)
+  return n + (b - VO_MAP.segments.at(-1)[0]) + (t - b)
+}
+/** app.mp4 frame 0 is this voice-over time (edited clock when vo-map.json exists). */
+export const APP_START = remap(21.2)
+export const APP_END = remap(71.5)
 export const INTRO_END = APP_START // film-a.mp4 covers 0 → APP_START
 
 /**
@@ -59,10 +74,11 @@ export const CUES = {
   // 14 · 63.8 "Essentially, I just wanted…": back to the graph, slow pull-back, sign-off for the last 2s.
   outro: 63.8,
   signoff: 69.4,
-  end: APP_END,
+  end: 71.5,
 }
+for (const k of Object.keys(CUES)) CUES[k] = remap(CUES[k])
 export const APP_ORG = 'Example Studio LLC'
-export const APP_PROMPT = 'PASSPort e-procurement performance optimization'
+export const APP_PROMPT = 'software for NYC schools'
 export const LISTING = '00225P0002'
 export const INDUSTRY = 'Construction' // beat 8: the biggest industry cluster
 export const LIVE_URL = 'nyc-rfp-app.vercel.app'
@@ -502,9 +518,10 @@ async function record(port) {
     await until(C.type)
     await click(p.locator('input[aria-label^="Describe"]'))
     await p.keyboard.press('Control+A')
+    // Human typing speed (~10 characters a second), not one character per frame.
     for (const ch of APP_PROMPT) {
       await p.keyboard.type(ch)
-      await tick()
+      for (let k = 0; k < 3; k++) await tick()
     }
     /* 10 · match: the graph turns to the matches, then a quick zoom onto the lit nodes */
     await until(C.match)

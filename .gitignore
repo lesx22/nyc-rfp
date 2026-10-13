@@ -11,3 +11,4 @@ video/hf/assets/rec/
 video/hf/assets/*.mp4
 video/hf/assets/*.mp3
 video/hf/.hyperframes/
+video/hf/assets/*.wav
