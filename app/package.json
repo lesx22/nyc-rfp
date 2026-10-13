@@ -10,7 +10,9 @@
     "preview": "vite preview",
     "scrape": "node scripts/scrape-passport.mjs",
     "typecheck": "tsc -b",
-    "test:smoke": "node scripts/smoke.mjs"
+    "test:smoke": "node scripts/smoke.mjs",
+    "validate": "node scripts/validate-data.mjs",
+    "test:validate": "node --test scripts/validate-data.test.mjs"
   },
   "dependencies": {
     "@react-three/drei": "^10.7.9",

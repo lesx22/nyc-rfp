@@ -1,0 +1,43 @@
+{
+  "meta": {
+    "source": "test fixture",
+    "fetchedAt": "2026-10-13T00:00:00.000Z",
+    "count": 2
+  },
+  "rfps": [
+    {
+      "id": "85826P0001",
+      "title": "Citywide data platform modernization",
+      "agency": "Office of Technology and Innovation",
+      "epin": "85826P0001",
+      "industry": "Professional Services - IT Related",
+      "industryInferred": false,
+      "program": null,
+      "status": "Released",
+      "releaseDate": "2026-09-01",
+      "dueDate": "11/30/2026",
+      "mainCommodity": "Software",
+      "estValueUSD": null,
+      "description": null,
+      "sourceUrl": null,
+      "confidence": "high"
+    },
+    {
+      "id": "84126P0001",
+      "title": "Transit Signal Priority deployment",
+      "agency": "Department of Transportation",
+      "epin": "84126P0001",
+      "industry": "Professional Services - IT Related",
+      "industryInferred": false,
+      "program": null,
+      "status": "Released",
+      "releaseDate": "2026-09-01",
+      "dueDate": "2026-11-30",
+      "mainCommodity": "Software",
+      "estValueUSD": 1500000,
+      "description": null,
+      "sourceUrl": null,
+      "confidence": "medium"
+    }
+  ]
+}

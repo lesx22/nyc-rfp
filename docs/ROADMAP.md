@@ -61,6 +61,8 @@ Phases ship in order. Each phase ends with an explicit **validation gate**. Don'
 **Why now:** an MVP on a stale snapshot misleads people. Make the data fresh before adding AI.
 
 - ✅ GitHub Action: nightly scrape → rankings → build → commit if changed, with a >50% row-drop guard (see [`AUTOMATION.md`](./AUTOMATION.md)). Cron activates once merged to the default branch.
+- ✅ Data validator (`npm run validate`): schema hard errors fail the nightly job before commit; coverage, EPIN, closed-date and duplicate warnings in the job summary. Also runs inside the scraper before it writes
+- ✅ CI on every push and PR (`.github/workflows/ci.yml`): validate → validator tests → build → smoke test, screenshots uploaded on failure
 - ◻︎ Claude Routines: morning data review, scraper self-heal, detail enrichment (see `AUTOMATION.md`)
 - ◻︎ Detail-page scraper: description, pre-proposal date, documents list, contact, procurement method
 - ◻︎ Contract value enrichment: parse "estimated amount" from solicitation documents and City Record notices; keep values null when unknown

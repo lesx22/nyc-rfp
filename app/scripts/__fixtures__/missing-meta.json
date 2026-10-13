@@ -1,0 +1,21 @@
+{
+  "rfps": [
+    {
+      "id": "85826P0001",
+      "title": "Citywide data platform modernization",
+      "agency": "Office of Technology and Innovation",
+      "epin": "85826P0001",
+      "industry": "Professional Services - IT Related",
+      "industryInferred": false,
+      "program": null,
+      "status": "Released",
+      "releaseDate": "2026-09-01",
+      "dueDate": "2026-11-30",
+      "mainCommodity": "Software",
+      "estValueUSD": null,
+      "description": null,
+      "sourceUrl": null,
+      "confidence": "high"
+    }
+  ]
+}

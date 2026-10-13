@@ -12,6 +12,7 @@
  */
 import { chromium } from 'playwright'
 import { mkdir, readFile, writeFile } from 'node:fs/promises'
+import { formatReport, validate } from './validate-data.mjs'
 
 const URL = 'https://passport.cityofnewyork.us/page.aspx/en/rfp/request_browse_public'
 const OUT = new globalThis.URL('../public/data/rfps.json', import.meta.url)
@@ -32,7 +33,11 @@ const COLS = {
 const toIso = (s) => {
   if (!s) return null
   const d = new Date(s.trim())
-  return Number.isNaN(d.getTime()) ? null : d.toISOString().slice(0, 10)
+  if (Number.isNaN(d.getTime())) return null
+  // Use the parsed local calendar date: toISOString() converts to UTC and can shift
+  // a late-evening due time ("11:00 PM") onto the next day.
+  const pad = (n) => String(n).padStart(2, '0')
+  return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`
 }
 
 const browser = await chromium.launch({ headless: !process.env.HEADED, executablePath: process.env.CHROMIUM_PATH || undefined })
@@ -91,7 +96,12 @@ if (prev.length && rows.length < prev.length * 0.5 && !process.env.FORCE) {
   process.exit(2)
 }
 
-const rfps = rows.map((r, i) => {
+// Paging can repeat a row (postback timing); EPINs are unique, so drop exact EPIN repeats.
+const seenEpin = new Set()
+const unique = rows.filter((r) => !r.epin || (!seenEpin.has(r.epin) && seenEpin.add(r.epin)))
+if (unique.length !== rows.length) console.log(`Dropped ${rows.length - unique.length} repeated EPIN row(s) from paging.`)
+
+const rfps = unique.map((r, i) => {
   const old = prevBy.get(key(r)) ?? {}
   return {
     id: r.epin || `pp-${i}`,
@@ -111,6 +121,16 @@ const rfps = rows.map((r, i) => {
   }
 })
 
+const dataset = { meta: { source: 'NYC PASSPort public browse (scraped)', fetchedAt: new Date().toISOString(), count: rfps.length }, rfps }
+
+// Second safety rail: run the same validator CI uses before touching the file.
+const check = validate(dataset)
+console.log(formatReport('scraped dataset (not yet written)', check))
+if (!check.ok && !process.env.FORCE) {
+  console.error('Refusing to write: scraped data failed validation (see errors above). Set FORCE=1 to override.')
+  process.exit(3)
+}
+
 await mkdir(new globalThis.URL('.', OUT), { recursive: true })
-await writeFile(OUT, JSON.stringify({ meta: { source: 'NYC PASSPort public browse (scraped)', fetchedAt: new Date().toISOString(), count: rfps.length }, rfps }, null, 2))
+await writeFile(OUT, JSON.stringify(dataset, null, 2))
 console.log(`Wrote ${rfps.length} rows → ${OUT.pathname}`)

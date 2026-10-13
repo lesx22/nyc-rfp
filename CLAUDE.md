@@ -6,6 +6,7 @@ Opportunity Graph is a 3D explorer and response builder for NYC PASSPort procure
 ## Commands (run from `app/`)
 - `npm run dev` · `npm run build` (runs `tsc -b`) · `npm run typecheck`
 - `npm run scrape`: Playwright scraper → `public/data/rfps.json`
+- `npm run validate`: check `public/data/rfps.json` (or a path; `--json`). Hard errors exit 1; run after any data change. Tests: `npm run test:validate`
 - `node scripts/normalize-seed.mjs`: rebuild the dataset from `data-raw/` seed
 - `node --experimental-strip-types scripts/rankings.ts` → `docs/RANKINGS.md`
 

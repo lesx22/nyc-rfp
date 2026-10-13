@@ -33,6 +33,11 @@ jobs:
       - run: npx playwright install --with-deps chromium
       - name: Scrape PASSPort
         run: npm run scrape
+      - name: Validate data (hard errors fail the job, so bad data never commits)
+        shell: bash # -eo pipefail: the validator's exit code survives the tee
+        run: |
+          { echo '```'; npm run -s validate; } | tee -a "$GITHUB_STEP_SUMMARY"
+          echo '```' >> "$GITHUB_STEP_SUMMARY"
       - name: Regenerate rankings
         run: node --experimental-strip-types scripts/rankings.ts
       - name: Build (validates the data loads and types pass)
