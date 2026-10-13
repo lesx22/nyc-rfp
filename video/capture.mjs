@@ -211,8 +211,17 @@ async function app() {
     if (frame >= LIMIT * FPS) throw new Stop()
   }
   const setCursor = (x, y, down = false) => p.evaluate(([x, y, down]) => { const c = document.getElementById('vc'); c.style.transform = `translate(${x}px,${y}px)`; c.classList.toggle('down', down) }, [x, y, down])
+  // Locator waits poll requestAnimationFrame, which only advances when we step, so wait by stepping
+  // frames ourselves (these frames are recorded, so keep waits short and cue them early).
+  const present = async (locator, seconds = 6) => {
+    for (let i = 0; i < seconds * FPS; i++) {
+      if ((await locator.count()) > 0 && (await locator.first().isVisible())) return
+      await tick()
+    }
+    throw new Error(`Timed out waiting for ${locator}`)
+  }
   const centre = async (locator) => {
-    await locator.waitFor({ state: 'visible', timeout: 10000 })
+    await present(locator)
     const box = await locator.boundingBox()
     return { x: box.x + box.width / 2, y: box.y + box.height / 2 }
   }
@@ -241,7 +250,7 @@ async function app() {
 
   // Smoothly scroll a container so a target sits near its top, over the given seconds.
   const scrollInto = async (container, target, seconds) => {
-    await target.waitFor({ state: 'attached', timeout: 10000 })
+    await present(target)
     const [from, to] = await container.evaluate((el, t) => {
       const node = el.querySelector(t)
       return [el.scrollTop, Math.min(el.scrollHeight - el.clientHeight, el.scrollTop + node.getBoundingClientRect().top - el.getBoundingClientRect().top - 24)]
