@@ -77,6 +77,37 @@ try {
   throw e
 }
 
+// Always keep a snapshot of the first page (uploaded as a CI artifact) so the grid and pager can be inspected.
+await saveDebug('first page snapshot (saved on every run)')
+
+// How many listings does the page say there are? ("1 - 15 of 432", "432 results", ...)
+const expected = await page.evaluate(() => {
+  const t = document.body.innerText
+  const m = t.match(/\bof\s+([\d,]{2,})\b/i) ?? t.match(/([\d,]{2,})\s+(?:results|records|items|rows)\b/i)
+  return m ? Number(m[1].replace(/,/g, '')) : null
+})
+console.log('Listings the page reports:', expected ?? 'unknown')
+
+// Prefer one big page: pick the largest page-size option if the grid offers one.
+await page.evaluate(() => {
+  for (const sel of document.querySelectorAll('select')) {
+    const opts = [...sel.options].map((o) => Number(o.value || o.text)).filter((n) => n >= 10 && n <= 1000)
+    if (opts.length >= 2 && opts.includes(Number(sel.value || sel.options[sel.selectedIndex]?.text))) {
+      const max = Math.max(...opts)
+      sel.value = String([...sel.options].find((o) => Number(o.value || o.text) === max).value)
+      sel.dispatchEvent(new Event('change', { bubbles: true }))
+      return true
+    }
+  }
+  return false
+}).then(async (changed) => {
+  if (changed) {
+    console.log('Switched the grid to its largest page size')
+    await page.waitForLoadState('networkidle').catch(() => {})
+    await page.waitForTimeout(1500)
+  }
+})
+
 const rows = []
 for (let p = 1; p <= MAX_PAGES; p++) {
   const batch = await page.evaluate((colSrc) => {
@@ -103,11 +134,32 @@ for (let p = 1; p <= MAX_PAGES; p++) {
   rows.push(...batch.filter((r) => r.title))
   console.log(`page ${p}: +${batch.length} (total ${rows.length})`)
 
-  const next = page.locator('a[title*="Next" i], button[title*="Next" i], a:has-text("›"), a:has-text("Next")').first()
-  if (!(await next.count()) || (await next.getAttribute('class'))?.match(/disabled/i)) break
-  const before = await page.locator('table tbody tr').first().textContent()
+  if (expected && rows.length >= expected) break
+  // Find the pager's "next" control: by label/title/text, then by the next page number.
+  const handle = await page.evaluateHandle((target) => {
+    const disabled = (el) => el.disabled || /disabled/i.test(el.className) || el.getAttribute('aria-disabled') === 'true' || /disabled/i.test(el.parentElement?.className ?? '')
+    const visible = (el) => !!(el.offsetWidth || el.offsetHeight || el.getClientRects().length)
+    const clickable = [...document.querySelectorAll('a, button, [role="button"], li[onclick], span[onclick]')].filter(visible)
+    const label = (el) => `${el.getAttribute('aria-label') ?? ''} ${el.getAttribute('title') ?? ''} ${el.textContent ?? ''} ${el.className ?? ''}`.trim()
+    const byName = clickable.find((el) => /(^|\b)(next( page)?|›|»|>)(\b|$)/i.test(label(el)) && !/prev|last|first/i.test(label(el)) && !disabled(el))
+    if (byName) return byName
+    return clickable.find((el) => el.textContent?.trim() === String(target) && /pag/i.test(el.closest('[class*="pag" i], nav, ul')?.className ?? 'pag') && !disabled(el)) ?? null
+  }, p + 1)
+  const next = handle.asElement()
+  if (!next) {
+    console.log(`No next-page control found after page ${p}.`)
+    break
+  }
+  const before = await page.evaluate(() => [...document.querySelectorAll('table tbody tr')].map((r) => r.textContent).join('|').slice(0, 2000))
   await next.click()
-  await page.waitForFunction((b) => document.querySelector('table tbody tr')?.textContent !== b, before, { timeout: 30_000 }).catch(() => {})
+  const changed = await page
+    .waitForFunction((b) => [...document.querySelectorAll('table tbody tr')].map((r) => r.textContent).join('|').slice(0, 2000) !== b, before, { timeout: 30_000 })
+    .then(() => true)
+    .catch(() => false)
+  if (!changed) {
+    console.log(`Clicking next didn't change the grid after page ${p}.`)
+    break
+  }
   await page.waitForTimeout(800)
 }
 await browser.close()

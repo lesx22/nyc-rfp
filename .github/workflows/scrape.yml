@@ -54,9 +54,9 @@ jobs:
           git add app/public/data/rfps.json docs/RANKINGS.md
           git commit -m "data: nightly PASSPort scrape $(date -u +%F)"
           git push
-      - name: Upload debug snapshot on failure
-        if: failure()
-        uses: actions/upload-artifact@v4
+      - name: Upload page snapshot (always, for diagnosis)
+        if: always()
+        uses: actions/upload-artifact@v5
         with:
           name: scrape-debug
           path: app/scrape-debug/
