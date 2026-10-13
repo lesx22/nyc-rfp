@@ -17,7 +17,10 @@ export default function App() {
   const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
-    fetch(`${import.meta.env.BASE_URL}data/rfps.json`)
+    // ?data=stress.json loads an alternate local file (dev/testing only; filename-only for safety).
+    const alt = new URLSearchParams(location.search).get('data')
+    const file = alt && /^[\w.-]+\.json$/.test(alt) ? alt : 'rfps.json'
+    fetch(`${import.meta.env.BASE_URL}data/${file}`)
       .then((r) => (r.ok ? r.json() : Promise.reject(new Error(`HTTP ${r.status}`))))
       .then((d: { meta: { source: string; fetchedAt: string }; rfps: Rfp[] }) => {
         setMeta(d.meta)

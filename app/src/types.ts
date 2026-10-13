@@ -27,9 +27,11 @@ export interface RfpNode extends Rfp {
   aiFit: number // 0–100: how much of the delivery an AI-assisted team could automate end to end
   aiFitReasons: string[]
   daysLeft: number | null
+  method: string // from EPIN method letter, else 'Unknown'
+  fiscalYear: number | null
 }
 
-export type GroupKey = 'industry' | 'agency' | 'mainCommodity' | 'program'
+export type GroupKey = 'industry' | 'agency' | 'mainCommodity' | 'program' | 'method'
 
 export interface Cluster {
   id: string // `${level}:${path}`

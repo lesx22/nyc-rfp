@@ -85,6 +85,12 @@ try {
 const key = (r) => (r.epin || r.title || '').toLowerCase()
 const prevBy = new Map(prev.map((r) => [key(r), r]))
 
+// Safety rail for unattended runs: a broken selector must never wipe good data.
+if (prev.length && rows.length < prev.length * 0.5 && !process.env.FORCE) {
+  console.error(`Refusing to write: scraped ${rows.length} rows vs ${prev.length} previously (<50%). Set FORCE=1 to override.`)
+  process.exit(2)
+}
+
 const rfps = rows.map((r, i) => {
   const old = prevBy.get(key(r)) ?? {}
   return {

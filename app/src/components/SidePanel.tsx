@@ -63,7 +63,7 @@ function NodeView({ id }: { id: string }) {
         <Cell k="Released" v={date(n.releaseDate)} />
         <Cell k={n.industryInferred ? 'Industry (inferred)' : 'Industry'} v={n.industry} />
         <Cell k="Est. value" v={usd(n.estValueUSD)} />
-        <Cell k="EPIN" v={<span className="font-mono">{n.epin ?? '—'}</span>} />
+        <Cell k="EPIN" v={<><span className="font-mono">{n.epin ?? '—'}</span>{n.method !== 'Unknown' && <div className="text-[11px] text-mute">{n.method}{n.fiscalYear && ` · FY${String(n.fiscalYear).slice(2)}`}</div>}</>} />
         <Cell k="Status" v={<>{n.status ?? '—'}{n.statusNote && <div className="text-[11px] text-mute">{n.statusNote}</div>}</>} />
         <div className="col-span-2">
           <Cell k="Main commodity" v={n.mainCommodity ?? '—'} />
@@ -185,7 +185,7 @@ function ClusterView({ id }: { id: string }) {
   )
 }
 
-const labelOf = (k: string) => ({ industry: 'Industry', agency: 'Agency', mainCommodity: 'Commodity', program: 'Program' })[k] ?? k
+const labelOf = (k: string) => ({ industry: 'Industry', agency: 'Agency', mainCommodity: 'Commodity', program: 'Program', method: 'Type' })[k] ?? k
 
 function Stat({ k, v }: { k: string; v: string }) {
   return (

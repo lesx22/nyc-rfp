@@ -59,7 +59,8 @@ export function buildLayout(nodes: RfpNode[], l1: GroupKey, l2: GroupKey): Layou
   const nodeCluster = new Map<string, string>()
   const edges: [string, string][] = []
 
-  const R1 = 34 + l1Keys.length * 2.5
+  // Spacing grows with the data so 50 rows and 2,000 rows both read as distinct constellations.
+  const R1 = Math.max(34, Math.sqrt(nodes.length) * 2.4 + l1Keys.length * 2)
   l1Keys.forEach((a, i) => {
     const id1 = `1:${a}`
     const p1 = fibonacci(l1Keys.length, i, R1, 0.1)
@@ -71,7 +72,7 @@ export function buildLayout(nodes: RfpNode[], l1: GroupKey, l2: GroupKey): Layou
     edges.push(['root', id1])
 
     const l2Keys = [...sub.keys()].sort((x, y) => sub.get(y)!.length - sub.get(x)!.length)
-    const R2 = 7 + Math.sqrt(l2Keys.length) * 4.5
+    const R2 = 5 + Math.sqrt(l2Keys.length) * 3
     const out = scale(p1, 1 / len(p1))
     l2Keys.forEach((b, j) => {
       const id2 = `2:${a}/${b}`
@@ -80,7 +81,7 @@ export function buildLayout(nodes: RfpNode[], l1: GroupKey, l2: GroupKey): Layou
       clusterPos.set(id2, p2)
       clusterColor.set(id2, color)
       edges.push([id1, id2])
-      const R3 = 2.2 + Math.sqrt(list.length) * 1.3
+      const R3 = 1.8 + Math.sqrt(list.length) * 0.9
       list.forEach((n, k) => {
         const jitter: Vec3 = [(hash(n.id + 'x') - 0.5) * 1.2, (hash(n.id + 'y') - 0.5) * 1.2, (hash(n.id + 'z') - 0.5) * 1.2]
         nodePos.set(n.id, add(add(p2, fibonacci(list.length, k, R3, hash(b))), jitter))

@@ -6,7 +6,7 @@ export interface Phase {
   tasks: [string, boolean][]
 }
 
-export const BUILD = 'v0.2'
+export const BUILD = 'v0.3'
 
 export const PHASES: Phase[] = [
   {
@@ -42,6 +42,9 @@ export const PHASES: Phase[] = [
       ['Mobile bottom sheet', true],
       ['Adaptive DPR, perf monitor, pause when hidden', true],
       ['Playwright smoke test', true],
+      ['Scale pass (1,500-row stress test)', true],
+      ['EPIN → procurement type filter', true],
+      ['Visual direction chosen & applied', false],
       ['Usability test with 5 target users', false],
     ],
   },
@@ -50,7 +53,8 @@ export const PHASES: Phase[] = [
     name: 'Data pipeline & deploy',
     goal: 'Fresh, shareable data',
     tasks: [
-      ['Nightly scrape GitHub Action', false],
+      ['Nightly scrape GitHub Action', true],
+      ['Claude Routines (review, self-heal)', false],
       ['Detail-page scraper (docs, contacts)', false],
       ['Contract value enrichment', false],
       ['Next.js on Vercel, /o/[epin] pages', false],

@@ -58,9 +58,7 @@ function Scene() {
       <Rig layout={layout} />
       <Sparkles count={reducedMotion ? 0 : 260} scale={[420, 260, 420]} size={1.4} speed={0.15} opacity={0.35} color="#9fb4ff" />
       <RootHub />
-      {layout.clusters.map((c) => (
-        <Hub key={c.id} id={c.id} target={layout.clusterPos.get(c.id)!} color={layout.clusterColor.get(c.id)!} level={c.level} label={c.label} count={c.members.length} live={live} />
-      ))}
+      <Hubs layout={layout} live={live} />
       <Nodes layout={layout} live={live} />
       <Edges layout={layout} live={live} />
       {!reducedMotion && <Pulses layout={layout} live={live} />}
@@ -80,6 +78,7 @@ function Rig({ layout }: { layout: Layout }) {
     const c = ref.current
     if (!c) return
     cam.controls = c
+    cam.home()
     const mark = () => cam.touch()
     c.addEventListener('controlstart', mark)
     c.addEventListener('control', mark)
@@ -88,6 +87,14 @@ function Rig({ layout }: { layout: Layout }) {
       c.removeEventListener('control', mark)
     }
   }, [])
+
+  // Frame the whole network whenever the layout changes size.
+  useEffect(() => {
+    let r = 0
+    for (const p of layout.clusterPos.values()) r = Math.max(r, Math.hypot(...p))
+    cam.homeDist = Math.max(120, r * 2.3)
+    if (!useStore.getState().selected) cam.home()
+  }, [layout])
 
   // Fly to a selected cluster/node.
   useEffect(() => {
@@ -115,7 +122,7 @@ function Rig({ layout }: { layout: Layout }) {
     const ctr = top.reduce((a, p) => a.add(new THREE.Vector3(...p)), new THREE.Vector3()).divideScalar(top.length)
     const dir = ctr.clone().setY(ctr.y * 0.4).normalize()
     if (dir.lengthSq() === 0) dir.set(0, 0, 1)
-    const eye = ctr.clone().add(dir.multiplyScalar(110)).add(new THREE.Vector3(0, 18, 0))
+    const eye = ctr.clone().add(dir.multiplyScalar(cam.homeDist * 0.7)).add(new THREE.Vector3(0, cam.homeDist * 0.1, 0))
     const look = ctr.clone().multiplyScalar(0.6)
     c.setLookAt(eye.x, eye.y, eye.z, look.x, look.y, look.z, true)
     cam.touch()
@@ -147,58 +154,113 @@ function RootHub() {
   )
 }
 
-function Hub({ id, target, color, level, label, count, live }: { id: string; target: Vec3; color: string; level: 1 | 2; label: string; count: number; live: Live }) {
-  const m = useRef<THREE.Mesh>(null)
-  const labelRef = useRef<HTMLDivElement>(null)
-  const select = useStore((s) => s.select)
-  const selected = useStore((s) => s.selected)
-  const hovered = useStore((s) => s.hovered)
-  const hover = useStore((s) => s.hover)
-  const tgt = useMemo(() => new THREE.Vector3(...target), [target])
-  const base = level === 1 ? 1.6 + Math.sqrt(count) * 0.22 : 0.7 + Math.sqrt(count) * 0.16
-  const col = useMemo(() => new THREE.Color(color).multiplyScalar(level === 1 ? 1.5 : 1.1), [color, level])
+/** All cluster hubs (industry + agency) in ONE instanced draw call. */
+function Hubs({ layout, live }: { layout: Layout; live: Live }) {
+  const ref = useRef<THREE.InstancedMesh>(null)
+  const { clusters } = layout
+  const tmp = useMemo(() => new THREE.Object3D(), [])
+  const col = useMemo(() => new THREE.Color(), [])
+  const radius = useMemo(() => clusters.map((c) => (c.level === 1 ? 1.6 + Math.sqrt(c.members.length) * 0.2 : 0.55 + Math.sqrt(c.members.length) * 0.11)), [clusters])
+  const scales = useMemo(() => new Float32Array(clusters.length).fill(0), [clusters])
 
   useEffect(() => {
-    if (!live.has(id)) live.set(id, new THREE.Vector3())
-    return () => void live.delete(id)
-  }, [id, live])
+    clusters.forEach((c) => live.set(c.id, live.get(c.id) ?? new THREE.Vector3()))
+    return () => clusters.forEach((c) => live.delete(c.id))
+  }, [clusters, live])
 
-  useFrame(({ camera }, dt) => {
+  useFrame((_, dt) => {
+    const mesh = ref.current
+    if (!mesh) return
+    const { hovered, selected } = useStore.getState()
+    const k = 1 - Math.exp(-dt * 3)
+    clusters.forEach((c, i) => {
+      const v = live.get(c.id)
+      const p = layout.clusterPos.get(c.id)
+      if (!v || !p) return
+      v.x += (p[0] - v.x) * k
+      v.y += (p[1] - v.y) * k
+      v.z += (p[2] - v.z) * k
+      const s = radius[i] * (hovered === c.id || selected?.id === c.id ? 1.35 : 1)
+      scales[i] += (s - scales[i]) * 0.15
+      tmp.position.copy(v)
+      tmp.scale.setScalar(scales[i])
+      tmp.updateMatrix()
+      mesh.setMatrixAt(i, tmp.matrix)
+      col.set(layout.clusterColor.get(c.id)!).multiplyScalar(c.level === 1 ? 1.5 : 0.85)
+      mesh.setColorAt(i, col)
+    })
+    mesh.instanceMatrix.needsUpdate = true
+    if (mesh.instanceColor) mesh.instanceColor.needsUpdate = true
+  })
+
+  const pick = (e: ThreeEvent<PointerEvent | MouseEvent>) => (e.instanceId != null ? clusters[e.instanceId]?.id : undefined)
+  return (
+    <>
+      <instancedMesh
+        key={clusters.length + layout.edges.length}
+        ref={ref}
+        args={[undefined, undefined, clusters.length]}
+        onClick={(e) => {
+          e.stopPropagation()
+          const id = pick(e)
+          if (id) useStore.getState().select({ kind: 'cluster', id })
+        }}
+        onPointerMove={(e) => {
+          e.stopPropagation()
+          const id = pick(e)
+          if (id && useStore.getState().hovered !== id) useStore.getState().hover(id)
+          document.body.style.cursor = 'pointer'
+        }}
+        onPointerOut={() => (useStore.getState().hover(null), (document.body.style.cursor = ''))}
+      >
+        <icosahedronGeometry args={[1, 3]} />
+        <meshBasicMaterial toneMapped={false} />
+      </instancedMesh>
+      <Labels layout={layout} live={live} radius={radius} />
+    </>
+  )
+}
+
+/** Industry labels always; agency labels only when hovered or their industry is selected. */
+function Labels({ layout, live, radius }: { layout: Layout; live: Live; radius: number[] }) {
+  const hovered = useStore((s) => s.hovered)
+  const selected = useStore((s) => s.selected)
+  const sel = selected?.kind === 'cluster' ? selected.id : null
+  const shown = layout.clusters
+    .map((c, i) => ({ c, r: radius[i] }))
+    .filter(({ c }) => c.level === 1 || c.id === hovered || c.id === sel || (sel && c.parent === sel) || (sel && c.parent === layout.clusters.find((x) => x.id === sel)?.parent))
+  return (
+    <>
+      {shown.map(({ c, r }) => (
+        <Label key={c.id} id={c.id} level={c.level} text={c.label} count={c.members.length} lift={r + (c.level === 1 ? 3 : 1.4)} live={live} />
+      ))}
+    </>
+  )
+}
+
+function Label({ id, level, text, count, lift, live }: { id: string; level: 1 | 2; text: string; count: number; lift: number; live: Live }) {
+  const g = useRef<THREE.Group>(null)
+  const el = useRef<HTMLDivElement>(null)
+  useFrame(({ camera }) => {
     const v = live.get(id)
-    if (!v || !m.current) return
-    if (labelRef.current) {
+    if (!v || !g.current) return
+    g.current.position.set(v.x, v.y + lift, v.z)
+    if (el.current) {
       // Fade labels as the camera closes in so they never balloon over the scene.
       const d = camera.position.distanceTo(v)
       const near = level === 1 ? 55 : 14
-      labelRef.current.style.opacity = String(Math.max(0, Math.min(1, (d - near) / (near * 0.8))))
+      el.current.style.opacity = String(Math.max(0, Math.min(1, (d - near) / (near * 0.8))))
     }
-    v.lerp(tgt, 1 - Math.exp(-dt * 3))
-    m.current.position.copy(v)
-    const s = hovered === id || selected?.id === id ? 1.35 : 1
-    m.current.scale.lerp(new THREE.Vector3(s, s, s), 0.15)
   })
-
-  const parentSelected = selected?.kind === 'cluster' && (selected.id === id || (level === 2 && id.startsWith(selected.id.replace(/^1:/, '2:') + '/')))
-  const showLabel = level === 1 || hovered === id || parentSelected
-
   return (
-    <mesh
-      ref={m}
-      onClick={(e: ThreeEvent<MouseEvent>) => (e.stopPropagation(), select({ kind: 'cluster', id }))}
-      onPointerOver={(e) => (e.stopPropagation(), hover(id), (document.body.style.cursor = 'pointer'))}
-      onPointerOut={() => (hover(null), (document.body.style.cursor = ''))}
-    >
-      <sphereGeometry args={[base, 24, 24]} />
-      <meshBasicMaterial color={col} toneMapped={false} transparent opacity={level === 1 ? 0.95 : 0.8} />
-      {showLabel && (
-        <Html center distanceFactor={level === 1 ? 110 : 60} position={[0, base + (level === 1 ? 3 : 1.6), 0]} style={{ pointerEvents: 'none' }} zIndexRange={[10, 0]}>
-          <div ref={labelRef} className={`whitespace-nowrap transition-opacity font-medium tracking-tight ${level === 1 ? 'text-[22px] text-white' : 'text-[15px] text-white/75'}`} style={{ textShadow: '0 0 12px rgba(0,0,0,.9)' }}>
-            {label}
-            <span className="ml-1.5 font-mono text-[0.7em] text-white/40">{count}</span>
-          </div>
-        </Html>
-      )}
-    </mesh>
+    <group ref={g}>
+      <Html center distanceFactor={level === 1 ? 110 : 60} style={{ pointerEvents: 'none' }} zIndexRange={[10, 0]}>
+        <div ref={el} className={`whitespace-nowrap font-medium tracking-tight ${level === 1 ? 'text-[22px] text-white' : 'text-[15px] text-white/75'}`} style={{ textShadow: '0 0 12px rgba(0,0,0,.9)' }}>
+          {text}
+          <span className="ml-1.5 font-mono text-[0.7em] text-white/40">{count}</span>
+        </div>
+      </Html>
+    </group>
   )
 }
 
@@ -223,6 +285,7 @@ function Nodes({ layout, live }: { layout: Layout; live: Live }) {
     if (!mesh) return
     const { filters, relevance, hovered, selected, heat } = useStore.getState()
     const hasQ = relevance.size > 0
+    const density = Math.min(1, Math.pow(150 / Math.max(nodes.length, 1), 0.3))
     const k = 1 - Math.exp(-dt * 2.6)
     const t = clock.elapsedTime
     nodes.forEach((n, i) => {
@@ -235,7 +298,7 @@ function Nodes({ layout, live }: { layout: Layout; live: Live }) {
       const on = passesFilters(n, filters)
       const rel = relevance.get(n.id) ?? 0
       const hot = hasQ && rel > 0.55
-      let s = 0.45 + (n.aiFit / 100) * 0.55
+      let s = (0.45 + (n.aiFit / 100) * 0.55) * density
       if (!on) s *= 0.35
       if (hot) s *= 1.55 + Math.sin(t * 3 + i) * 0.12
       if (hovered === n.id || selected?.id === n.id) s *= 1.3
@@ -270,7 +333,7 @@ function Nodes({ layout, live }: { layout: Layout; live: Live }) {
 
   return (
     <instancedMesh key={nodes.length} ref={ref} args={[undefined, undefined, nodes.length]} onClick={onClick} onPointerMove={onMove} onPointerOut={() => (useStore.getState().hover(null), (document.body.style.cursor = ''))}>
-      <sphereGeometry args={[1, 16, 16]} />
+      <icosahedronGeometry args={[1, 1]} />
       <meshBasicMaterial toneMapped={false} />
     </instancedMesh>
   )
@@ -325,6 +388,7 @@ function Pulses({ layout, live }: { layout: Layout; live: Live }) {
   }, [])
   const state = useRef(Array.from({ length: N }, () => ({ path: [] as string[], t: Math.random() * 3, speed: 0.6 + Math.random() * 0.7 })))
   const leafIds = useMemo(() => [...layout.nodeCluster.keys()], [layout])
+  const hotCache = useRef<{ rel: Map<string, number> | null; ids: string[] }>({ rel: null, ids: [] })
 
   const pathTo = (leaf: string) => {
     const l2 = layout.nodeCluster.get(leaf)
@@ -335,7 +399,8 @@ function Pulses({ layout, live }: { layout: Layout; live: Live }) {
   useFrame((_, dt) => {
     const arr = (geo.getAttribute('position') as THREE.BufferAttribute).array as Float32Array
     const rel = useStore.getState().relevance
-    const hot = [...rel.entries()].filter(([, v]) => v > 0.55).map(([k]) => k)
+    if (hotCache.current.rel !== rel) hotCache.current = { rel, ids: [...rel.entries()].filter(([, v]) => v > 0.55).map(([k]) => k) }
+    const hot = hotCache.current.ids
     state.current.forEach((p, i) => {
       p.t += dt * p.speed
       if (!p.path.length || p.t >= p.path.length - 1) {

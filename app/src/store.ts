@@ -5,12 +5,13 @@ export interface Filters {
   industry: string[]
   agency: string[]
   mainCommodity: string[]
+  method: string[]
   dueWithin: number | null // days
   minFit: number
   digitalOnly: boolean
 }
 
-export const emptyFilters: Filters = { industry: [], agency: [], mainCommodity: [], dueWithin: null, minFit: 0, digitalOnly: false }
+export const emptyFilters: Filters = { industry: [], agency: [], mainCommodity: [], method: [], dueWithin: null, minFit: 0, digitalOnly: false }
 
 interface State {
   nodes: RfpNode[]
@@ -66,6 +67,7 @@ export function passesFilters(n: RfpNode, f: Filters): boolean {
   if (f.industry.length && !f.industry.includes(n.industry)) return false
   if (f.agency.length && !f.agency.includes(n.agency)) return false
   if (f.mainCommodity.length && !f.mainCommodity.includes(n.mainCommodity ?? '')) return false
+  if (f.method.length && !f.method.includes(n.method)) return false
   if (f.dueWithin != null && (n.daysLeft == null || n.daysLeft < 0 || n.daysLeft > f.dueWithin)) return false
   if (n.aiFit < f.minFit) return false
   if (f.digitalOnly && n.aiFit < 60) return false

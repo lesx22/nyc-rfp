@@ -4,11 +4,12 @@ import type { CameraControls } from '@react-three/drei'
 export const cam = {
   controls: null as CameraControls | null,
   lastInput: performance.now(),
+  homeDist: 170,
   touch() {
     this.lastInput = performance.now()
   },
   home() {
-    this.controls?.setLookAt(0, 30, 170, 0, 0, 0, true)
+    this.controls?.setLookAt(0, this.homeDist * 0.18, this.homeDist, 0, 0, 0, true)
     this.touch()
   },
   zoom(by: number) {

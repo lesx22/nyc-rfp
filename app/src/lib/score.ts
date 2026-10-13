@@ -1,4 +1,5 @@
 import type { Rfp, RfpNode } from '../types'
+import { parseEpin } from './epin'
 
 /**
  * AI-fit heuristic. Transparent, keyword-weighted, and explainable on purpose:
@@ -75,7 +76,8 @@ export function daysUntil(iso: string | null, now = new Date()): number | null {
 export function enrich(rows: Rfp[]): RfpNode[] {
   return rows.map((r) => {
     const { score, reasons } = scoreAiFit(r)
-    return { ...r, aiFit: score, aiFitReasons: reasons, daysLeft: daysUntil(r.dueDate) }
+    const ep = parseEpin(r.epin)
+    return { ...r, aiFit: score, aiFitReasons: reasons, daysLeft: daysUntil(r.dueDate), method: ep?.method ?? 'Unknown', fiscalYear: ep?.fiscalYear ?? null }
   })
 }
 

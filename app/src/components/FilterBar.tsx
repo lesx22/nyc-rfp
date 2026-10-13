@@ -3,7 +3,7 @@ import { cx } from '../lib/format'
 import { emptyFilters, passesFilters, useStore, type Filters } from '../store'
 import type { GroupKey } from '../types'
 
-const LABEL: Record<GroupKey, string> = { industry: 'Industry', agency: 'Agency', mainCommodity: 'Commodity', program: 'Program' }
+const LABEL: Record<GroupKey, string> = { industry: 'Industry', agency: 'Agency', mainCommodity: 'Commodity', program: 'Program', method: 'Type' }
 
 export default function FilterBar() {
   const nodes = useStore((s) => s.nodes)
@@ -14,7 +14,7 @@ export default function FilterBar() {
 
   const opts = useMemo(() => {
     const u = (k: GroupKey) => [...new Set(nodes.map((n) => (n[k] as string | null) ?? '').filter(Boolean))].sort()
-    return { industry: u('industry'), agency: u('agency'), mainCommodity: u('mainCommodity') }
+    return { industry: u('industry'), agency: u('agency'), mainCommodity: u('mainCommodity'), method: u('method') }
   }, [nodes])
   const dirty = JSON.stringify(filters) !== JSON.stringify(emptyFilters)
 
@@ -32,6 +32,7 @@ export default function FilterBar() {
         <Multi label="Industry" values={opts.industry} sel={filters.industry} onChange={(industry) => setFilters({ industry })} />
         <Multi label="Agency" values={opts.agency} sel={filters.agency} onChange={(agency) => setFilters({ agency })} />
         <Multi label="Commodity" values={opts.mainCommodity} sel={filters.mainCommodity} onChange={(mainCommodity) => setFilters({ mainCommodity })} />
+        <Multi label="Type" values={opts.method} sel={filters.method} onChange={(method) => setFilters({ method })} />
         <Select
           label="Due"
           value={filters.dueWithin}
@@ -50,9 +51,9 @@ export default function FilterBar() {
 
       <div className="glass pointer-events-auto flex items-center gap-1 rounded-xl p-1">
         <span className="pl-2 text-[11px] uppercase tracking-wider text-mute">Cluster</span>
-        <Select label="" value={l1} options={(['industry', 'agency', 'mainCommodity'] as GroupKey[]).map((k) => [k, LABEL[k]])} onChange={(v) => setHierarchy(v as GroupKey, v === l2 ? l1 : l2)} />
+        <Select label="" value={l1} options={(['industry', 'agency', 'method', 'mainCommodity'] as GroupKey[]).map((k) => [k, LABEL[k]])} onChange={(v) => setHierarchy(v as GroupKey, v === l2 ? l1 : l2)} />
         <span className="text-mute">→</span>
-        <Select label="" value={l2} options={(['agency', 'industry', 'mainCommodity'] as GroupKey[]).filter((k) => k !== l1).map((k) => [k, LABEL[k]])} onChange={(v) => setHierarchy(l1, v as GroupKey)} />
+        <Select label="" value={l2} options={(['agency', 'industry', 'method', 'mainCommodity'] as GroupKey[]).filter((k) => k !== l1).map((k) => [k, LABEL[k]])} onChange={(v) => setHierarchy(l1, v as GroupKey)} />
         <Chip on={heat} onClick={toggleHeat} title="Warm colours = closer deadline. Live traffic heat lands in Phase 4.">
           <span className="inline-block size-2 rounded-full bg-gradient-to-r from-heat-1 via-heat-2 to-heat-3" /> Heat
         </Chip>

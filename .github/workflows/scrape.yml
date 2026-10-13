@@ -1,0 +1,51 @@
+# Nightly PASSPort scrape → commit fresh data + rankings if anything changed.
+# Deterministic on purpose: no AI in the loop, so it's cheap and predictable.
+# Note: GitHub only runs `schedule` triggers from the default branch; use "Run workflow" to trigger it manually before then.
+name: Nightly PASSPort scrape
+
+on:
+  schedule:
+    - cron: '17 9 * * *' # 05:17 New York (EDT) / 04:17 (EST)
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: scrape
+  cancel-in-progress: false
+
+jobs:
+  scrape:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    defaults:
+      run:
+        working-directory: app
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: app/package-lock.json
+      - run: npm ci
+      - run: npx playwright install --with-deps chromium
+      - name: Scrape PASSPort
+        run: npm run scrape
+      - name: Regenerate rankings
+        run: node --experimental-strip-types scripts/rankings.ts
+      - name: Build (validates the data loads and types pass)
+        run: npm run build
+      - name: Commit if changed
+        working-directory: .
+        run: |
+          if git diff --quiet -- app/public/data/rfps.json docs/RANKINGS.md; then
+            echo "No changes."
+            exit 0
+          fi
+          git config user.name "opportunity-graph-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add app/public/data/rfps.json docs/RANKINGS.md
+          git commit -m "data: nightly PASSPort scrape $(date -u +%F)"
+          git push
