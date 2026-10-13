@@ -10,7 +10,8 @@ export default function FilterBar() {
   const filters = useStore((s) => s.filters)
   const setFilters = useStore((s) => s.setFilters)
   const { l1, l2, setHierarchy, heat, toggleHeat } = useStore()
-  
+  const savedCount = useStore((s) => s.saved.size)
+
   const opts = useMemo(() => {
     const u = (k: GroupKey) => [...new Set(nodes.map((n) => (n[k] as string | null) ?? '').filter(Boolean))].sort()
     return { industry: u('industry'), agency: u('agency'), mainCommodity: u('mainCommodity'), method: u('method') }
@@ -40,6 +41,14 @@ export default function FilterBar() {
         <Chip on={filters.digitalOnly} onClick={() => setFilters({ digitalOnly: !filters.digitalOnly })} title="AI-fit score ≥ 60">
           AI-buildable
         </Chip>
+        <Chip
+          on={filters.savedOnly}
+          disabled={!savedCount && !filters.savedOnly}
+          onClick={() => setFilters({ savedOnly: !filters.savedOnly })}
+          title={savedCount ? 'Show only listings you saved' : 'Save listings (bookmark in the panel, or S) to filter them here'}
+        >
+          Saved <span className="font-mono text-[10px]">{savedCount}</span>
+        </Chip>
         {dirty && (
           <button className="px-2 text-[12px] text-mute hover:text-white" onClick={() => setFilters(emptyFilters)}>
             Reset
@@ -64,7 +73,7 @@ export default function FilterBar() {
 
 function Chip({ on, children, ...p }: { on: boolean; children: React.ReactNode } & React.ButtonHTMLAttributes<HTMLButtonElement>) {
   return (
-    <button {...p} aria-pressed={on} className={cx('flex h-8 items-center gap-1.5 rounded-[3px] px-2.5 text-[12px] transition-colors duration-150', on ? 'bg-phosphor text-ink' : 'text-text/80 hover:bg-phosphor/10')}>
+    <button {...p} aria-pressed={on} className={cx('flex h-8 items-center gap-1.5 rounded-[3px] px-2.5 text-[12px] transition-colors duration-150 disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:bg-transparent', on ? 'bg-phosphor text-ink' : 'text-text/80 hover:bg-phosphor/10')}>
       {children}
     </button>
   )

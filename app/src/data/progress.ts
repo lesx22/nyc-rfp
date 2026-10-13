@@ -56,6 +56,9 @@ export const PHASES: Phase[] = [
     goal: 'Fresh, shareable data',
     tasks: [
       ['Nightly scrape GitHub Action', true],
+      ['Deep links (#EPIN) + copy link', true],
+      ['Shortlist: save, Saved filter', true],
+      ['Deadline → calendar (.ics)', true],
       ['Claude Routines (review, self-heal)', false],
       ['Detail-page scraper (docs, contacts)', false],
       ['Contract value enrichment', false],

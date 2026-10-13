@@ -9,6 +9,9 @@ import { useStore } from '../store'
 export default function Legend({ source }: { source: string | null }) {
   const nodes = useStore((s) => s.nodes)
   const { l1, l2, heat, select } = useStore()
+  const savedCount = useStore((s) => s.saved.size)
+  const savedOnly = useStore((s) => s.filters.savedOnly)
+  const setFilters = useStore((s) => s.setFilters)
   const [open, setOpen] = useState(false)
   const l1s = useMemo(() => {
     const lay = buildLayout(nodes, l1, l2)
@@ -41,6 +44,16 @@ export default function Legend({ source }: { source: string | null }) {
         )}
         <div className="mt-2.5 flex items-center gap-2 border-t border-line pt-2.5 text-[10px] text-mute">
           <span className="min-w-0 flex-1 truncate" title={source ?? undefined}>{source ? 'Sample data' : 'Loading…'}</span>
+          {savedCount > 0 && (
+            <button
+              onClick={() => setFilters({ savedOnly: !savedOnly })}
+              aria-pressed={savedOnly}
+              title={savedOnly ? 'Show all listings' : 'Show only saved listings'}
+              className={cx('shrink-0 px-1 transition-colors duration-150 hover:text-text', savedOnly && 'text-phosphor')}
+            >
+              <span className="font-mono">{savedCount}</span> saved
+            </button>
+          )}
           <button onClick={() => setOpen(!open)} aria-expanded={open} className="shrink-0 rounded-[2px] border border-white/15 px-2 py-0.5 font-mono text-[10px] text-white/80 hover:border-white/40">
             {BUILD} build
           </button>

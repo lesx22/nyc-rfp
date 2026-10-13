@@ -36,7 +36,7 @@ Phases ship in order. Each phase ends with an explicit **validation gate**. Don'
 7. ✅ Prompt bar: local relevance → rotate the camera to the matches and re-highlight; "Picked for you" on load; ⌘K
 8. ✅ Filter bar: Industry · Agency · Commodity · Due window · AI-buildable; hierarchy remap; heat toggle
 9. ✅ Response Studio v0: brief → about you → documents → outline (.md download) → submission checklist
-10. ✅ Keyboard (arrows, +/−, 0, Esc) and button alternatives to orbit and zoom
+10. ✅ Keyboard (arrows, +/−, 0, Esc; S saves the selected listing, Phase 2) and button alternatives to orbit and zoom
 11. ✅ Mobile: side panel becomes a bottom sheet under 640px; 40px camera buttons
 12. ✅ `AdaptiveDpr` + `PerformanceMonitor` (drops bloom on weak GPUs); render loop pauses when the tab is hidden
 13. ✅ Playwright smoke test, desktop + mobile (`npm run test:smoke`)
@@ -61,6 +61,9 @@ Phases ship in order. Each phase ends with an explicit **validation gate**. Don'
 **Why now:** an MVP on a stale snapshot misleads people. Make the data fresh before adding AI.
 
 - ✅ GitHub Action: nightly scrape → rankings → build → commit if changed, with a >50% row-drop guard (see [`AUTOMATION.md`](./AUTOMATION.md)). Cron activates once merged to the default branch.
+- ✅ Shareable deep links: selecting a listing sets a bare `#EPIN` hash (falls back to the row id; unreserved characters only so it survives claude.ai artifact hosting), loading a hash opens and flies to that listing, closing clears it (`history.replaceState`, no history spam); unknown hashes show a notice. "Copy link" in the panel with a read-only fallback field
+- ✅ Shortlist: Save toggle (bookmark) in the panel and **S** on the selected listing; ids in `localStorage` (`og.saved`, guarded, works without storage); "Saved" filter chip with count; saved count in the Legend; `saved: Set<string>` exposed in the store for a future visual mark
+- ✅ Calendar export: "Add deadline to calendar" downloads an RFC 5545 `.ics` (all-day on the due date, 3-day reminder; disabled when no due date is published). `buildIcs` in `app/src/lib/ics.ts`, tested by `npm run test:unit`
 - ◻︎ Claude Routines: morning data review, scraper self-heal, detail enrichment (see `AUTOMATION.md`)
 - ◻︎ Detail-page scraper: description, pre-proposal date, documents list, contact, procurement method
 - ◻︎ Contract value enrichment: parse "estimated amount" from solicitation documents and City Record notices; keep values null when unknown
