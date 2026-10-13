@@ -81,8 +81,10 @@ Phases ship in order. Each phase ends with an explicit **validation gate**. Don'
 **Why:** prove the whole loop (discover → understand → respond → check → export) on one real solicitation: [00225P0002 City-wide E-Procurement Performance Optimization (PASSPort 2026)](./solicitations/00225P0002/README.md). It's the listing that sparked the project, and it's the story of the demo video.
 
 - ✅ Single-solicitation scraper (`npm run scrape:solicitation`): detail page + every linked document + index with hashes and failures
-- ◻︎ Run it from a network that can reach PASSPort and commit `data-raw/solicitations/00225P0002/`
-- ◻︎ Extract requirements, evaluation criteria, key dates and the submission checklist into `requirements.json`, each with a source (file + page)
+- ✅ Documents captured (5 provided by the user): proposal template, Addendum #3, special case memo, M/WBE worksheet, Appendix A
+- ◻︎ Still needed: main RFS (evaluation weights), Appendix F, Attachment E/PRC/SCY, addenda #1, #2 and later
+- ✅ 81 requirements, 5 evaluation areas, key dates, M/WBE goal and the submission checklist extracted into `requirements.json`, each with a verified PDF page (`build_requirements.py`)
+- ◻︎ Appendix A contract obligations → `appendix-a-obligations.json` (in progress)
 - ◻︎ Side panel: show requirement counts and key dates from `requirements.json` when present
 - ◻︎ Response Studio: load the listing's real checklist and evaluation criteria; draft each required section against its requirement; compliance matrix
 - ◻︎ Export a submission package (narrative .docx/.md, forms list, attachments index)

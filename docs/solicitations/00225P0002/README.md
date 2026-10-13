@@ -10,9 +10,9 @@ The worked example for the end-to-end demo: we take this listing from discovery 
 | Industry | Professional Services - IT Related | Databook |
 | City Record notice | Request 20241224032, dated 1/7/2025, with a pre-bid conference listed on 1/13/2025 | [City Record](https://a856-cityrecord.nyc.gov/RequestDetail/20241224032) |
 | PASSPort page | process_manage_extranet/26900 | [PASSPort](https://passport.cityofnewyork.us/page.aspx/en/bpm/process_manage_extranet/26900) |
-| Release / due (PASSPort mirror) | 10/3/2025 / 2/27/2026, 2:00 PM | [Databook](https://databook.nyc/procurement/solicitation/00225P0002) |
+| Due dates | Originally 4/24/2025 → 10/24/2025 2 PM (Addendum #3) → 2/27/2026 2 PM per the PASSPort mirror | Addendum #3, [Databook](https://databook.nyc/procurement/solicitation/00225P0002) |
 | Status | Due date passed. Award not known | — |
-| Estimated value | Not published in any source we've read | — |
+| Estimated value | $230,940,954 (agency estimate, not an award) | M/WBE goals worksheet |
 
 > **Open conflict:** the City Record notice (Jan 2025) and the Databook release date (Oct 2025) disagree. The PASSPort page and its addenda should settle it.
 
@@ -23,33 +23,36 @@ The worked example for the end-to-end demo: we take this listing from discovery 
 - **Category 2:** software enhancement or replacement, up to and including a complete system replacement.
 - **Background:** PASSPort launched in 2016, replacing APT and Vendex. In 2024, MOCS retired HHS Accelerator and folded those services into PASSPort.
 
-## Solicitation documents
+## Solicitation documents (captured 2026-10-13)
 
-**Status: not yet captured.** The PASSPort page and its attachments are blocked from the cloud build environment. To capture them, run from a normal network:
+The user provided these. They're stored in `data-raw/solicitations/00225P0002/files/`, with text extracts in `text/`.
 
-```bash
-cd nyc-rfp/app
-npx playwright install chromium   # one-time
-HEADED=1 npm run scrape:solicitation -- https://passport.cityofnewyork.us/page.aspx/en/bpm/process_manage_extranet/26900 --id 00225P0002
-git add ../data-raw/solicitations/00225P0002 && git commit -m "Capture 00225P0002 documents" && git push
-```
+| # | Document | What it gives us |
+|---|---|---|
+| 01 | Attachment A – Proposal Template (26 pp) | Required proposal structure, the five evaluation areas, and **81 requirements** |
+| 02 | Addendum #3 (Apr 23, 2025) | Due date moved from Apr 24, 2025 to **Oct 24, 2025, 2 PM**; question deadline to **Aug 29, 2025** |
+| 03 | Special Case Determination Memo (Nov 13, 2024) | Why competitive sealed proposals were used: specialist software expertise, and a balance of price and quality |
+| 04 | M/WBE Participation Goals Worksheet | **30% M/WBE goal** (unspecified). Agency-estimated contract value **$230,940,954**; ~$69.3M in subcontracting across "Procurement Software" and "Procurement Development" |
+| 05 | Appendix A – General Provisions (2018) + addendum (77 pp) | Standard contract obligations: insurance, records, confidentiality, subcontracting, local laws (extraction in progress → `appendix-a-obligations.json`) |
 
-That writes `data-raw/solicitations/00225P0002/`:
-- `page.html`, `page.txt`, `page.png`
-- `files/` with every linked document
-- `index.json`, which records failures too (for example, documents that need a vendor login)
+**Still missing:**
+- The main RFS, which holds the **evaluation weights** and submission instructions
+- Appendix F (detailed functional requirements)
+- Attachment E (price worksheet), Attachment PRC and Attachment SCY
+- Addenda #1, #2 and any after #3. Databook's Feb 27, 2026 due date suggests at least one more.
 
-## Requirements: to extract from the documents
+## Requirements (extracted, cited)
 
-Once the files land, each requirement is extracted into [`requirements.json`](./requirements.json) with a citation (file + page), and summarised here.
+All of these are in [`requirements.json`](./requirements.json), each with its PDF page. Rebuild with `python3 data-raw/solicitations/00225P0002/build_requirements.py`.
 
-- [ ] **Scope of services:** deliverables per category, current-state constraints, integrations, environments
-- [ ] **Technical requirements:** performance/SLA targets, security (NYC Cyber Command), accessibility, hosting, data migration
-- [ ] **Proposal format:** required sections, page limits, file types, forms
-- [ ] **Evaluation criteria and weights:** e.g. experience, approach, organization, price
-- [ ] **Submission requirements:** PASSPort vendor enrollment, Doing Business Data forms, M/WBE utilization plan, insurance, certifications
-- [ ] **Key dates:** questions deadline, addenda, pre-proposal conference, due date
-- [ ] **Addenda and Q&A:** every change since release
+| Section (evaluated area) | Requirements | Highlights |
+|---|---|---|
+| Executive Summary | 1 | Name your Response Category (1 or 2), approach, staff, duration |
+| 1. Relevant Project Experience | 2 | At least 3 similar projects, with a reference for each |
+| 2. Solution Fit | 55 | 13 infrastructure (architecture, monitoring, security, DR), 3 performance (**2,500 concurrent users at 99.9%**, auto-scaling, real-time metrics visible to MOCS), 39 functional (**Category 2 only**: vendor management, catalog, source-to-contract, finance, data, document vault, global config) |
+| 3. Statement of Work | 10 | Category 1: 8-month first phase, then 12 months. Category 2: 8-month gap analysis and BPR, then 18 months. Phase 1 priced separately |
+| 4. Staffing and Organization | 6 | 6 named key roles (Category 2 adds 6 more); resumes, references, and 5+ years in the target cloud environment |
+| 5. Fees | 7 | Fixed-price, deliverables-based; Attachment E; mark-up limits; 12-month minimum warranty |
 
 ## End-to-end demo plan
 

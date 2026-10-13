@@ -1,0 +1,1112 @@
+City-wide e-Procurement Performance Optimization
+              Proposal in Response to
+        Mayor’s Office of Contract Services
+
+
+
+                                  [date]
+
+
+
+
+   This document is prepared by the Contractor, on the Contractor’s station
+       City-wide e-Procurement Performance Optimization Proposal for Mayor’s Office of
+                                     Contract Services
+
+
+                                                              Table of Contents
+Instructions ................................................................................................................................ 2
+Executive Summary ................................................................................................................... 2
+1.       Relevant Project Experience .............................................................................................. 2
+     1.1. Description of Similar, Successful Projects ........................................................................ 2
+     1.2. References .......................................................................................................................... 3
+2.       Solution Fit .......................................................................................................................... 3
+     2.1. Technical Requirements ..................................................................................................... 3
+     2.2. Performance Requirements ................................................................................................ 6
+     2.3. Functional Requirements .................................................................................................... 6
+3.       Statement of work                     13
+     3.1. Objectives ......................................................................................................................... 13
+     3.2. Approach and Methodology .............................................................................................. 13
+     3.3. Project Scope .................................................................................................................... 13
+     3.4. Work Products and Deliverables ...................................................................................... 13
+     3.5. Project Timeline ................................................................................................................ 14
+     3.6. Project Scope Exclusion ................................................................................................... 16
+     3.7. Form, Content and Frequency of Reports ........................................................................ 16
+     3.8. Assumptions...................................................................................................................... 17
+4.       Project Staffing and Organization                           17
+     4.1. Staffing .............................................................................................................................. 17
+     4.2. Organization ...................................................................................................................... 18
+     4.3. Governance Structure....................................................................................................... 19
+5.       Fees ................................................................................................................................. 19
+     5.1. Labor Fees .........................................................................Error! Bookmark not defined.
+     5.2. Software ............................................................................................................................ 20
+     5.3. Hardware........................................................................................................................... 20
+     5.4. Post-Implementation Support and Maintenance .............................................................. 21
+     5.5. Other Charges .................................................................................................................. 21
+     5.6. Grand Total ....................................................................................................................... 21
+     5.7. Payment Schedule .............................................................Error! Bookmark not defined.
+     5.8. Performance Outcome Measures & Financial Incentives .Error! Bookmark not defined.
+
+City-wide e-Procurement Performance Optimization Proposal template   Page 1
+Mayor’s Office of Contract Services
+      City-wide e-Procurement Performance Optimization Proposal for Mayor’s Office of
+                                    Contract Services
+6.     Warranty Period Error! Bookmark not defined.
+
+
+
+
+City-wide e-Procurement Performance Optimization Proposal template   Page 2
+Mayor’s Office of Contract Services
+      City-wide e-Procurement Performance Optimization Proposal for Mayor’s Office of
+                                    Contract Services
+
+Instructions
+
+This template is to be used for Systems Integrator Proposals. The items in [BOLDFACE] are
+variables that should be changed to the specifics of the proposal in question. Notes are indicated
+in italics and provide additional information or instructions. This document is to be prepared by
+the contractor and submitted to the MOCS program manager, who will distribute the proposals to
+the evaluation team.
+The proposals will be evaluated in five key areas, which align to the five sections of the
+proposal:
+
+
+     1.    Relevant Project Experience
+     2.    Solution Fit
+     3.    Statement of Work (equivalent to Approach and Methodology)
+     4.    Organization and Staffing (equivalent to Organizational Capability)
+     5.    Fees (equivalent to Cost Proposal)
+
+
+The weights for each area can be found in the RFS.
+
+
+
+Executive Summary
+
+Use this section to identify the Response Category (1 or 2, describe the contractor’s
+understanding of the scope and objectives of the project, and summarize the contractor’s
+approach, proposed staff, and estimated project duration.
+
+
+Relevant Project Experience
+
+The specifics for this section will vary depending on the nature of the project.
+
+Description of Similar, Successful Projects
+
+Describe at least three similar projects in which you successfully participated. Include, at
+minimum:
+     •     Start and end dates of project
+     •     Number of staff on project
+     •     Contractor’s role in the project
+     •     Business need being addressed
+     •     Target Audience, including approximate number of users
+City-wide e-Procurement Performance Optimization Proposal template   Page 3
+Mayor’s Office of Contract Services
+      City-wide e-Procurement Performance Optimization Proposal for Mayor’s Office of
+                                    Contract Services
+     •      Technical solution deployed
+     •      Final results of project
+
+
+References
+
+For each project described above, please provide a client reference including:
+     •      Organization
+     •      Name and Title
+     •      Project Role
+     •      Phone number
+     •      Email address
+
+The evaluation committee may elect to contact the references during the evaluation process, so
+please ensure that the listed references are aware and agreeable to being contacted.
+
+Solution Fit
+Technical Requirements
+
+     All proposers must complete the following Infrastructure Requirements section.
+
+    REQ #                                       Infrastructure Requirement        Category
+
+               Describe how your architecture allows for load balancing and
+               workload distribution? Attach a reference architecture,
+               covering both the hosting environment and application
+               architecture.
+
+      1                                                                         Architecture
+
+
+
+
+               Describe how your solution tracks the following metrics:
+               •      Availability (e.g. uptime, responsiveness, etc.)
+               •      Response times.
+               •      Web, application, and OS processes.
+               •      Database queries, I/O operations.                         Performance
+      2
+               •      Throughput (Requests, Transaction volumes)                Management
+               •      CPU, memory, network, and database utilization
+               •      Active users
+               •      Error rates (OS, DB, and application)
+               •      Garbage collection (available memory, cleanup frequency
+City-wide e-Procurement Performance Optimization Proposal template   Page 4
+Mayor’s Office of Contract Services
+      City-wide e-Procurement Performance Optimization Proposal for Mayor’s Office of
+                                    Contract Services
+
+    REQ #                                       Infrastructure Requirement          Category
+
+               Describe how you add new monitoring parameters.
+
+
+                                                                                  Performance
+      3
+                                                                                  Management
+
+
+
+               Describe how you detect and report performance degradation.
+
+
+
+                                                                                  Performance
+      4
+                                                                                  Management
+
+
+
+
+               Detail your logging and error tracking process. Include the list
+               of items logged and tracked.
+                                                                                  Performance
+      5
+                                                                                  Management
+
+
+               Describe how your solution provides high availability and
+               scalability through dynamic resource allocation for the
+               following resources:
+                • Processing power
+                • Memory
+      6         • Database capacity                                               Architecture
+                • Network bandwidth
+                • Application server capacity
+
+
+
+
+               Describe your security model for the hosing infrastructure and
+               the application.
+
+
+      7                                                                             Security
+
+
+
+
+City-wide e-Procurement Performance Optimization Proposal template   Page 5
+Mayor’s Office of Contract Services
+      City-wide e-Procurement Performance Optimization Proposal for Mayor’s Office of
+                                    Contract Services
+
+    REQ #                                       Infrastructure Requirement      Category
+
+               What safeguards does your solution provide to prevent users
+               from inadvertently impairing system performance.
+                                                                              Performance
+      8
+                                                                              Management
+
+
+
+               Detail your approach to providing comprehensive database
+               monitoring.
+                                                                              Performance
+      9
+                                                                              Management
+
+
+               Describe your process for guaranteeing database consistency.
+                                                                              Performance
+     10
+                                                                              Management
+
+
+               Describe the disaster recovery options included in your
+               solution.
+     11                                                                       Architecture
+
+
+
+               List the environments that are included in your solution?
+
+     12                                                                       Architecture
+
+
+               Provide a comprehensive description of your process for
+               problem identification, root cause determination, and
+               resolution?
+     13                                                                       Architecture
+
+
+
+
+City-wide e-Procurement Performance Optimization Proposal template   Page 6
+Mayor’s Office of Contract Services
+      City-wide e-Procurement Performance Optimization Proposal for Mayor’s Office of
+                                    Contract Services
+
+
+Performance Requirements
+
+  REQ #                                                                  Requirement
+
+             99.9% of the time, a minimum of 2,500 concurrent users must have consistent access to
+             system logins and user functions during which individual users must not experience
+             timeouts or other instability that would meaningfully impact their ability to do work.
+     1       Describe how your solution provides this.
+
+
+
+
+             The solution must demonstrate scalability, i.e., if CPU utilization, memory allocation, database
+             performance, or other essential resources cross critical thresholds, the solution must be able to
+             provision the necessary resources to prevent degradation and/or restore acceptable system
+     2       performance. Describe your approach to providing this.
+
+
+
+
+In order to fulfill the above Performance Requirements, the hosting solution must provide real-time
+monitoring of key performance metrics, to be agreed upon with MOCS. The hosting architecture and
+real-time monitoring metrics must be made available to MOCS Staff. All Proposers must detail the
+application performance metrics they will be monitoring, describe how each impacts overall
+system performance, the frequency at which the metric will be reported, and the acceptable
+range of metric values.
+
+
+  Metric #                                 Name and Description of Metric              Acceptable Range   Frequency
+
+      1
+      2
+      3
+      4
+      5
+      6
+      7
+      8
+
+
+
+Functional Requirements
+
+City-wide e-Procurement Performance Optimization Proposal template   Page 7
+Mayor’s Office of Contract Services
+      City-wide e-Procurement Performance Optimization Proposal for Mayor’s Office of
+                                    Contract Services
+In addition to the prior two sections, All Category 2 Proposers must complete the following
+functional requirements section. Please review the detailed functional requirements in Appendix
+F of the RFS for fuller functional descriptions. Please provide responses to each category
+requirement below:
+
+
+         REQ #                                         Functional Requirements           Functional Area
+
+                            In the sections below, please describe the degree to
+    Vendor
+                            which your solution provides the indicated vendor
+  Management
+                            functionality.
+                            Self-service capture of all indicative, background, and
+                            performance vendor information. Vendor and
+        VM01                principal disclosure, vendor caution, and performance     Vendor Management
+                            evaluation capture and management should all be
+                            supported.
+                            Manage Pre-Qualified Lists (PQLs). Each PQL must be
+                            tied to a Managing Agency that is responsible for
+                            requesting the creation of a PQL and managing a
+        VM02                                                                           PQL Management
+                            Vendor’s qualification to the PQL. PQLs can be flagged
+                            as citywide or for use by the Managing Agency only.
+
+                            Manage vendor responsibility determinations,
+                            including all required reporting from City and external
+        VM03                                                                           RD Management
+                            resources.
+
+                            Provide vendor ability to store and manage
+                            documents. Vendors should be able to upload
+                            specified document types and pull documents from
+        VM04                                                                            Document Vault
+                            their vault to their proposals, contracts, invoices,
+                            vendor disclosures, and/or PQL Applications.
+
+                            Provide vendor budget management, including
+        VM05                certification of funds, invoice and payment tracking,     Budget Management
+                            advances, and recoupments.
+                            Provide subcontractor management functionality to
+                            facilitate the current subcontractor management
+                            process. This includes subcontractor submission and          Subcontractor
+        VM06
+                            approval, subcontract modifications, and capture of          Management
+                            payments made to subcontractors.
+
+                            Allow vendors and agencies to monitor progress
+                            towards M/WBE goals for a given contract.
+        VM07                                                                           M/WBE Utilization
+
+
+
+City-wide e-Procurement Performance Optimization Proposal template   Page 8
+Mayor’s Office of Contract Services
+      City-wide e-Procurement Performance Optimization Proposal for Mayor’s Office of
+                                    Contract Services
+
+         REQ #                                         Functional Requirements             Functional Area
+
+                            In the sections below, please describe the degree to
+    Catalog
+                            which your solution provides the indicated catalog
+  Management
+                            management functionality.
+                            Establish import process for goods catalogs sourced
+                            from established master agreement contracts. Items
+        CM01                                                                           Catalog Management
+                            from catalogs can be viewed citywide for purchase
+                            requisitions.
+                            Allow for internal business and financial approvals of
+                            good purchase requisitions before funds being
+                            encumbered and sent to the vendor for fulfillment. An
+        CM02                                                                          Requisition and Ordering
+                            order module enable vendors to view and manage
+                            orders and mark estimated delivery dates.
+
+                            Create receipts to mark the confirmed delivery of
+                            goods to the agency with verified quantities. Vendors
+                            can create invoices to be paid that will undergo a
+        CM03                system match against what was ordered and what            Receiving and Invoicing
+                            was received and internal agency business and
+                            financial review prior to disbursement from FMS.
+
+                            In the sections below, please describe the degree to
+     Source to
+                            which your solution provides the indicated catalog
+     Contract
+                            management functionality.
+                            Contract requisition, solicitation, creation, and
+        STC01               management.                                                  Source to Contract
+
+                            Organize Requisitions, Sourcing Projects into different
+        STC02               Programs according to thematic city initiatives.               Organization
+
+                            Request director orders for goods, services through
+                            task orders or prompt the initiation of a new sourcing
+        STC03                                                                               Requisition
+                            event or contract action.
+
+                            Support pre-solicitation review assessing the existing
+                            market for goods, services, or construction; to
+        STC04               estimate the expected cost; and to select the most            Pre-Solicitation
+                            appropriate method for the City’s need.
+
+                            Draft procurement solicitations and issue/publish
+                            solicitations to vendors that have been selected in
+        STC05               accordance with the PPB rules.                                  Solicitation
+
+
+
+
+City-wide e-Procurement Performance Optimization Proposal template   Page 9
+Mayor’s Office of Contract Services
+      City-wide e-Procurement Performance Optimization Proposal for Mayor’s Office of
+                                    Contract Services
+
+         REQ #                                         Functional Requirements             Functional Area
+
+                            Evaluate vendor responses to solicitations in
+                            accordance with PPB rules and other City initiatives,
+        STC06                                                                               Evaluation
+                            including multiple rounds or addenda, open-ended
+                            solicitations, and real-time bidding.
+                            Link a responsibility determination to the selected
+                            vendor and create a recommendation for award to a
+        STC07               vendor. Submit recommendation for approval by                     Award
+                            oversight agency administrators.
+
+                            Draft vendor contracts and engage in collaborative
+                            editing and negotiation between City and vendor.
+                            Execute completed contracts, and conduct oversight,
+        STC08               review and approve finalized contracts, request and              Contract
+                            calendar public hearings, perform Contract
+                            certification of funds, and submit the registration
+                            package to the Comptroller’s Office.
+                            Provide full functionality for contract amendment and
+        STC09                                                                             Amendments
+                            change order management.
+                            Establish contract functionality to allow agencies to
+                            register and manage Master Agreements (MA1,
+                                                                                        Master Agreement
+                            MMA1, MAR) directly from PASSPort. This includes
+        STC10                                                                             Registration
+                            contract modifications, the creation of new
+                                                                                       (MA1/MMA1/MAR)
+                            agreements and task order management including
+                            supporting different task order rotation models.
+                            In the sections below, please describe the degree to
+       Finance              which your solution provides the indicated catalog
+                            management functionality.
+                            Enable agencies to manage their certification of funds,
+                            encumbrances, and accounting lines. This functional
+        FIN01               need will exist across relevant requisition, contract,    Financials Management
+                            contract amendment/ change orders, order, and
+                            invoice operations.
+                            Budget and encumbrance management includes
+                                                                                          FY Budgeting &
+        FIN02               validation and submission capabilities, as well as
+                                                                                          Encumbrance
+                            management of oversight and approval workflows.
+                            Provide invoicing and receiving modules for direct
+                            orders, general contracts and task orders along with
+                            supporting budget and encumbrance integrations             Invoicing & Receiving
+        FIN03
+                            with the City’s financial management system. This              (CT1/CTA1)
+                            functionality features workflow rules, agency approval
+                            business requirements, and payment details set-up.
+
+
+City-wide e-Procurement Performance Optimization Proposal template   Page 10
+Mayor’s Office of Contract Services
+      City-wide e-Procurement Performance Optimization Proposal for Mayor’s Office of
+                                    Contract Services
+
+         REQ #                                         Functional Requirements             Functional Area
+
+
+                            Enable submission of contract budgets from vendors
+        FIN04                                                                         Vendor Contract Budget
+                            for contracts and purchase orders.
+
+                            Enable management retainage terms on contract
+        FIN05                                                                          Capital Management
+                            budgets and related invoices.
+                            Dynamic and well-managed flexible pricing and
+                            blanket order options to support specialized purchase       Fuel Pricing/Blanket
+        FIN06
+                            needs such as fuel purchases and bulk supply                       Order
+                            fulfillment.
+                            As disbursements are issued by the City’s financial
+                            management system, order, invoice, and
+                                                                                          Financial system
+        FIN07               disbursement integrations will be real- or near-real-
+                                                                                            integrations
+                            time to ensure best practice and provide operational
+                            transparency and integrity.
+                            Support different funding structures across functional
+                                                                                      Mixed Funding Contract
+        FIN08               modules; these structures include capital, expense,
+                                                                                          Submissions
+                            and mixed budgets.
+                            Allow for payment advances and recoupment on                   Advances and
+        FIN09
+                            those advances.                                                Recoupment
+                            The following items provide a description of data
+     Data                   requirements to support transactions with external
+ Requirements               systems and reporting functionality.
+
+                            Enable integrations required to support the above
+                            functionality with respect to City authentication,
+                            financial, and budget systems hosted by the City's
+                            Office of Technology Innovation (OTI), Financial
+        DR01                Information Services Agency (FISA), and the Office of           Integration
+                            Management and Budget (OMB). Standard
+                            integrations protocols (API, FTP, LDAP, etc.), security
+                            provisions, and management tools (scheduling,
+                            monitoring, etc.) must be supported.
+                            Provide programmatic and user-accessible read-level
+                            access to all application data, allowing for
+                            customizable standard query methods (SQL or SQL-
+        DR02                                                                                Reporting
+                            like queries) to retrieve filtered data outputs in a
+                            variety of structured formats (for example, MS Excel,
+                            csv, xml, etc. files).
+     Document               The following items provide a description of
+       Vault                document management and sharing capabilities.
+
+
+City-wide e-Procurement Performance Optimization Proposal template   Page 11
+Mayor’s Office of Contract Services
+      City-wide e-Procurement Performance Optimization Proposal for Mayor’s Office of
+                                    Contract Services
+
+         REQ #                                         Functional Requirements             Functional Area
+
+                            This module allows Vendor, Agency, and Admin users
+                            in PASSPort to manage documents within their
+                            organization's PASSPort Vault, organizing, uploading,
+                            and searching for documents. Documents can be
+        DV01                shared between organizations but cannot be archived       Document Management
+                            or deleted once shared. Unshared documents can be
+                            archived but restored if needed. Users can view and
+                            download read-only documents sent by other
+                            organizations but cannot edit or link them.
+                            The system shall allow agencies to select document
+                            submission requirements for vendors to upload as
+                            part of certain steps in the procurement lifecycle.
+                            Both agencies and vendors can link requested
+        DV02                documents either from their local device or link an          Document Linking
+                            existing document from their respective document
+                            vault. In certain cases, documents linked to PASSPort
+                            objects will be converted to PDF format for viewing or
+                            download.
+   Global and               The following items describe system capabilities to
+   Homepages                configure homepage, menus, approval rules, as well
+                            as access based on user profiles and authorizations.
+
+        GH01                The system shall allow the configuration and design       Homepage Configuration
+                            for PASSPort global pages.
+                            The system shall allow mapping new and baseline user
+                            profiles and authorizations, determining access                Profiles and
+        GH02
+                            privileges to determine which homepage features are           Authorizations
+                            available based on a user’s profile combinations.
+                            The system shall allow users with the MOCS Admin
+                            profile to manage agency rules, defining levels of
+                            approval within an agency, routing tasks for oversight
+                            agency approval or delegating approvals.
+                            The business rules shall allow the dollar threshold
+                            dimension to be formatted as “greater than or equal
+        GH03                to”; tasks will then be routed to pre-defined agency          Approval Rules
+                            users. For delegation rules, formatted as “less than or
+                            equal to”, the system assigns the task to a designated
+                            user and auto-completes the delegated steps.
+
+
+
+
+City-wide e-Procurement Performance Optimization Proposal template   Page 12
+Mayor’s Office of Contract Services
+      City-wide e-Procurement Performance Optimization Proposal for Mayor’s Office of
+                                    Contract Services
+
+         REQ #                                         Functional Requirements           Functional Area
+
+                            The system shall provide a facility to configure and
+                            generate electronic procurement identification
+                            number (E-PIN) for sourcing projects, contracts,
+                            contract management actions, and encumbrance
+        GH04                change contracts.                                          E-PIN Generation
+
+                            When searching for sourcing projects, contracts,
+                            requisitions, and POs, the user should be able to enter
+                            a partial or full E-PIN and the relevant objects will
+                            populate on the browse screens.
+                            The system will generate PDFs based on created
+                            templates that will pull data fields from various points
+                            throughout the Contract Object. System-generated           System Generated
+        GH05
+                            documents will be given a new naming convention at            Documents
+                            the time which they are generated and then sent to
+                            the agency’s document vault.
+                            The system shall provide configuration to allow
+                            certain system objects to use the document vault (link
+                            documents to objects) or the standard system               Document Vault
+        GH06
+                            attachment functionality. Provide facility to configure     configuration
+                            types of documents that user can upload when
+                            document vault linking is allowed.
+
+
+
+
+City-wide e-Procurement Performance Optimization Proposal template   Page 13
+Mayor’s Office of Contract Services
+      City-wide e-Procurement Performance Optimization Proposal for Mayor’s Office of
+                                    Contract Services
+
+
+
+Statement of work
+Objectives
+
+     State your understanding of the project’s objectives and goals.
+
+Approach and Methodology
+
+     Describe the approach and methodology to be used in this project (e.g., prototyping, RAD,
+     Agile, COTs products, etc.)
+
+
+Project Scope
+
+     Include the following in this section:
+
+      •     Contractor’s needs – e.g., desk space, development and test environments, etc.
+      •     Proposed acceptance criteria and process for project deliverables
+      •     How the Contractor will interact with the City’s staff, Requirements Definition and/or Project
+            Monitoring contractors, as applicable
+      •     List of tasks, by phase, per the sample below. Include resources assigned to those tasks,
+            estimated duration, and critical milestones. Actual project phases will vary depending on the
+            project scope:
+
+
+
+   Phase                                                  Task                 Resource   Estimated Duration
+   Initiation
+   Analysis and Design
+   Build
+   Test
+   Implement
+   Document
+   Train
+   Operations and Support
+   Knowledge Transfer
+   Post-Project Review
+
+
+
+ Work Products and Deliverables
+
+Describe the deliverables for this project. Below are examples; specific deliverables will vary
+depending on the project scope.
+
+City-wide e-Procurement Performance Optimization Proposal template   Page 14
+Mayor’s Office of Contract Services
+      City-wide e-Procurement Performance Optimization Proposal for Mayor’s Office of
+                                    Contract Services
+
+
+   Phase                               Deliverable                       Description
+   Initiation                          Project Workplan                  A workplan document with a hierarchical representation of
+                                                                         tasks, consisting of start and end dates, dependencies, and
+                                                                         resources
+
+   Design                              Design Document                   A text document containing a detailed design of each aspect
+                                       (planned and as-built)            of the implementation. The Design Document should include
+                                                                         a security approach strategy.
+
+   Build                               Unit Test Results                 A text document and attachments containing results of unit
+                                                                         testing (peer review documents)
+
+   Test                                Test Plan                         A text document describing the test approach, including the
+                                                                         test cycle, conditions, expected results definitions.
+
+   Test                                Test Scripts                      A text document and attachments containing Unit and
+                                                                         assembly test scripts
+
+   Test                                Test Results                      A text document and attachments containing results of the
+                                                                         testing
+
+   Implementation                      Production Application            A working application live in production.
+
+   Documentation                       Technical documentation           Runbook, technical architecture blueprint,
+                                                                         application/database manuals, class hierarchies, etc. that are
+                                                                         determined to be necessary. Each document should be listed
+                                                                         as a separate deliverable.
+
+   Documentation                       Deployment and back-out           Step-by-step procedures for deploying and backing out the
+                                       plans                             code, modules, templates, deployment scripts, data, files,
+                                                                         network and firewall changes and user accounts required to
+                                                                         go live in production.
+
+   Training/Knowledge                  Transition Plan                   A text document describing the steps necessary to enable
+   Transfer                                                              City staff to support and maintain the application in
+                                                                         production.
+
+   Ongoing                             Status Reports                    Contractor will provide weekly status reports about the
+                                                                         project and progress to schedule.
+
+
+
+
+Project Timeline
+
+[Contractor Name] shall undertake the work effort detailed in this proposal within [time
+period], with [additional time period] reserved for monitoring and support. The project is
+scheduled to begin [fill in date]. The Gantt chart in this proposal illustrates the high-level
+schedule for the project and indicates the required deliverables and due dates.
+
+The overall timeline and schedule is illustrated below:
+
+Below is an example timeframe and schedule:
+
+
+
+City-wide e-Procurement Performance Optimization Proposal template   Page 15
+Mayor’s Office of Contract Services
+      City-wide e-Procurement Performance Optimization Proposal for Mayor’s Office of
+                                    Contract Services
+
+
+
+
+Category 1 Solutions. We expect the initial and most substantive phase to be completed within eight (8)
+months, depending on vendor readiness, onboarding of resources, and stakeholder cooperation by City
+Hall and Agency resources. Subsequent phases, addressing additional tiers or products should be
+completed within the following twelve (12) months. Below are the suggested Phase 1 Timetable and
+Work Breakdown. Category 2 Phase 1 cost should be priced separately from all future phases.
+
+
+Category 1 Phase 1 Timetable
+
+ Month 1                     Project setup & analysis of current environment
+ Month 2                     Complete Phase 1 environment design
+ Month 3                     Stand up test environment
+ Month 4                     Implement test system
+ Months 5                    Complete design of performance evaluation criteria
+ Months 6-8                  Migrate to production
+
+
+Category 1 Phase 1 Work Breakdown
+                                                                                                     Estimated
+           Phase                                 Deliverable                                         Completion
+ 1         Planning &                            Project work plan                                     Month 1
+           Requirements
+ 2         Planning &                            Phase 1 evaluation criteria                          Month 2
+           Requirements
+ 3         Planning &                            Phase1 test plan                                     Month 2
+           Requirements
+ 4         Design & Development                  Detailed hosting environment design, including       Month 3
+                                                 accurate reference architecture.
+ 5         Design & Development                  Detailed multi-tier application design, including    Month 3
+                                                 accurate reference architecture. Detailing all
+                                                 components.
+ 6         Design & Development                  Test Implementation plan                             Month 3
+ 7         Design & Development                  Production implementation plan                       Month 5
+ 8         Pre-Release                           End-to-End Testing                                  Months 7-8
+
+City-wide e-Procurement Performance Optimization Proposal template   Page 16
+Mayor’s Office of Contract Services
+      City-wide e-Procurement Performance Optimization Proposal for Mayor’s Office of
+                                    Contract Services
+ 9         Pre-Release                           User Acceptance Testing and Approval                        Months 7-8
+
+Category 2 Solutions. In solutions involving the introduction of software replacing PASSPort
+functionality in whole or in part, we expect a sandbox environment to be established and a
+comprehensive gap analysis to all existing functionality along with separate business process
+engineering to be completed within eight (8) months, with full implementation/integration and
+migration to be completed within the following eighteen (18) months, with dependency on vendor
+readiness, onboarding of resources, and stakeholder cooperation by City Hall and Agency resources.
+Category 2 Phase 1 cost should be priced separately from all future phases.
+
+Category 2 Phase 1 Timetable
+ Month 1                     Implement sandbox environment. Identify Business process re-engineering team
+ Month 2                     Define scope of targeted replacement functionality. Launch BPR.
+ Month 3                     Commence Gap Analysis.
+ Month 6                     Complete gap analysis of targeted functionality
+ Month 7                     Complete Business Process Re-engineering
+ Month 8                     Submit Gap Analysis and BPR reports. Submit initial integration and migration
+                             plans.
+
+
+
+Category 2 Phase 1 Work Breakdown
+                                                                                                              Estimated
+                                                                                                              Completio
+   Phase                                                 Deliverable                                          n
+ 1 Planning & Requirements                               Project Work Plan                                     Month 1
+ 2 Planning & Requirements                               Functional Requirements Validation Document.          Month 2
+ 3 Planning & Requirements                               Business process re-engineering plan.                 Month 2
+
+ 4 Design & Development                                  Detailed hosting environment design, including        Month 3
+                                                         accurate reference architecture.
+ 5 Design & Development                                  Detailed multi-tier application design, including     Month 3
+                                                         accurate reference architecture. Detailing all
+                                                         components.
+ 6     Design & Development                              Functional integration specification                  Month 4
+ 7     Design & Development                              Gap Analysis Report                                   Month 8
+ 8     Design & Development                              BPR Specification                                     Month 8
+ 9     Design & Development                              Integration and Migration Plan                        Month 8
+
+
+Project Scope Exclusion
+
+Explicitly list what is outside of the scope of the project; for example, if the Requesting Agency
+has reserved any procurement responsibilities for itself. Generic exclusions are not acceptable.
+
+Form, Content and Frequency of Reports
+
+City-wide e-Procurement Performance Optimization Proposal template   Page 17
+Mayor’s Office of Contract Services
+      City-wide e-Procurement Performance Optimization Proposal for Mayor’s Office of
+                                    Contract Services
+<Describe the Reports that will be submitted by the Contractor for this project.>
+
+   Title of Report                     Form and Content                                            Frequency
+
+
+
+
+Assumptions
+
+Contractor should insert any Assumptions here. This may include the provision of resources
+or facilities by the Requesting Agency. Any assumptions that conflict with the terms and
+conditions of the Agreement are deemed null and void. For example, the percentage of work
+that contractor personnel will perform off-site, specific software or system access that is
+required.
+
+
+
+
+Project Staffing and Organization
+Staffing
+
+The Contractor will provide a minimum of the following resources to perform the work
+described in this proposal. Unless otherwise indicated, all assigned staffing is full-time.
+This list should include subcontractors as well. If a resource is a subcontractor, this should
+be clearly indicated. Key Personnel should be denoted with an asterisk (*).
+
+Category 1 responders are expected to staff the following Personnel roles.
+
+            Resource                                   Project Role             Labor Category           Hourly Rate
+                                      Project Manager*                         Project Manager I
+                                      Technical Project Lead*                  Programmer II
+                                      Lead Infrastructure Architect*           Programmer II
+                                      Sr. Application Solution Engineer*       Programmer II
+                                      Senior Database Engineer*                Programmer II
+                                      Senior Implementation Engineer*          Programmer I
+                                      Implementation Engineer(s)               Programmer I
+
+
+Category 2 responders are expected to staff the following Key Personnel roles, in addition to the above
+positions.
+
+            Resource                                   Project Role             Labor Category           Hourly Rate
+                                      Business Analyst Lead*                   Analyst II
+                                      Quality Assurance Lead Lead*             Analyst II
+
+City-wide e-Procurement Performance Optimization Proposal template   Page 18
+Mayor’s Office of Contract Services
+      City-wide e-Procurement Performance Optimization Proposal for Mayor’s Office of
+                                    Contract Services
+                                      Business Analyst(s)                      Analyst I
+                                      Quality Assurance Analyst(s)             Analyst I
+                                      Business Process Re-engineering          Analyst II
+                                      (BPR) Lead
+                                      Change Management Lead                   Analyst II
+
+
+
+
+Unless otherwise indicated in the solicitation, for each resource listed, provide a resume and
+at least one client reference – preferably from one of the projects referenced in Section 2. The
+City may elect to contact the references during the evaluation process, therefore any references
+listed should be aware that they may be contacted. The client reference should include
+organization, name, title, relationship to the resource (e.g., project manager, supervisor, etc.),
+phone number and email address.
+If the proposed solution entails new software implementation and/or implementation in or
+migration to a cloud environment, platform, or framework, the resumes must reflect a
+minimum of five years’ experience working in the targeted environment.
+
+If Prevailing Wage labor will be used, the prevailing wage mark-up should be specified in
+this section.
+
+If non-U.S. labor will be used, the Discounted Hourly Rate should be specified in this
+section. (Reminder: if non-U.S. labor will be used, the Requesting Agency should review
+Attachment SCY and consult with MOCS IT Security.)
+
+If specialized subcontractor personnel will be used, these personnel, their specialty and their
+Cost-plus Hourly Rate should be specified in this section. Please see additional restrictions
+on the use of these personnel in section 14.10 of the Agreement
+
+
+
+
+Organization
+
+The project team will be organized as follows:
+Please provide an organization chart showing the contractor’s organization for this project, and
+how it will interact with the City’s staff and other entities. Also include a narrative describing
+the organization and interactions. Below is an example of an organization chart:
+
+
+
+
+City-wide e-Procurement Performance Optimization Proposal template   Page 19
+Mayor’s Office of Contract Services
+      City-wide e-Procurement Performance Optimization Proposal for Mayor’s Office of
+                                    Contract Services
+
+
+
+
+ Governance Structure
+
+Describe the governance structure of the project.
+
+
+
+
+Fees
+Note: The City requires that all proposals for these services include a fixed-price, deliverables-
+based payment structure. Fixed-price proposals must show the basis for computing the total cost
+per deliverable including the estimated hours and associated hourly rates. In addition to fixed-
+price proposals, contractors may submit alternative pricing proposals for consideration, such as
+time and materials. The City reserves the right to select the payment approach that it believes is
+in the best interest of the City.
+
+
+The Contractor proposes that the services and deliverables defined in this proposal will be
+performed at rates not exceeding those defined in the Agreement. The estimated total cost for
+the services and equipment included in this proposal are [indicate amount].
+
+Contractor to complete Attachment E – Price Proposal Worksheet based on the guidance
+below: All Category1 & 2 proposals should provide separate pricing for Phase 1
+
+
+Note: If the City has authorized the Contractor to perform Services outside of the United States,
+state the applicable discount and indicate which rates are Discounted Hourly Rates.
+
+
+Staffing Plan
+
+
+
+City-wide e-Procurement Performance Optimization Proposal template   Page 20
+Mayor’s Office of Contract Services
+         City-wide e-Procurement Performance Optimization Proposal for Mayor’s Office of
+                                       Contract Services
+In tab “Staffing Plan” Indicate the fees for labor by task and deliverable. Include tasks and
+deliverable for ALL PHASES required to complete the proposed solution
+                                                                                  YEAR 1                     YEAR 2                     YEAR 3                     YEAR 4                     YEAR 5                     YEAR 6                 TOTAL (6 Years)
+Deliverable            No. Proposer Resource Title Proposer Hourly Rate Estimated Hours Total Cost Estimated Hours Total Cost Estimated Hours Total Cost Estimated Hours Total Cost Estimated Hours Total Cost Estimated Hours Total Cost Estimated Hours Total Cost
+1                        1                                                               $ -                        $ -                        $ -                        $ -                        $ -                        $ -                      0$ -
+                         2                                                               $ -                        $ -                        $ -                        $ -                        $ -                        $ -                      0$ -
+                         3                                                               $ -                        $ -                        $ -                        $ -                        $ -                        $ -                      0$ -
+                         4                                                               $ -                        $ -                        $ -                        $ -                        $ -                        $ -                      0$ -
+                         5                                                               $ -                        $ -                        $ -                        $ -                        $ -                        $ -                      0$ -
+              Subtotal                                                                0$ -                       0$ -                       0$ -                       0$ -                       0$ -                       0$ -                        0$ -
+2                        1                                                               $ -                        $ -                        $ -                        $ -                        $ -                        $ -                      0$ -
+                         2                                                               $ -                        $ -                        $ -                        $ -                        $ -                        $ -                      0$ -
+                         3                                                               $ -                        $ -                        $ -                        $ -                        $ -                        $ -                      0$ -
+                         4                                                               $ -                        $ -                        $ -                        $ -                        $ -                        $ -                      0$ -
+                         5                                                               $ -                        $ -                        $ -                        $ -                        $ -                        $ -                      0$ -
+              Subtotal                                                                0$ -                       0$ -                       0$ -                       0$ -                       0$ -                       0$ -                        0$ -
+3                        1                                                               $ -                        $ -                        $ -                        $ -                        $ -                        $ -                      0$ -
+                         2                                                               $ -                        $ -                        $ -                        $ -                        $ -                        $ -                      0$ -
+                         3                                                               $ -                        $ -                        $ -                        $ -                        $ -                        $ -                      0$ -
+                         4                                                               $ -                        $ -                        $ -                        $ -                        $ -                        $ -                      0$ -
+                         5                                                               $ -                        $ -                        $ -                        $ -                        $ -                        $ -                      0$ -
+              Subtotal                                                                0$ -                       0$ -                       0$ -                       0$ -                       0$ -                       0$ -                        0$ -
+4                        1                                                               $ -                        $ -                        $ -                        $ -                        $ -                        $ -                      0$ -
+                         2                                                               $ -                        $ -                        $ -                        $ -                        $ -                        $ -                      0$ -
+                         3                                                               $ -                        $ -                        $ -                        $ -                        $ -                        $ -                      0$ -
+                         4                                                               $ -                        $ -                        $ -                        $ -                        $ -                        $ -                      0$ -
+                         5                                                               $ -                        $ -                        $ -                        $ -                        $ -                        $ -                      0$ -
+              Subtotal                                                                0$ -                       0$ -                       0$ -                       0$ -                       0$ -                       0$ -                        0$ -
+5                        1                                                               $ -                        $ -                        $ -                        $ -                        $ -                        $ -                      0$ -
+                         2                                                               $ -                        $ -                        $ -                        $ -                        $ -                        $ -                      0$ -
+                         3                                                               $ -                        $ -                        $ -                        $ -                        $ -                        $ -                      0$ -
+                         4                                                               $ -                        $ -                        $ -                        $ -                        $ -                        $ -                      0$ -
+                         5                                                               $ -                        $ -                        $ -                        $ -                        $ -                        $ -                      0$ -
+              Subtotal                                                                0$ -                       0$ -                       0$ -                       0$ -                       0$ -                       0$ -                        0$ -
+                     0                             Totals                             0$ -                       0$ -                       0$ -                       0$ -                       0$ -                       0$ -                        0$ -
+
+
+
+
+In tab “Total Charges” include all the following:
+
+Software/Subscriptions
+
+Identify any packaged and/or operating system software costs associated with this project. Note
+any volume or packaging discounts which apply, as well as the licensing structure used by each
+software vendor (e.g., server-based concurrent users, etc.). Indicate the percentage mark-up, if
+any, (not-to-exceed that specified in Attachment PRC); for maintenance and support services no
+mark-up (0% mark-up) applies. Prior to purchase, all software licenses must be approved per
+section 6.8 of the Agreement.
+
+Hardware
+
+Indicate, to the greatest extent possible, any and all hardware acquisitions necessary to support
+the proposed solution(s) described in the project proposal. Indicate the percentage mark-up (not-
+to-exceed that specified in Attachment PRC); for maintenance and support services no mark-up
+(0% mark-up) is permitted.
+
+Note: All hardware and software purchases should be at or below the lessor of Contractor’s
+discounted prices, NYS OGS prices or GSA Schedule commercial list price.
+City-wide e-Procurement Performance Optimization Proposal template                                  Page 21
+Mayor’s Office of Contract Services
+      City-wide e-Procurement Performance Optimization Proposal for Mayor’s Office of
+                                    Contract Services
+Phase 1
+
+Contractor can use sample “Phase 1” tab to indicate Phase 1 staffing requirements in the “Phase
+1” tab, and complete either category 1 phase 1 or category 2 phase 1 tables depending on
+approach and numbers will auto-populate under section 4 in “Total Charges” tab or use own
+template.
+
+
+Post-Implementation Support and Maintenance
+
+Indicate any applicable ongoing annual fees (such as license fees, maintenance, training, etc.)
+Assume, unless otherwise indicated, that there is no overlap between final acceptance, warranty,
+and maintenance periods. No mark-up (0% mark-up) permitted for maintenance and support
+services.
+
+Note: The City has the right to select a subset of the quoted goods and services to purchase from
+the Contractor. These rights include, but are not limited to, deciding to purchase software or
+hardware from another source (including directly from the software or hardware vendor) if the
+Contractor’s proposed pricing is not the most favorable option available to the City.
+
+
+Other Charges
+
+Include below any other fees/charges not covered in the above categories.
+
+Performance Outcome Measures & Financial Incentives
+
+Contractors are invited to list and describe outcome measures of the work to be performed by
+them and the related financial incentives/disincentives that could potentially be applied to this
+contract, either in whole or in part.
+
+Grand Total
+
+Enter the subtotals from each of the above categories and calculate the Grand Total.
+
+
+
+
+City-wide e-Procurement Performance Optimization Proposal template   Page 22
+Mayor’s Office of Contract Services
+      City-wide e-Procurement Performance Optimization Proposal for Mayor’s Office of
+                                    Contract Services
+
+
+
+
+Payment Schedule
+
+The Contractor shall submit invoices to the Agency Project Manager as follows:
+Indicate the schedule – monthly, by deliverable, etc. If by deliverable list each deliverable and
+the associated cost, sample below - See attachment E tab for full Payment Schedule.
+
+
+
+
+City-wide e-Procurement Performance Optimization Proposal template   Page 23
+Mayor’s Office of Contract Services
+      City-wide e-Procurement Performance Optimization Proposal for Mayor’s Office of
+                                    Contract Services
+
+
+
+
+City-wide e-Procurement Performance Optimization Proposal template   Page 24
+Mayor’s Office of Contract Services
+      City-wide e-Procurement Performance Optimization Proposal for Mayor’s Office of
+                                    Contract Services
+Warranty Period
+The Warranty Period for Products and System Deliverables is [12] months.
+
+Indicate if the Warranty Period for Products and Systems Deliverables is greater than 12
+months (it cannot be shorter). Any additional warranties should also be specified in this
+section.
+
+
+
+
+City-wide e-Procurement Performance Optimization Proposal template   Page 25
+Mayor’s Office of Contract Services
+

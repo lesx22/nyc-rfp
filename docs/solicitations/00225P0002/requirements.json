@@ -1,16 +1,1135 @@
 {
-  "$comment": "Schema for listing-specific requirements consumed by the Response Studio. Populate only from captured documents; every item needs a source. Never invent requirements.",
   "epin": "00225P0002",
-  "status": "pending-documents",
-  "sources": [],
-  "keyDates": [],
-  "sections": [],
-  "evaluationCriteria": [],
-  "submissionChecklist": [],
-  "example": {
-    "sections": [{ "id": "scope", "title": "Scope of services", "requirements": [{ "id": "R-001", "text": "…", "type": "must | should | form | info", "source": { "file": "files/01-RFP.pdf", "page": 12 } }] }],
-    "evaluationCriteria": [{ "criterion": "…", "weight": 0.3, "source": { "file": "files/01-RFP.pdf", "page": 30 } }],
-    "keyDates": [{ "label": "Proposal due", "date": "2026-02-27T14:00", "source": { "file": "…", "page": 1 } }],
-    "submissionChecklist": [{ "item": "…", "source": { "file": "…", "page": 0 } }]
+  "title": "City-wide E-Procurement Performance Optimization (PASSPort 2026)",
+  "agency": "Mayor's Office of Contract Services",
+  "status": "extracted",
+  "extractedAt": "2026-10-13",
+  "note": "Extracted from the documents provided by the user. Pages are PDF page numbers. The main RFS document, Appendix F and Attachment E were not among the files and are listed under missingDocuments.",
+  "sources": [
+    {
+      "file": "files/01-Attachment_A_Proposal_Template.pdf",
+      "title": "Attachment A – Proposal Template",
+      "pages": 26
+    },
+    {
+      "file": "files/02-Addendum_3_Submission_and_QA_Deadline_Extension.pdf",
+      "title": "Addendum #3 – Submission Due Date & Question Deadline Extension",
+      "pages": 1
+    },
+    {
+      "file": "files/03-Special_Case_Determination_Memo.pdf",
+      "title": "Special Case Determination Memo (11/13/2024)",
+      "pages": 1
+    },
+    {
+      "file": "files/04-MOCS_MWBE_Goals_Worksheet.xlsx",
+      "title": "NYC M/WBE Participation Goals Worksheet"
+    },
+    {
+      "file": "files/05-Appendix_A_2018_with_Addendum.pdf",
+      "title": "Appendix A – General Provisions (2018) with Addendum",
+      "pages": 77
+    }
+  ],
+  "missingDocuments": [
+    "Main RFS (evaluation weights, submission instructions)",
+    "Appendix F – detailed functional requirements",
+    "Attachment E – Price Proposal Worksheet",
+    "Attachment PRC (mark-up limits)",
+    "Attachment SCY (security)",
+    "Addenda #1, #2 and any after #3"
+  ],
+  "responseCategories": [
+    {
+      "id": "category1",
+      "title": "Category 1",
+      "summary": "Enhancement or optimization of the existing PASSPort software environment."
+    },
+    {
+      "id": "category2",
+      "title": "Category 2",
+      "summary": "Software enhancement or replacement, up to a complete system replacement; also completes the functional requirements."
+    }
+  ],
+  "keyDates": [
+    {
+      "label": "Special case determination (CSP method)",
+      "date": "2024-11-13",
+      "source": {
+        "file": "files/03-Special_Case_Determination_Memo.pdf",
+        "page": 1
+      }
+    },
+    {
+      "label": "Original proposal due date",
+      "date": "2025-04-24T14:00",
+      "source": {
+        "file": "files/02-Addendum_3_Submission_and_QA_Deadline_Extension.pdf",
+        "page": 1
+      }
+    },
+    {
+      "label": "Addendum #3 issued",
+      "date": "2025-04-23",
+      "source": {
+        "file": "files/02-Addendum_3_Submission_and_QA_Deadline_Extension.pdf",
+        "page": 1
+      }
+    },
+    {
+      "label": "Question deadline (extended)",
+      "date": "2025-08-29",
+      "source": {
+        "file": "files/02-Addendum_3_Submission_and_QA_Deadline_Extension.pdf",
+        "page": 1
+      }
+    },
+    {
+      "label": "Proposal due date (extended by Addendum #3)",
+      "date": "2025-10-24T14:00",
+      "source": {
+        "file": "files/02-Addendum_3_Submission_and_QA_Deadline_Extension.pdf",
+        "page": 1
+      }
+    },
+    {
+      "label": "Proposal due date per PASSPort mirror (later addendum not captured)",
+      "date": "2026-02-27T14:00",
+      "source": {
+        "url": "https://databook.nyc/procurement/solicitation/00225P0002"
+      }
+    }
+  ],
+  "evaluationCriteria": {
+    "areas": [
+      "Relevant Project Experience",
+      "Solution Fit",
+      "Statement of Work (Approach and Methodology)",
+      "Organization and Staffing (Organizational Capability)",
+      "Fees (Cost Proposal)"
+    ],
+    "weights": null,
+    "weightsNote": "Weights are in the main RFS, which was not provided.",
+    "source": {
+      "file": "files/01-Attachment_A_Proposal_Template.pdf",
+      "page": 4
+    }
+  },
+  "procurementMethod": {
+    "method": "Competitive sealed proposals",
+    "reason": "Requires specific expertise in software development and optimization; a balance of price, quality and other factors (PPB Rule § 3-01(d)(2)).",
+    "source": {
+      "file": "files/03-Special_Case_Determination_Memo.pdf",
+      "page": 1
+    }
+  },
+  "mwbe": {
+    "participationGoal": 0.3,
+    "goalBreakdown": "Unspecified (no group-specific goals)",
+    "estimatedContractValueUSD": 230940954,
+    "estimatedMwbeValueUSD": 69282286.2,
+    "subcontractingAreas": [
+      {
+        "area": "Procurement Software",
+        "estValueUSD": 34641143.1
+      },
+      {
+        "area": "Procurement Development",
+        "estValueUSD": 34641143.1
+      }
+    ],
+    "note": "Agency estimate from the M/WBE goals worksheet, not an award amount. Directory search exports in the workbook contain third-party contact details and are not reproduced here.",
+    "source": {
+      "file": "files/04-MOCS_MWBE_Goals_Worksheet.xlsx",
+      "sheet": "Worksheet"
+    }
+  },
+  "sections": [
+    {
+      "id": "exec",
+      "title": "Executive Summary",
+      "evaluated": false,
+      "requirements": [
+        {
+          "id": "EX-01",
+          "text": "Identify the Response Category (1 or 2), your understanding of scope and objectives, and summarize approach, proposed staff and estimated duration.",
+          "type": "must",
+          "appliesTo": "all",
+          "source": {
+            "file": "files/01-Attachment_A_Proposal_Template.pdf",
+            "page": 4
+          }
+        }
+      ]
+    },
+    {
+      "id": "experience",
+      "title": "1. Relevant Project Experience",
+      "evaluated": true,
+      "requirements": [
+        {
+          "id": "EXP-01",
+          "text": "Describe at least three similar, successful projects with start/end dates, staff count, your role, business need, target audience and approximate users, technical solution, and final results.",
+          "type": "must",
+          "appliesTo": "all",
+          "source": {
+            "file": "files/01-Attachment_A_Proposal_Template.pdf",
+            "page": 4
+          }
+        },
+        {
+          "id": "EXP-02",
+          "text": "Provide a client reference for each project (organization, name and title, project role, phone, email); references must agree to be contacted.",
+          "type": "must",
+          "appliesTo": "all",
+          "source": {
+            "file": "files/01-Attachment_A_Proposal_Template.pdf",
+            "page": 5
+          }
+        }
+      ]
+    },
+    {
+      "id": "solution",
+      "title": "2. Solution Fit",
+      "evaluated": true,
+      "subsections": [
+        {
+          "id": "technical",
+          "title": "2.1 Technical (Infrastructure) Requirements",
+          "note": "All proposers must complete.",
+          "requirements": [
+            {
+              "id": "INF-01",
+              "text": "Describe how the architecture supports load balancing and workload distribution; attach a reference architecture covering hosting environment and application architecture.",
+              "type": "must",
+              "appliesTo": "all",
+              "source": {
+                "file": "files/01-Attachment_A_Proposal_Template.pdf",
+                "page": 5
+              },
+              "category": "Architecture"
+            },
+            {
+              "id": "INF-02",
+              "text": "Describe how the solution tracks: availability, response times, web/application/OS processes, database queries and I/O, throughput, CPU/memory/network/database utilization, active users, error rates, garbage collection.",
+              "type": "must",
+              "appliesTo": "all",
+              "source": {
+                "file": "files/01-Attachment_A_Proposal_Template.pdf",
+                "page": 5
+              },
+              "category": "Performance Management"
+            },
+            {
+              "id": "INF-03",
+              "text": "Describe how new monitoring parameters are added.",
+              "type": "must",
+              "appliesTo": "all",
+              "source": {
+                "file": "files/01-Attachment_A_Proposal_Template.pdf",
+                "page": 6
+              },
+              "category": "Performance Management"
+            },
+            {
+              "id": "INF-04",
+              "text": "Describe how performance degradation is detected and reported.",
+              "type": "must",
+              "appliesTo": "all",
+              "source": {
+                "file": "files/01-Attachment_A_Proposal_Template.pdf",
+                "page": 6
+              },
+              "category": "Performance Management"
+            },
+            {
+              "id": "INF-05",
+              "text": "Detail the logging and error-tracking process, including the list of items logged and tracked.",
+              "type": "must",
+              "appliesTo": "all",
+              "source": {
+                "file": "files/01-Attachment_A_Proposal_Template.pdf",
+                "page": 6
+              },
+              "category": "Performance Management"
+            },
+            {
+              "id": "INF-06",
+              "text": "Describe high availability and scalability through dynamic allocation of processing power, memory, database capacity, network bandwidth and application server capacity.",
+              "type": "must",
+              "appliesTo": "all",
+              "source": {
+                "file": "files/01-Attachment_A_Proposal_Template.pdf",
+                "page": 6
+              },
+              "category": "Architecture"
+            },
+            {
+              "id": "INF-07",
+              "text": "Describe the security model for the hosting infrastructure and the application.",
+              "type": "must",
+              "appliesTo": "all",
+              "source": {
+                "file": "files/01-Attachment_A_Proposal_Template.pdf",
+                "page": 6
+              },
+              "category": "Security"
+            },
+            {
+              "id": "INF-08",
+              "text": "Describe safeguards that prevent users from inadvertently impairing system performance.",
+              "type": "must",
+              "appliesTo": "all",
+              "source": {
+                "file": "files/01-Attachment_A_Proposal_Template.pdf",
+                "page": 7
+              },
+              "category": "Performance Management"
+            },
+            {
+              "id": "INF-09",
+              "text": "Detail the approach to comprehensive database monitoring.",
+              "type": "must",
+              "appliesTo": "all",
+              "source": {
+                "file": "files/01-Attachment_A_Proposal_Template.pdf",
+                "page": 7
+              },
+              "category": "Performance Management"
+            },
+            {
+              "id": "INF-10",
+              "text": "Describe the process for guaranteeing database consistency.",
+              "type": "must",
+              "appliesTo": "all",
+              "source": {
+                "file": "files/01-Attachment_A_Proposal_Template.pdf",
+                "page": 7
+              },
+              "category": "Performance Management"
+            },
+            {
+              "id": "INF-11",
+              "text": "Describe the disaster recovery options included.",
+              "type": "must",
+              "appliesTo": "all",
+              "source": {
+                "file": "files/01-Attachment_A_Proposal_Template.pdf",
+                "page": 7
+              },
+              "category": "Architecture"
+            },
+            {
+              "id": "INF-12",
+              "text": "List the environments included in the solution.",
+              "type": "must",
+              "appliesTo": "all",
+              "source": {
+                "file": "files/01-Attachment_A_Proposal_Template.pdf",
+                "page": 7
+              },
+              "category": "Architecture"
+            },
+            {
+              "id": "INF-13",
+              "text": "Describe the process for problem identification, root cause determination and resolution.",
+              "type": "must",
+              "appliesTo": "all",
+              "source": {
+                "file": "files/01-Attachment_A_Proposal_Template.pdf",
+                "page": 7
+              },
+              "category": "Architecture"
+            }
+          ]
+        },
+        {
+          "id": "performance",
+          "title": "2.2 Performance Requirements",
+          "requirements": [
+            {
+              "id": "PERF-01",
+              "text": "99.9% of the time, at least 2,500 concurrent users must have consistent access to logins and user functions without timeouts or instability; describe how the solution provides this.",
+              "type": "must",
+              "appliesTo": "all",
+              "source": {
+                "file": "files/01-Attachment_A_Proposal_Template.pdf",
+                "page": 8
+              }
+            },
+            {
+              "id": "PERF-02",
+              "text": "Demonstrate scalability: when CPU, memory, database performance or other essential resources cross critical thresholds, provision resources to prevent or recover from degradation; describe the approach.",
+              "type": "must",
+              "appliesTo": "all",
+              "source": {
+                "file": "files/01-Attachment_A_Proposal_Template.pdf",
+                "page": 8
+              }
+            },
+            {
+              "id": "PERF-03",
+              "text": "Provide real-time monitoring of key performance metrics (agreed with MOCS), visible to MOCS staff; for each application metric give name, description, impact, acceptable range and reporting frequency.",
+              "type": "must",
+              "appliesTo": "all",
+              "source": {
+                "file": "files/01-Attachment_A_Proposal_Template.pdf",
+                "page": 8
+              }
+            }
+          ]
+        },
+        {
+          "id": "functional",
+          "title": "2.3 Functional Requirements",
+          "note": "Category 2 proposers only; fuller descriptions are in Appendix F of the RFS (not yet captured).",
+          "requirements": [
+            {
+              "id": "VM01",
+              "text": "Self-service capture of vendor indicative, background and performance information; vendor/principal disclosure, caution and performance evaluation.",
+              "type": "must",
+              "appliesTo": "category2",
+              "source": {
+                "file": "files/01-Attachment_A_Proposal_Template.pdf",
+                "page": 9
+              },
+              "category": "Vendor Management"
+            },
+            {
+              "id": "VM02",
+              "text": "Manage Pre-Qualified Lists tied to a managing agency; citywide or agency-only flags.",
+              "type": "must",
+              "appliesTo": "category2",
+              "source": {
+                "file": "files/01-Attachment_A_Proposal_Template.pdf",
+                "page": 9
+              },
+              "category": "PQL Management"
+            },
+            {
+              "id": "VM03",
+              "text": "Manage vendor responsibility determinations, including required City and external reporting.",
+              "type": "must",
+              "appliesTo": "category2",
+              "source": {
+                "file": "files/01-Attachment_A_Proposal_Template.pdf",
+                "page": 9
+              },
+              "category": "RD Management"
+            },
+            {
+              "id": "VM04",
+              "text": "Vendor document vault: upload specified document types and pull them into proposals, contracts, invoices, disclosures and PQL applications.",
+              "type": "must",
+              "appliesTo": "category2",
+              "source": {
+                "file": "files/01-Attachment_A_Proposal_Template.pdf",
+                "page": 9
+              },
+              "category": "Document Vault"
+            },
+            {
+              "id": "VM05",
+              "text": "Vendor budget management: certification of funds, invoice and payment tracking, advances and recoupments.",
+              "type": "must",
+              "appliesTo": "category2",
+              "source": {
+                "file": "files/01-Attachment_A_Proposal_Template.pdf",
+                "page": 9
+              },
+              "category": "Budget Management"
+            },
+            {
+              "id": "VM06",
+              "text": "Subcontractor management: submission and approval, subcontract modifications, payments to subcontractors.",
+              "type": "must",
+              "appliesTo": "category2",
+              "source": {
+                "file": "files/01-Attachment_A_Proposal_Template.pdf",
+                "page": 9
+              },
+              "category": "Subcontractor Management"
+            },
+            {
+              "id": "VM07",
+              "text": "Let vendors and agencies monitor progress toward M/WBE goals per contract.",
+              "type": "must",
+              "appliesTo": "category2",
+              "source": {
+                "file": "files/01-Attachment_A_Proposal_Template.pdf",
+                "page": 9
+              },
+              "category": "M/WBE Utilization"
+            },
+            {
+              "id": "CM01",
+              "text": "Import goods catalogs from master agreement contracts; catalog items viewable citywide for requisitions.",
+              "type": "must",
+              "appliesTo": "category2",
+              "source": {
+                "file": "files/01-Attachment_A_Proposal_Template.pdf",
+                "page": 10
+              },
+              "category": "Catalog Management"
+            },
+            {
+              "id": "CM02",
+              "text": "Internal business and financial approvals of goods requisitions before encumbrance; vendor order module with estimated delivery dates.",
+              "type": "must",
+              "appliesTo": "category2",
+              "source": {
+                "file": "files/01-Attachment_A_Proposal_Template.pdf",
+                "page": 10
+              },
+              "category": "Requisition and Ordering"
+            },
+            {
+              "id": "CM03",
+              "text": "Receipts confirming delivery; vendor invoices matched against order and receipt, with agency review before FMS disbursement.",
+              "type": "must",
+              "appliesTo": "category2",
+              "source": {
+                "file": "files/01-Attachment_A_Proposal_Template.pdf",
+                "page": 10
+              },
+              "category": "Receiving and Invoicing"
+            },
+            {
+              "id": "STC01",
+              "text": "Contract requisition, solicitation, creation and management.",
+              "type": "must",
+              "appliesTo": "category2",
+              "source": {
+                "file": "files/01-Attachment_A_Proposal_Template.pdf",
+                "page": 10
+              },
+              "category": "Source to Contract"
+            },
+            {
+              "id": "STC02",
+              "text": "Organize requisitions and sourcing projects into programs by citywide initiative.",
+              "type": "must",
+              "appliesTo": "category2",
+              "source": {
+                "file": "files/01-Attachment_A_Proposal_Template.pdf",
+                "page": 10
+              },
+              "category": "Organization"
+            },
+            {
+              "id": "STC03",
+              "text": "Request direct orders or task orders, or start a new sourcing event or contract action.",
+              "type": "must",
+              "appliesTo": "category2",
+              "source": {
+                "file": "files/01-Attachment_A_Proposal_Template.pdf",
+                "page": 10
+              },
+              "category": "Requisition"
+            },
+            {
+              "id": "STC04",
+              "text": "Pre-solicitation review: market assessment, cost estimate, selection of procurement method.",
+              "type": "must",
+              "appliesTo": "category2",
+              "source": {
+                "file": "files/01-Attachment_A_Proposal_Template.pdf",
+                "page": 10
+              },
+              "category": "Pre-Solicitation"
+            },
+            {
+              "id": "STC05",
+              "text": "Draft and publish solicitations to selected vendors in accordance with PPB rules.",
+              "type": "must",
+              "appliesTo": "category2",
+              "source": {
+                "file": "files/01-Attachment_A_Proposal_Template.pdf",
+                "page": 10
+              },
+              "category": "Solicitation"
+            },
+            {
+              "id": "STC06",
+              "text": "Evaluate responses per PPB rules, including multiple rounds/addenda, open-ended solicitations and real-time bidding.",
+              "type": "must",
+              "appliesTo": "category2",
+              "source": {
+                "file": "files/01-Attachment_A_Proposal_Template.pdf",
+                "page": 11
+              },
+              "category": "Evaluation"
+            },
+            {
+              "id": "STC07",
+              "text": "Link responsibility determination to selected vendor; create and route recommendation for award.",
+              "type": "must",
+              "appliesTo": "category2",
+              "source": {
+                "file": "files/01-Attachment_A_Proposal_Template.pdf",
+                "page": 11
+              },
+              "category": "Award"
+            },
+            {
+              "id": "STC08",
+              "text": "Draft contracts with collaborative City–vendor editing; execution, oversight review, public hearings, certification of funds, Comptroller registration package.",
+              "type": "must",
+              "appliesTo": "category2",
+              "source": {
+                "file": "files/01-Attachment_A_Proposal_Template.pdf",
+                "page": 11
+              },
+              "category": "Contract"
+            },
+            {
+              "id": "STC09",
+              "text": "Contract amendment and change order management.",
+              "type": "must",
+              "appliesTo": "category2",
+              "source": {
+                "file": "files/01-Attachment_A_Proposal_Template.pdf",
+                "page": 11
+              },
+              "category": "Amendments"
+            },
+            {
+              "id": "STC10",
+              "text": "Register and manage Master Agreements (MA1, MMA1, MAR) including modifications and task-order rotation models.",
+              "type": "must",
+              "appliesTo": "category2",
+              "source": {
+                "file": "files/01-Attachment_A_Proposal_Template.pdf",
+                "page": 11
+              },
+              "category": "Master Agreement Registration"
+            },
+            {
+              "id": "FIN01",
+              "text": "Agency management of certification of funds, encumbrances and accounting lines across requisition, contract, amendment, order and invoice.",
+              "type": "must",
+              "appliesTo": "category2",
+              "source": {
+                "file": "files/01-Attachment_A_Proposal_Template.pdf",
+                "page": 11
+              },
+              "category": "Financials Management"
+            },
+            {
+              "id": "FIN02",
+              "text": "Budget and encumbrance validation, submission, and oversight approval workflows.",
+              "type": "must",
+              "appliesTo": "category2",
+              "source": {
+                "file": "files/01-Attachment_A_Proposal_Template.pdf",
+                "page": 11
+              },
+              "category": "FY Budgeting & Encumbrance"
+            },
+            {
+              "id": "FIN03",
+              "text": "Invoicing and receiving for direct orders, contracts and task orders, integrated with the City financial management system.",
+              "type": "must",
+              "appliesTo": "category2",
+              "source": {
+                "file": "files/01-Attachment_A_Proposal_Template.pdf",
+                "page": 11
+              },
+              "category": "Invoicing & Receiving"
+            },
+            {
+              "id": "FIN04",
+              "text": "Vendor submission of contract budgets for contracts and purchase orders.",
+              "type": "must",
+              "appliesTo": "category2",
+              "source": {
+                "file": "files/01-Attachment_A_Proposal_Template.pdf",
+                "page": 12
+              },
+              "category": "Vendor Contract Budget"
+            },
+            {
+              "id": "FIN05",
+              "text": "Manage retainage terms on contract budgets and related invoices.",
+              "type": "must",
+              "appliesTo": "category2",
+              "source": {
+                "file": "files/01-Attachment_A_Proposal_Template.pdf",
+                "page": 12
+              },
+              "category": "Capital Management"
+            },
+            {
+              "id": "FIN06",
+              "text": "Flexible pricing and blanket orders for specialized purchases (e.g. fuel, bulk supply).",
+              "type": "must",
+              "appliesTo": "category2",
+              "source": {
+                "file": "files/01-Attachment_A_Proposal_Template.pdf",
+                "page": 12
+              },
+              "category": "Fuel Pricing/Blanket Order"
+            },
+            {
+              "id": "FIN07",
+              "text": "Real- or near-real-time order, invoice and disbursement integrations with the City financial system.",
+              "type": "must",
+              "appliesTo": "category2",
+              "source": {
+                "file": "files/01-Attachment_A_Proposal_Template.pdf",
+                "page": 12
+              },
+              "category": "Financial system integrations"
+            },
+            {
+              "id": "FIN08",
+              "text": "Support capital, expense and mixed funding structures across modules.",
+              "type": "must",
+              "appliesTo": "category2",
+              "source": {
+                "file": "files/01-Attachment_A_Proposal_Template.pdf",
+                "page": 12
+              },
+              "category": "Mixed Funding Contract Submissions"
+            },
+            {
+              "id": "FIN09",
+              "text": "Payment advances and recoupment.",
+              "type": "must",
+              "appliesTo": "category2",
+              "source": {
+                "file": "files/01-Attachment_A_Proposal_Template.pdf",
+                "page": 12
+              },
+              "category": "Advances and Recoupment"
+            },
+            {
+              "id": "DR01",
+              "text": "Integrations with City authentication, financial and budget systems (OTI, FISA, OMB) using standard protocols (API, FTP, LDAP) with security and management tooling.",
+              "type": "must",
+              "appliesTo": "category2",
+              "source": {
+                "file": "files/01-Attachment_A_Proposal_Template.pdf",
+                "page": 12
+              },
+              "category": "Integration"
+            },
+            {
+              "id": "DR02",
+              "text": "Programmatic and user read access to all application data via SQL-like queries, exportable to Excel, CSV, XML.",
+              "type": "must",
+              "appliesTo": "category2",
+              "source": {
+                "file": "files/01-Attachment_A_Proposal_Template.pdf",
+                "page": 12
+              },
+              "category": "Reporting"
+            },
+            {
+              "id": "DV01",
+              "text": "Document vault for vendor, agency and admin users; sharing rules (shared docs can't be archived/deleted; read-only viewing).",
+              "type": "must",
+              "appliesTo": "category2",
+              "source": {
+                "file": "files/01-Attachment_A_Proposal_Template.pdf",
+                "page": 13
+              },
+              "category": "Document Management"
+            },
+            {
+              "id": "DV02",
+              "text": "Agencies set document submission requirements per step; link documents from device or vault; some converted to PDF.",
+              "type": "must",
+              "appliesTo": "category2",
+              "source": {
+                "file": "files/01-Attachment_A_Proposal_Template.pdf",
+                "page": 13
+              },
+              "category": "Document Linking"
+            },
+            {
+              "id": "GH01",
+              "text": "Configure and design PASSPort global pages.",
+              "type": "must",
+              "appliesTo": "category2",
+              "source": {
+                "file": "files/01-Attachment_A_Proposal_Template.pdf",
+                "page": 13
+              },
+              "category": "Homepage Configuration"
+            },
+            {
+              "id": "GH02",
+              "text": "Map user profiles and authorizations to homepage features.",
+              "type": "must",
+              "appliesTo": "category2",
+              "source": {
+                "file": "files/01-Attachment_A_Proposal_Template.pdf",
+                "page": 13
+              },
+              "category": "Profiles and Authorizations"
+            },
+            {
+              "id": "GH03",
+              "text": "MOCS Admin management of agency approval rules, routing and delegation by dollar thresholds.",
+              "type": "must",
+              "appliesTo": "category2",
+              "source": {
+                "file": "files/01-Attachment_A_Proposal_Template.pdf",
+                "page": 13
+              },
+              "category": "Approval Rules"
+            },
+            {
+              "id": "GH04",
+              "text": "Configure and generate E-PINs; search objects by partial or full E-PIN.",
+              "type": "must",
+              "appliesTo": "category2",
+              "source": {
+                "file": "files/01-Attachment_A_Proposal_Template.pdf",
+                "page": 14
+              },
+              "category": "E-PIN Generation"
+            },
+            {
+              "id": "GH05",
+              "text": "Generate PDFs from templates pulling Contract Object fields, with naming convention, into the agency vault.",
+              "type": "must",
+              "appliesTo": "category2",
+              "source": {
+                "file": "files/01-Attachment_A_Proposal_Template.pdf",
+                "page": 14
+              },
+              "category": "System Generated Documents"
+            },
+            {
+              "id": "GH06",
+              "text": "Configure which objects use the document vault vs. attachments, and allowed document types.",
+              "type": "must",
+              "appliesTo": "category2",
+              "source": {
+                "file": "files/01-Attachment_A_Proposal_Template.pdf",
+                "page": 14
+              },
+              "category": "Document Vault configuration"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "sow",
+      "title": "3. Statement of Work",
+      "evaluated": true,
+      "requirements": [
+        {
+          "id": "SOW-01",
+          "text": "State your understanding of the project objectives and goals.",
+          "type": "must",
+          "appliesTo": "all",
+          "source": {
+            "file": "files/01-Attachment_A_Proposal_Template.pdf",
+            "page": 15
+          }
+        },
+        {
+          "id": "SOW-02",
+          "text": "Describe the approach and methodology (e.g. prototyping, RAD, Agile, COTS).",
+          "type": "must",
+          "appliesTo": "all",
+          "source": {
+            "file": "files/01-Attachment_A_Proposal_Template.pdf",
+            "page": 15
+          }
+        },
+        {
+          "id": "SOW-03",
+          "text": "Project scope: contractor needs, proposed acceptance criteria and process, interaction with City staff and other contractors, and tasks by phase with resources, durations and milestones.",
+          "type": "must",
+          "appliesTo": "all",
+          "source": {
+            "file": "files/01-Attachment_A_Proposal_Template.pdf",
+            "page": 15
+          }
+        },
+        {
+          "id": "SOW-04",
+          "text": "List deliverables (e.g. work plan, design document with security approach, test plan/scripts/results, production application, technical docs, deployment and back-out plans, transition plan, weekly status reports).",
+          "type": "must",
+          "appliesTo": "all",
+          "source": {
+            "file": "files/01-Attachment_A_Proposal_Template.pdf",
+            "page": 15
+          }
+        },
+        {
+          "id": "SOW-05",
+          "text": "Category 1: initial phase expected within 8 months (setup → design → test env → test system → evaluation criteria → production by months 6–8); later phases within the following 12 months.",
+          "type": "info",
+          "appliesTo": "all",
+          "source": {
+            "file": "files/01-Attachment_A_Proposal_Template.pdf",
+            "page": 17
+          },
+          "category": "category1"
+        },
+        {
+          "id": "SOW-06",
+          "text": "Category 2: sandbox, gap analysis and business process re-engineering within 8 months; full implementation, integration and migration within the following 18 months.",
+          "type": "info",
+          "appliesTo": "all",
+          "source": {
+            "file": "files/01-Attachment_A_Proposal_Template.pdf",
+            "page": 18
+          },
+          "category": "category2"
+        },
+        {
+          "id": "SOW-07",
+          "text": "Phase 1 must be priced separately from all future phases (Categories 1 and 2).",
+          "type": "must",
+          "appliesTo": "all",
+          "source": {
+            "file": "files/01-Attachment_A_Proposal_Template.pdf",
+            "page": 17
+          }
+        },
+        {
+          "id": "SOW-08",
+          "text": "Explicitly list scope exclusions; generic exclusions are not acceptable.",
+          "type": "must",
+          "appliesTo": "all",
+          "source": {
+            "file": "files/01-Attachment_A_Proposal_Template.pdf",
+            "page": 18
+          }
+        },
+        {
+          "id": "SOW-09",
+          "text": "Describe reports: title, form and content, frequency.",
+          "type": "must",
+          "appliesTo": "all",
+          "source": {
+            "file": "files/01-Attachment_A_Proposal_Template.pdf",
+            "page": 19
+          }
+        },
+        {
+          "id": "SOW-10",
+          "text": "List assumptions (assumptions conflicting with the Agreement are void).",
+          "type": "should",
+          "appliesTo": "all",
+          "source": {
+            "file": "files/01-Attachment_A_Proposal_Template.pdf",
+            "page": 19
+          }
+        }
+      ]
+    },
+    {
+      "id": "staffing",
+      "title": "4. Project Staffing and Organization",
+      "evaluated": true,
+      "requirements": [
+        {
+          "id": "STF-01",
+          "text": "Category 1 key roles: Project Manager*, Technical Project Lead*, Lead Infrastructure Architect*, Sr. Application Solution Engineer*, Senior Database Engineer*, Senior Implementation Engineer*, plus Implementation Engineer(s), with labor category and hourly rate; mark subcontractors.",
+          "type": "must",
+          "appliesTo": "all",
+          "source": {
+            "file": "files/01-Attachment_A_Proposal_Template.pdf",
+            "page": 19
+          }
+        },
+        {
+          "id": "STF-02",
+          "text": "Category 2 adds: Business Analyst Lead*, QA Lead*, Business Analysts, QA Analysts, BPR Lead, Change Management Lead.",
+          "type": "must",
+          "appliesTo": "all",
+          "source": {
+            "file": "files/01-Attachment_A_Proposal_Template.pdf",
+            "page": 19
+          },
+          "category": "category2"
+        },
+        {
+          "id": "STF-03",
+          "text": "Resume and at least one client reference per resource; for cloud or new-software work, resumes must show at least five years in the targeted environment.",
+          "type": "must",
+          "appliesTo": "all",
+          "source": {
+            "file": "files/01-Attachment_A_Proposal_Template.pdf",
+            "page": 20
+          }
+        },
+        {
+          "id": "STF-04",
+          "text": "Specify prevailing-wage mark-up, non-U.S. labor discounted rates, and specialized subcontractor cost-plus rates where applicable.",
+          "type": "should",
+          "appliesTo": "all",
+          "source": {
+            "file": "files/01-Attachment_A_Proposal_Template.pdf",
+            "page": 20
+          }
+        },
+        {
+          "id": "STF-05",
+          "text": "Organization chart and narrative showing interaction with City staff and other entities.",
+          "type": "must",
+          "appliesTo": "all",
+          "source": {
+            "file": "files/01-Attachment_A_Proposal_Template.pdf",
+            "page": 20
+          }
+        },
+        {
+          "id": "STF-06",
+          "text": "Describe the governance structure.",
+          "type": "must",
+          "appliesTo": "all",
+          "source": {
+            "file": "files/01-Attachment_A_Proposal_Template.pdf",
+            "page": 21
+          }
+        }
+      ]
+    },
+    {
+      "id": "fees",
+      "title": "5. Fees",
+      "evaluated": true,
+      "requirements": [
+        {
+          "id": "FEE-01",
+          "text": "Fixed-price, deliverables-based structure showing hours and hourly rates per deliverable (alternatives such as T&M may be added).",
+          "type": "must",
+          "appliesTo": "all",
+          "source": {
+            "file": "files/01-Attachment_A_Proposal_Template.pdf",
+            "page": 21
+          }
+        },
+        {
+          "id": "FEE-02",
+          "text": "Complete Attachment E – Price Proposal Worksheet (Staffing Plan, Total Charges, Phase 1 tabs) across all phases for up to six years.",
+          "type": "form",
+          "appliesTo": "all",
+          "source": {
+            "file": "files/01-Attachment_A_Proposal_Template.pdf",
+            "page": 21
+          }
+        },
+        {
+          "id": "FEE-03",
+          "text": "Software/subscription and hardware costs with licensing structure and mark-ups (not above Attachment PRC; 0% on maintenance); prices at or below the lesser of contractor discount, NYS OGS or GSA.",
+          "type": "must",
+          "appliesTo": "all",
+          "source": {
+            "file": "files/01-Attachment_A_Proposal_Template.pdf",
+            "page": 22
+          }
+        },
+        {
+          "id": "FEE-04",
+          "text": "Post-implementation support and maintenance annual fees, no overlap with acceptance and warranty; 0% mark-up.",
+          "type": "must",
+          "appliesTo": "all",
+          "source": {
+            "file": "files/01-Attachment_A_Proposal_Template.pdf",
+            "page": 2
+          }
+        },
+        {
+          "id": "FEE-05",
+          "text": "Optional performance outcome measures and financial incentives/disincentives.",
+          "type": "should",
+          "appliesTo": "all",
+          "source": {
+            "file": "files/01-Attachment_A_Proposal_Template.pdf",
+            "page": 23
+          }
+        },
+        {
+          "id": "FEE-06",
+          "text": "Payment schedule (monthly or by deliverable).",
+          "type": "must",
+          "appliesTo": "all",
+          "source": {
+            "file": "files/01-Attachment_A_Proposal_Template.pdf",
+            "page": 24
+          }
+        },
+        {
+          "id": "FEE-07",
+          "text": "Warranty period for products and system deliverables of at least 12 months.",
+          "type": "must",
+          "appliesTo": "all",
+          "source": {
+            "file": "files/01-Attachment_A_Proposal_Template.pdf",
+            "page": 26
+          }
+        }
+      ]
+    }
+  ],
+  "submissionChecklist": [
+    {
+      "item": "Proposal following Attachment A section order (Executive Summary, sections 1–5, Warranty)",
+      "source": {
+        "file": "files/01-Attachment_A_Proposal_Template.pdf",
+        "page": 4
+      }
+    },
+    {
+      "item": "Reference architecture attachment (INF-01)",
+      "source": {
+        "file": "files/01-Attachment_A_Proposal_Template.pdf",
+        "page": 5
+      }
+    },
+    {
+      "item": "Resumes and client references for every proposed resource",
+      "source": {
+        "file": "files/01-Attachment_A_Proposal_Template.pdf",
+        "page": 20
+      }
+    },
+    {
+      "item": "Attachment E – Price Proposal Worksheet, Phase 1 priced separately",
+      "source": {
+        "file": "files/01-Attachment_A_Proposal_Template.pdf",
+        "page": 21
+      }
+    },
+    {
+      "item": "M/WBE Utilization Plan meeting the 30% participation goal (or waiver request)",
+      "source": {
+        "file": "files/04-MOCS_MWBE_Goals_Worksheet.xlsx",
+        "sheet": "Worksheet"
+      }
+    },
+    {
+      "item": "Acknowledge Addendum #3 (and any later addenda)",
+      "source": {
+        "file": "files/02-Addendum_3_Submission_and_QA_Deadline_Extension.pdf",
+        "page": 1
+      }
+    },
+    {
+      "item": "Submit in PASSPort before the due date",
+      "source": {
+        "url": "https://passport.cityofnewyork.us/page.aspx/en/bpm/process_manage_extranet/26900"
+      }
+    }
+  ],
+  "counts": {
+    "exec": 1,
+    "experience": 2,
+    "solution": 55,
+    "sow": 10,
+    "staffing": 6,
+    "fees": 7,
+    "total": 81
   }
 }
