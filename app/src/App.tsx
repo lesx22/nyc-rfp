@@ -1,5 +1,7 @@
 import { lazy, Suspense, useEffect, useState } from 'react'
 import FilterBar from './components/FilterBar'
+import Legend from './components/Legend'
+import NavControls from './components/NavControls'
 import PromptBar from './components/PromptBar'
 import ResponseStudio from './components/ResponseStudio'
 import SidePanel from './components/SidePanel'
@@ -15,7 +17,7 @@ export default function App() {
   const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
-    fetch('/data/rfps.json')
+    fetch(`${import.meta.env.BASE_URL}data/rfps.json`)
       .then((r) => (r.ok ? r.json() : Promise.reject(new Error(`HTTP ${r.status}`))))
       .then((d: { meta: { source: string; fetchedAt: string }; rfps: Rfp[] }) => {
         setMeta(d.meta)
@@ -33,14 +35,8 @@ export default function App() {
       <SidePanel />
       <PromptBar />
       <ResponseStudio />
-      <div className="pointer-events-none absolute bottom-3 left-3 z-10 hidden max-w-60 text-[10px] leading-relaxed text-white/35 lg:block">
-        Drag to orbit · Scroll / pinch to zoom · Click a cluster or node
-        {meta && (
-          <div className="mt-1">
-            Data: {meta.source} · {new Date(meta.fetchedAt).toLocaleDateString()}
-          </div>
-        )}
-      </div>
+      <NavControls />
+      <Legend source={meta ? `${meta.source} · ${new Date(meta.fetchedAt).toLocaleDateString()}` : null} />
       {error && <div className="absolute inset-0 grid place-items-center text-[13px] text-heat-3">Couldn't load opportunities: {error}</div>}
     </div>
   )

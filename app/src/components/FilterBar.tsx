@@ -21,7 +21,7 @@ export default function FilterBar() {
   return (
     <header className="pointer-events-none absolute inset-x-0 top-0 z-20 flex flex-wrap items-center gap-2 p-3 sm:p-4">
       <div className="pointer-events-auto mr-2 flex items-center gap-2.5">
-        <img src="/favicon.svg" alt="" className="size-7" />
+        <img src="./favicon.svg" alt="" className="size-7" />
         <div className="leading-tight">
           <div className="text-[13px] font-semibold tracking-tight">Opportunity Graph</div>
           <div className="text-[11px] text-mute">NYC procurement, mapped</div>

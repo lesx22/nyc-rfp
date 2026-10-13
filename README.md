@@ -13,13 +13,25 @@ A 3D, motion-designed way to explore NYC procurement opportunities from [PASSPor
 ## Run it
 
 ```bash
-cd app
+git clone -b claude/nyc-passport-rfp-viz-98fi1c https://github.com/lesx22/nyc-rfp.git
+cd nyc-rfp/app
 npm install
 npm run dev          # http://localhost:5173
 npm run build        # typecheck + production build
-npm run scrape       # refresh public/data/rfps.json from live PASSPort (needs network access to the site)
-node --experimental-strip-types scripts/rankings.ts   # regenerate docs/RANKINGS.md
+npm run test:smoke   # Playwright: desktop + mobile core flow, no console errors
 ```
+
+### Refresh the data from live PASSPort
+
+```bash
+cd nyc-rfp/app
+npx playwright install chromium    # one-time
+HEADED=1 npm run scrape            # visible browser; drop HEADED=1 to run headless
+node --experimental-strip-types scripts/rankings.ts   # regenerate docs/RANKINGS.md
+git add public/data/rfps.json ../docs/RANKINGS.md && git commit -m "Live PASSPort scrape" && git push
+```
+
+The scraper hasn't been run against the live site yet (the cloud build environment can't reach it). If it writes 0 rows, share the `Columns seen:` line it prints.
 
 ## What's in v0
 

@@ -16,7 +16,7 @@ export default function SidePanel() {
           animate={{ x: 0, opacity: 1 }}
           exit={{ x: 40, opacity: 0 }}
           transition={{ type: 'spring', stiffness: 380, damping: 36 }}
-          className="glass scroll-thin absolute bottom-3 right-3 top-20 z-30 flex w-[min(400px,calc(100vw-24px))] flex-col overflow-y-auto rounded-2xl"
+          className="glass scroll-thin absolute inset-x-2 bottom-2 z-30 flex max-h-[72vh] flex-col overflow-y-auto rounded-2xl sm:inset-x-auto sm:bottom-3 sm:right-3 sm:top-20 sm:max-h-none sm:w-[400px]"
         >
           {selected.kind === 'node' ? <NodeView id={selected.id} /> : <ClusterView id={selected.id} />}
         </motion.aside>

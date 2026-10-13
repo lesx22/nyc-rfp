@@ -23,7 +23,7 @@ Phases ship in order. Each phase ends with an explicit **validation gate**. Don'
 
 ---
 
-## Phase 1: Graph scaffold (v0 → v0.5, 2–4 days) ← *we are here*
+## Phase 1: Graph scaffold (v0 → v0.5, 2–4 days) ← *build complete; usability gate pending*
 
 **Why this order:** prove the hero interaction first, because it's the riskiest and most differentiating part. UI chrome comes after the canvas feels right.
 
@@ -36,10 +36,12 @@ Phases ship in order. Each phase ends with an explicit **validation gate**. Don'
 7. ✅ Prompt bar: local relevance → rotate the camera to the matches and re-highlight; "Picked for you" on load; ⌘K
 8. ✅ Filter bar: Industry · Agency · Commodity · Due window · AI-buildable; hierarchy remap; heat toggle
 9. ✅ Response Studio v0: brief → about you → documents → outline (.md download) → submission checklist
-10. ◻︎ Keyboard and button alternatives to orbit and zoom (Vercel guideline: no gesture-only interactions)
-11. ◻︎ Mobile: bottom sheet (`vaul`) instead of the side panel; tap targets ≥ 44px
-12. ◻︎ `AdaptiveDpr` and `PerformanceMonitor`; pause rendering when the tab is hidden
-13. ◻︎ Playwright smoke test plus screenshot (canvas renders, click opens a panel)
+10. ✅ Keyboard (arrows, +/−, 0, Esc) and button alternatives to orbit and zoom
+11. ✅ Mobile: side panel becomes a bottom sheet under 640px; 40px camera buttons
+12. ✅ `AdaptiveDpr` + `PerformanceMonitor` (drops bloom on weak GPUs); render loop pauses when the tab is hidden
+13. ✅ Playwright smoke test, desktop + mobile (`npm run test:smoke`)
+14. ✅ Legend (cluster colours, heat scale, data source) + in-app build-progress drawer
+15. ✅ Live prototype published as a claude.ai artifact
 
 **Gate (usability test with 5 target users):**
 - 4 of 5 can find a relevant opportunity in under 60 seconds without help

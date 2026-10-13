@@ -1,7 +1,8 @@
-import { Billboard, CameraControls, Html, Sparkles } from '@react-three/drei'
+import { AdaptiveDpr, Billboard, CameraControls, Html, PerformanceMonitor, Sparkles } from '@react-three/drei'
 import { Canvas, useFrame, type ThreeEvent } from '@react-three/fiber'
 import { Bloom, EffectComposer, Vignette } from '@react-three/postprocessing'
-import { useEffect, useMemo, useRef } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
+import { cam } from '../lib/camera'
 import * as THREE from 'three'
 import { buildLayout, heatColor, type Layout, type Vec3 } from '../lib/layout'
 import { passesFilters, useStore } from '../store'
@@ -12,8 +13,18 @@ const reducedMotion = typeof window !== 'undefined' && window.matchMedia('(prefe
 type Live = Map<string, THREE.Vector3>
 
 export default function Graph() {
+  const [bloom, setBloom] = useState(true)
+  const [visible, setVisible] = useState(!document.hidden)
+  useEffect(() => {
+    const h = () => setVisible(!document.hidden)
+    document.addEventListener('visibilitychange', h)
+    return () => document.removeEventListener('visibilitychange', h)
+  }, [])
   return (
     <Canvas
+      frameloop={visible ? 'always' : 'never'}
+      aria-label="3D map of open NYC procurement opportunities. Use the zoom buttons or arrow keys to navigate."
+      role="img"
       camera={{ position: [0, 30, 170], fov: 42, near: 0.1, far: 2000 }}
       dpr={[1, 2]}
       gl={{ antialias: true, powerPreference: 'high-performance' }}
@@ -21,11 +32,16 @@ export default function Graph() {
     >
       <color attach="background" args={['#000']} />
       <fog attach="fog" args={['#000', 160, 420]} />
+      {/* Drop resolution, then bloom, on weak GPUs instead of stuttering. */}
+      <PerformanceMonitor onDecline={() => setBloom(false)} onIncline={() => setBloom(true)} flipflops={3} />
+      <AdaptiveDpr pixelated={false} />
       <Scene />
-      <EffectComposer multisampling={0}>
-        <Bloom mipmapBlur luminanceThreshold={0.15} luminanceSmoothing={0.2} intensity={1.15} />
-        <Vignette eskil={false} offset={0.2} darkness={0.85} />
-      </EffectComposer>
+      {bloom && (
+        <EffectComposer multisampling={0}>
+          <Bloom mipmapBlur luminanceThreshold={0.15} luminanceSmoothing={0.2} intensity={1.15} />
+          <Vignette eskil={false} offset={0.2} darkness={0.85} />
+        </EffectComposer>
+      )}
     </Canvas>
   )
 }
@@ -59,12 +75,12 @@ function Rig({ layout }: { layout: Layout }) {
   const ref = useRef<CameraControls>(null)
   const selected = useStore((s) => s.selected)
   const focusNonce = useStore((s) => s.focusNonce)
-  const lastInput = useRef(performance.now())
 
   useEffect(() => {
     const c = ref.current
     if (!c) return
-    const mark = () => (lastInput.current = performance.now())
+    cam.controls = c
+    const mark = () => cam.touch()
     c.addEventListener('controlstart', mark)
     c.addEventListener('control', mark)
     return () => {
@@ -81,12 +97,12 @@ function Rig({ layout }: { layout: Layout }) {
     if (!p) return
     const t = new THREE.Vector3(...p)
     const dist = selected.kind === 'cluster' ? (selected.id.startsWith('1:') ? 75 : 40) : 38
-    const cam = new THREE.Vector3()
-    c.getPosition(cam)
-    const dir = cam.sub(t).normalize()
+    const now = new THREE.Vector3()
+    c.getPosition(now)
+    const dir = now.sub(t).normalize()
     const eye = t.clone().add(dir.multiplyScalar(dist))
     c.setLookAt(eye.x, eye.y, eye.z, t.x, t.y, t.z, true)
-    lastInput.current = performance.now()
+    cam.touch()
   }, [selected, layout])
 
   // Rotate the network so the strongest matches face the viewer (prompt bar / "for you").
@@ -102,7 +118,7 @@ function Rig({ layout }: { layout: Layout }) {
     const eye = ctr.clone().add(dir.multiplyScalar(110)).add(new THREE.Vector3(0, 18, 0))
     const look = ctr.clone().multiplyScalar(0.6)
     c.setLookAt(eye.x, eye.y, eye.z, look.x, look.y, look.z, true)
-    lastInput.current = performance.now()
+    cam.touch()
   }, [focusNonce, layout])
 
   // Idle drift: the "cover state" slowly orbits until the user grabs it.
@@ -110,7 +126,7 @@ function Rig({ layout }: { layout: Layout }) {
     const c = ref.current
     if (!c || reducedMotion) return
     if (useStore.getState().selected) return
-    if (performance.now() - lastInput.current > 3500) c.azimuthAngle += dt * 0.045
+    if (performance.now() - cam.lastInput > 3500) c.azimuthAngle += dt * 0.045
   })
 
   return <CameraControls ref={ref} makeDefault minDistance={6} maxDistance={420} smoothTime={0.6} draggingSmoothTime={0.12} dollySpeed={0.6} />
