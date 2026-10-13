@@ -84,7 +84,7 @@ Phases ship in order. Each phase ends with an explicit **validation gate**. Don'
 - ✅ Documents captured (5 provided by the user): proposal template, Addendum #3, special case memo, M/WBE worksheet, Appendix A
 - ◻︎ Still needed: main RFS (evaluation weights), Appendix F, Attachment E/PRC/SCY, addenda #1, #2 and later
 - ✅ 81 requirements, 5 evaluation areas, key dates, M/WBE goal and the submission checklist extracted into `requirements.json`, each with a verified PDF page (`build_requirements.py`)
-- ◻︎ Appendix A contract obligations → `appendix-a-obligations.json` (in progress)
+- ✅ Appendix A: 60 contract obligations with article and page (`appendix-a-obligations.json`); proposal-relevant ones summarised in the listing README
 - ◻︎ Side panel: show requirement counts and key dates from `requirements.json` when present
 - ◻︎ Response Studio: load the listing's real checklist and evaluation criteria; draft each required section against its requirement; compliance matrix
 - ◻︎ Export a submission package (narrative .docx/.md, forms list, attachments index)

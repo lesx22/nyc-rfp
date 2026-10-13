@@ -33,7 +33,7 @@ The user provided these. They're stored in `data-raw/solicitations/00225P0002/fi
 | 02 | Addendum #3 (Apr 23, 2025) | Due date moved from Apr 24, 2025 to **Oct 24, 2025, 2 PM**; question deadline to **Aug 29, 2025** |
 | 03 | Special Case Determination Memo (Nov 13, 2024) | Why competitive sealed proposals were used: specialist software expertise, and a balance of price and quality |
 | 04 | M/WBE Participation Goals Worksheet | **30% M/WBE goal** (unspecified). Agency-estimated contract value **$230,940,954**; ~$69.3M in subcontracting across "Procurement Software" and "Procurement Development" |
-| 05 | Appendix A – General Provisions (2018) + addendum (77 pp) | Standard contract obligations: insurance, records, confidentiality, subcontracting, local laws (extraction in progress → `appendix-a-obligations.json`) |
+| 05 | Appendix A – General Provisions (Jan 2018) + addendum (77 pp) | **60 contract obligations** with page citations → [`appendix-a-obligations.json`](../../../data-raw/solicitations/00225P0002/appendix-a-obligations.json) |
 
 **Still missing:**
 - The main RFS, which holds the **evaluation weights** and submission instructions
@@ -53,6 +53,18 @@ All of these are in [`requirements.json`](./requirements.json), each with its PD
 | 3. Statement of Work | 10 | Category 1: 8-month first phase, then 12 months. Category 2: 8-month gap analysis and BPR, then 18 months. Phase 1 priced separately |
 | 4. Staffing and Organization | 6 | 6 named key roles (Category 2 adds 6 more); resumes, references, and 5+ years in the target cloud environment |
 | 5. Fees | 7 | Fixed-price, deliverables-based; Attachment E; mark-up limits; 12-month minimum warranty |
+
+## Contract obligations that shape the proposal (Appendix A)
+
+- **Integrity certifications at signing:** responsibility disclosures (§2.04, p.7), non-collusion (§2.03, p.7), no conflicts of interest (§2.02, p.6), Lobbying Law (§2.01, p.6), and the affirmation of no City debts (p.62).
+- **E.O. 50 equal employment:** an Employment Report is due before award (§4.05(D), pp.16–17).
+- **Subcontractors:** those over $20,000 need prior approval and a Payee Information Portal listing. Payments to them must be reported within 30 days, or $100/day in liquidated damages applies (§3.02, pp.9, 11).
+- **Intellectual property:** the City owns the work product, including drafts (Art. 6, pp.30–31). **Name pre-existing IP and tools in the proposal** (§6.03 carve-out).
+- **Insurance (Schedule A, p.63):** workers' comp, disability, employers' liability, and general liability ($1M per occurrence / $2M aggregate). No professional or cyber liability is checked, which is unusual for an IT contract; confirm in the main RFS.
+- **Data breach (addendum to §5.08(B), pp.76–77):** notice within **3 days** of discovery, root-cause fix, machine-readable evidence to the City, and breach costs deductible from payments. The security sections should answer these.
+- **Records:** 6-year retention and audit (pp.24–25).
+- **Safe and Sick Time rider (pp.70–75):** supersedes §4.06.
+- **Not in Appendix A:** Doing Business data, campaign finance, M/WBE and HireNYC. They are expected in the main RFS or other attachments.
 
 ## End-to-end demo plan
 
