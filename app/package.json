@@ -12,7 +12,8 @@
     "typecheck": "tsc -b",
     "test:smoke": "node scripts/smoke.mjs",
     "validate": "node scripts/validate-data.mjs",
-    "test:validate": "node --test scripts/validate-data.test.mjs"
+    "test:validate": "node --test scripts/validate-data.test.mjs",
+    "scrape:solicitation": "node scripts/scrape-solicitation.mjs"
   },
   "dependencies": {
     "@react-three/drei": "^10.7.9",

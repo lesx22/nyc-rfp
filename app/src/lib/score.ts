@@ -1,5 +1,5 @@
 import type { Rfp, RfpNode } from '../types'
-import { parseEpin } from './epin'
+import { parseEpin } from './epin.ts'
 
 /**
  * AI-fit heuristic. Transparent, keyword-weighted, and explainable on purpose:

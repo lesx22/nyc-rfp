@@ -1134,8 +1134,8 @@
       "dueDate": "2026-02-27",
       "mainCommodity": "Procurement software",
       "estValueUSD": null,
-      "description": "PASSPort optimization. Reference only.",
-      "sourceUrl": "https://databook.nyc/procurement/solicitation/00225P0002",
+      "description": "Competitive sealed proposals (MOCS). Improve the performance, efficiency, reliability and scalability of the City's e-procurement system, PASSPort. Category 1: enhancement or optimization of the existing software environment. Category 2: software enhancement or replacement, up to a complete system replacement. City Record notice 20241224032 dated 1/7/2025; PASSPort mirror lists release 10/3/2025 and due 2/27/2026.",
+      "sourceUrl": "https://passport.cityofnewyork.us/page.aspx/en/bpm/process_manage_extranet/26900",
       "confidence": "high",
       "isDigitalBuild": true
     }

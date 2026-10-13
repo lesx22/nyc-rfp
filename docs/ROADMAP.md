@@ -73,6 +73,22 @@ Phases ship in order. Each phase ends with an explicit **validation gate**. Don'
 
 ---
 
+## Phase 2.5: End-to-end demo on a real listing (00225P0002)
+
+**Why:** prove the whole loop (discover → understand → respond → check → export) on one real solicitation: [00225P0002 City-wide E-Procurement Performance Optimization (PASSPort 2026)](./solicitations/00225P0002/README.md). It's the listing that sparked the project, and it's the story of the demo video.
+
+- ✅ Single-solicitation scraper (`npm run scrape:solicitation`): detail page + every linked document + index with hashes and failures
+- ◻︎ Run it from a network that can reach PASSPort and commit `data-raw/solicitations/00225P0002/`
+- ◻︎ Extract requirements, evaluation criteria, key dates and the submission checklist into `requirements.json`, each with a source (file + page)
+- ◻︎ Side panel: show requirement counts and key dates from `requirements.json` when present
+- ◻︎ Response Studio: load the listing's real checklist and evaluation criteria; draft each required section against its requirement; compliance matrix
+- ◻︎ Export a submission package (narrative .docx/.md, forms list, attachments index)
+- ◻︎ Video: re-cut the response segment with the real requirements on screen
+
+**Gate:** every requirement in `requirements.json` cites its source, and the draft shows each required section mapped to a requirement or marked `[NEEDS INPUT]`.
+
+---
+
 ## Phase 3: AI layer (v1.5, 1–2 weeks)
 
 **Why after data:** the AI is only as good as the corpus it reasons over.

@@ -1,0 +1,31 @@
+1
+00:00:00,300 --> 00:00:08,700
+Every contract New York City puts out to bid lands on PASSPort, as row after row in a grid built for compliance rather than for finding work.
+
+2
+00:00:09,200 --> 00:00:23,600
+Then we found this one. Solicitation 00225P0002, from the Mayor's Office of Contract Services. The City was asking for help making PASSPort itself faster, more reliable and easier to scale, up to and including a full replacement.
+
+3
+00:00:24,200 --> 00:00:29,700
+So we asked: what if finding the right opportunity felt less like reading a spreadsheet, and more like exploring a map?
+
+4
+00:00:30,200 --> 00:00:41,600
+Opportunity Graph turns every open solicitation into a living network, grouped by industry and then by agency. Filters narrow it in a click.
+
+5
+00:00:42,200 --> 00:00:49,600
+Describe what you do in plain language, and the graph turns toward the work that fits.
+
+6
+00:00:50,200 --> 00:01:01,600
+Open a listing to see its scope and deadline at a glance, then start a response shaped around that solicitation's requirements: your team, your experience, the City's checklist.
+
+7
+00:01:02,200 --> 00:01:12,600
+We built it in days with Claude Code. Research agents gathered the data and the best open-source graphics work, React Three Fiber renders the graph, and every visual change was reviewed side by side before it shipped.
+
+8
+00:01:13,200 --> 00:01:21,600
+For New York's next generation of business owners: find it, match it, answer it. Opportunity Graph.

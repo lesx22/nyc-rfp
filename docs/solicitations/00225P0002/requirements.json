@@ -1,0 +1,16 @@
+{
+  "$comment": "Schema for listing-specific requirements consumed by the Response Studio. Populate only from captured documents; every item needs a source. Never invent requirements.",
+  "epin": "00225P0002",
+  "status": "pending-documents",
+  "sources": [],
+  "keyDates": [],
+  "sections": [],
+  "evaluationCriteria": [],
+  "submissionChecklist": [],
+  "example": {
+    "sections": [{ "id": "scope", "title": "Scope of services", "requirements": [{ "id": "R-001", "text": "…", "type": "must | should | form | info", "source": { "file": "files/01-RFP.pdf", "page": 12 } }] }],
+    "evaluationCriteria": [{ "criterion": "…", "weight": 0.3, "source": { "file": "files/01-RFP.pdf", "page": 30 } }],
+    "keyDates": [{ "label": "Proposal due", "date": "2026-02-27T14:00", "source": { "file": "…", "page": 1 } }],
+    "submissionChecklist": [{ "item": "…", "source": { "file": "…", "page": 0 } }]
+  }
+}

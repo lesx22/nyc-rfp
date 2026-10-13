@@ -1,0 +1,158 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>Opportunity Graph film scenes</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..800&family=JetBrains+Mono:wght@400;500;600&display=swap" />
+<style>
+  /* Film scenes for the Opportunity Graph video. Brand v1.1 "Quiet Instrument". Rendered frame-by-frame via window.renderAt(t). */
+  :root { --ink:#020405; --text:#d8eef0; --mute:#6b8388; --line:rgb(120 220 230 / .16); --phosphor:#5ce1e6; --display:"Archivo","Helvetica Neue",Arial,sans-serif; --mono:"JetBrains Mono",ui-monospace,monospace; }
+  html,body { margin:0; width:1920px; height:1080px; overflow:hidden; background:var(--ink); color:var(--text); font-family:var(--display); }
+  canvas { position:absolute; inset:0; }
+  .scene { position:absolute; inset:0; opacity:0; }
+  .eyebrow { font-family:var(--mono); font-size:22px; letter-spacing:.04em; color:var(--phosphor); }
+  h1,h2 { margin:0; font-weight:650; font-stretch:115%; letter-spacing:-.01em; text-wrap:balance; }
+  .grid { position:absolute; left:160px; right:160px; top:420px; bottom:-40px; overflow:hidden; border-top:1px solid var(--line); -webkit-mask-image:linear-gradient(#000 60%, transparent); mask-image:linear-gradient(#000 60%, transparent); }
+  .row { display:grid; grid-template-columns:200px 1fr 520px 150px 170px; gap:24px; padding:18px 8px; border-bottom:1px solid var(--line); font-size:24px; color:rgb(216 238 240 / .72); white-space:nowrap; }
+  .row > * { overflow:hidden; text-overflow:ellipsis; }
+  .row .m { font-family:var(--mono); font-size:21px; }
+  .row.head { color:var(--mute); font-family:var(--mono); font-size:19px; text-transform:uppercase; letter-spacing:.08em; }
+  .card { position:absolute; left:220px; right:220px; top:190px; padding:56px 64px; border:1px solid var(--line); background:rgb(3 8 10 / .9); border-radius:6px; display:grid; gap:26px; }
+  .cats { display:grid; grid-template-columns:1fr 1fr; gap:24px; margin-top:8px; }
+  .cat { border:1px solid var(--line); border-radius:4px; padding:24px 28px; display:grid; gap:8px; }
+  .cat b { font-family:var(--mono); font-weight:500; color:var(--phosphor); font-size:20px; }
+  .cat span { font-size:28px; line-height:1.3; }
+  .src { font-family:var(--mono); font-size:18px; color:var(--mute); }
+  .steps { position:absolute; left:160px; right:160px; top:420px; display:grid; grid-template-columns:repeat(4,1fr); gap:28px; }
+  .step { border-top:2px solid var(--phosphor); padding-top:22px; display:grid; gap:10px; }
+  .step b { font-family:var(--mono); font-size:20px; color:var(--phosphor); font-weight:500; }
+  .step span { font-size:30px; font-weight:600; }
+  .step p { margin:0; font-size:22px; color:var(--mute); line-height:1.4; }
+  .chips { position:absolute; left:160px; top:780px; display:flex; gap:14px; flex-wrap:wrap; }
+  .chip { font-family:var(--mono); font-size:22px; border:1px solid var(--line); border-radius:4px; padding:10px 16px; color:var(--text); }
+  .center { position:absolute; inset:0; display:grid; place-content:center; text-align:center; gap:28px; }
+</style>
+</head>
+<body>
+<canvas id="bg" width="1920" height="1080"></canvas>
+
+<section class="scene" id="s1">
+  <div style="position:absolute;left:160px;top:150px;display:grid;gap:22px;max-width:1500px">
+    <div class="eyebrow">New York City · PASSPort public browse</div>
+    <h1 style="font-size:76px;line-height:1.08">Every City contract opportunity,<br />in rows and columns.</h1>
+  </div>
+  <div class="grid"><div class="row head"><span>EPIN</span><span>Procurement name</span><span>Agency</span><span>Status</span><span>Due</span></div><div id="rows"></div></div>
+</section>
+
+<section class="scene" id="s2">
+  <div class="card">
+    <div class="eyebrow">City Record · Mayor's Office of Contract Services</div>
+    <h2 style="font-size:60px;line-height:1.1">City-wide E-Procurement Performance Optimization — PASSPort 2026</h2>
+    <div style="font-family:var(--mono);font-size:26px;color:var(--mute)">EPIN 00225P0002 · Competitive sealed proposals</div>
+    <div style="font-size:32px;line-height:1.35;max-width:1300px" id="s2-scope">Goal: improve the performance, efficiency, reliability and scalability of the City's procurement system.</div>
+    <div class="cats">
+      <div class="cat" id="cat1"><b>Category 1</b><span>Optimize and enhance the existing system</span></div>
+      <div class="cat" id="cat2"><b>Category 2</b><span>Enhance or replace it, up to a complete system replacement</span></div>
+    </div>
+    <div class="src">Source: City Record Online, request 20241224032 (notice dated Jan 7, 2025)</div>
+  </div>
+</section>
+
+<section class="scene" id="s3">
+  <div class="center">
+    <div class="eyebrow">The idea</div>
+    <h1 style="font-size:92px;line-height:1.05;max-width:1500px">What if finding an RFP felt like exploring a map?</h1>
+  </div>
+</section>
+
+<section class="scene" id="s7">
+  <div style="position:absolute;left:160px;top:170px;display:grid;gap:20px">
+    <div class="eyebrow">How we built it</div>
+    <h1 style="font-size:76px">Days, not months, with Claude Code</h1>
+  </div>
+  <div class="steps">
+    <div class="step" id="st1"><b>01</b><span>Research</span><p>Agents gathered real listings and surveyed open-source graph and motion work</p></div>
+    <div class="step" id="st2"><b>02</b><span>Data</span><p>Every row keeps its source; anything inferred is flagged, nothing invented</p></div>
+    <div class="step" id="st3"><b>03</b><span>Graph</span><p>three.js and React Three Fiber, every node in one draw call</p></div>
+    <div class="step" id="st4"><b>04</b><span>Review</span><p>Each visual change shown side by side before it shipped</p></div>
+  </div>
+  <div class="chips" id="chips"><span class="chip">Claude Code</span><span class="chip">Claude API</span><span class="chip">React Three Fiber</span><span class="chip">Playwright</span><span class="chip">GitHub Actions</span></div>
+</section>
+
+<section class="scene" id="s8">
+  <div class="center">
+    <h1 style="font-size:104px;line-height:1.05" id="tag">Find it. Match it. Answer it.</h1>
+    <div id="mark" style="display:flex;gap:22px;align-items:center;justify-content:center;margin-top:36px">
+      <svg width="64" height="64" viewBox="0 0 32 32" aria-hidden="true"><g stroke="#5eead4" stroke-width="1.5" opacity=".7"><line x1="16" y1="16" x2="8" y2="9"/><line x1="16" y1="16" x2="24" y2="10"/><line x1="16" y1="16" x2="11" y2="24"/><line x1="16" y1="16" x2="23" y2="23"/></g><circle cx="16" cy="16" r="3.5" fill="#fff"/><circle cx="8" cy="9" r="2.2" fill="#38bdf8"/><circle cx="24" cy="10" r="2.2" fill="#a78bfa"/><circle cx="11" cy="24" r="2.2" fill="#5eead4"/><circle cx="23" cy="23" r="2.2" fill="#22d3ee"/></svg>
+      <span style="font-size:52px;font-weight:650;font-stretch:115%">Opportunity Graph</span>
+    </div>
+    <div class="eyebrow" id="sub" style="color:var(--mute)">Built for New York's builders</div>
+  </div>
+</section>
+
+<script>
+  // Scene windows in seconds (the app footage fills 30–62).
+  const SCENES = { s1: [0, 9], s2: [9, 24], s3: [24, 30], s7: [62, 73], s8: [73, 82] }
+  const clamp = (x) => Math.max(0, Math.min(1, x))
+  const easeOut = (x) => 1 - Math.pow(1 - clamp(x), 3)
+  const io = (t, a, b, f = 0.6) => clamp((t - a) / f) * clamp((b - t) / f) // fade in/out window
+  const rise = (el, t, at, dist = 24, dur = 0.7) => {
+    const k = easeOut((t - at) / dur)
+    el.style.opacity = k
+    el.style.transform = `translateY(${(1 - k) * dist}px)`
+  }
+
+  // Background: slow field of shaded spheres in the brand palette.
+  const cv = document.getElementById('bg'), cx = cv.getContext('2d')
+  const COLORS = ['#22d3ee', '#60a5fa', '#a78bfa', '#5eead4', '#c7d2fe', '#a3e635']
+  let seed = 11; const rnd = () => (seed = (seed * 16807) % 2147483647) / 2147483647
+  const DOTS = Array.from({ length: 90 }, () => ({ x: rnd() * 1920, y: rnd() * 1080, z: 0.25 + rnd() * 0.75, r: 3 + rnd() * 9, c: COLORS[(rnd() * COLORS.length) | 0], p: rnd() * 6.28 }))
+  function drawBg(t, gather) {
+    cx.clearRect(0, 0, 1920, 1080)
+    for (const d of DOTS) {
+      let x = d.x + Math.sin(t * 0.15 * d.z + d.p) * 40 * d.z
+      let y = d.y + Math.cos(t * 0.12 * d.z + d.p) * 26 * d.z
+      if (gather > 0) { x += (960 + (d.x - 960) * 0.35 - x) * gather; y += (540 + (d.y - 540) * 0.35 - y) * gather }
+      const r = d.r * d.z
+      const g = cx.createRadialGradient(x - r * 0.35, y - r * 0.4, r * 0.1, x, y, r)
+      g.addColorStop(0, '#ffffff'); g.addColorStop(0.25, d.c); g.addColorStop(1, '#020405')
+      cx.globalAlpha = 0.08 + 0.5 * d.z * d.z
+      cx.fillStyle = g; cx.beginPath(); cx.arc(x, y, r, 0, 6.2832); cx.fill()
+    }
+    cx.globalAlpha = 1
+  }
+
+  // Scene 1 rows: real listings from the app's dataset.
+  let ROWS = []
+  window.ready = fetch('../app/public/data/rfps.json').then((r) => r.json()).then((d) => {
+    ROWS = d.rfps
+    const html = ROWS.concat(ROWS).map((r) => `<div class="row"><span class="m">${r.epin ?? '—'}</span><span>${r.title}</span><span>${r.agency}</span><span class="m">${r.status ?? ''}</span><span class="m">${r.dueDate ?? '—'}</span></div>`).join('')
+    document.getElementById('rows').innerHTML = html
+  })
+
+  window.renderAt = (t) => {
+    const s = (id) => document.getElementById(id)
+    for (const [id, [a, b]] of Object.entries(SCENES)) s(id).style.opacity = io(t, a, b)
+    drawBg(t, easeOut((t - 25) / 4) * (t < 31 ? 1 : 0))
+    // S1: headline rises, grid scrolls.
+    rise(s('s1').firstElementChild, t, 0.3)
+    s('rows').style.transform = `translateY(${-t * 46}px)`
+    // S2: card in, scope and categories reveal.
+    rise(s('s2').querySelector('.card'), t, 9.2, 30, 0.9)
+    rise(s('s2-scope'), t, 12.5)
+    rise(s('cat1'), t, 16)
+    rise(s('cat2'), t, 18.5)
+    // S3: question.
+    rise(s('s3').querySelector('h1'), t, 24.4, 30, 1)
+    // S7: steps stagger, chips last.
+    rise(s('s7').firstElementChild, t, 62.3)
+    ;['st1', 'st2', 'st3', 'st4'].forEach((id, i) => rise(s(id), t, 63.4 + i * 1.6))
+    rise(s('chips'), t, 70)
+    // S8: tagline then mark.
+    rise(s('tag'), t, 73.3, 30, 1)
+    rise(s('mark'), t, 76)
+    rise(s('sub'), t, 77.2)
+  }
+</script>
+</body>
+</html>
