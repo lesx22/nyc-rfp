@@ -11,12 +11,12 @@
  * Be polite: one page at a time, small delays, run at most a few times a day.
  */
 import { chromium } from 'playwright'
-import { mkdir, readFile, writeFile } from 'node:fs/promises'
+import { mkdir, readdir, readFile, writeFile } from 'node:fs/promises'
 import { formatReport, validate } from './validate-data.mjs'
 
 const URL = 'https://passport.cityofnewyork.us/page.aspx/en/rfp/request_browse_public'
 const OUT = new globalThis.URL('../public/data/rfps.json', import.meta.url)
-const MAX_PAGES = Number(process.env.MAX_PAGES ?? 60)
+const MAX_PAGES = Number(process.env.MAX_PAGES ?? 200)
 
 const COLS = {
   program: /program/i,
@@ -231,6 +231,14 @@ const rfps = unique.map((r, i) => {
     confidence: 'high',
   }
 })
+
+// Listings we've documented (docs/solicitations/<EPIN>/) stay in the dataset after they close and drop off
+// PASSPort's default grid: the app's requirements, sample draft and deep links depend on them.
+const pinned = new Set(await readdir(new globalThis.URL('../../docs/solicitations/', import.meta.url)).catch(() => []))
+const seen = new Set(rfps.map((r) => r.epin))
+const kept = prev.filter((r) => r.epin && pinned.has(r.epin) && !seen.has(r.epin))
+if (kept.length) console.log(`Kept ${kept.length} documented listing(s) not in today's grid: ${kept.map((r) => r.epin).join(', ')}`)
+rfps.push(...kept)
 
 const dataset = { meta: { source: 'NYC PASSPort public browse (scraped)', fetchedAt: new Date().toISOString(), count: rfps.length }, rfps }
 
