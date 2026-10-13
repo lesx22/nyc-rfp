@@ -8,7 +8,7 @@ of one of the user's screen recordings: src, media start, playback rate, and a c
 import json
 import pathlib
 
-DUR = 72.0  # VO is 71.0 s; hold the last graph frame a beat longer
+DUR = 71.5  # app capture runs to VO 71.5
 APP_AT = 21.2  # beat 6: hard cut into the app capture
 
 # id, start, dur, src, media_start, rate, (scale0, scale1), origin0, origin1
