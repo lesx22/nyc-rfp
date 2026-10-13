@@ -6,3 +6,8 @@ dist
 !.env.example
 .shots
 .claude/worktrees/
+# Video: media stays local (recordings, VO, renders); the HyperFrames source is tracked
+video/hf/assets/rec/
+video/hf/assets/*.mp4
+video/hf/assets/*.mp3
+video/hf/.hyperframes/
