@@ -55,6 +55,7 @@ function FitMeter({ v }: { v: number }) {
 function NodeView({ id }: { id: string }) {
   const n = useStore((s) => s.nodes.find((x) => x.id === id))
   const openStudio = useStore((s) => s.openStudio)
+  const reason = useStore((s) => s.matchReasons.get(id))
   if (!n) return null
   const urgent = n.daysLeft != null && n.daysLeft >= 0 && n.daysLeft <= 10
   return (
@@ -78,6 +79,14 @@ function NodeView({ id }: { id: string }) {
           <Cell k="Main commodity" v={n.mainCommodity ?? '—'} />
         </div>
       </div>
+
+      {reason && (
+        <section className="border-l border-phosphor/60 pl-3">
+          <h3 className="eyebrow mb-1">Why it matches you</h3>
+          <p className="text-[13px] leading-relaxed text-text/85">{reason}</p>
+          <p className="mt-1 text-[10px] text-mute">Ranked by Claude from the listing summary. Verify against the solicitation.</p>
+        </section>
+      )}
 
       <section>
         <div className="mb-2 flex items-baseline justify-between">

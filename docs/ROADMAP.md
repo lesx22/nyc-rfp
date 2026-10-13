@@ -75,11 +75,16 @@ Phases ship in order. Each phase ends with an explicit **validation gate**. Don'
 
 **Why after data:** the AI is only as good as the corpus it reasons over.
 
-- ◻︎ `/api/match`: Claude via AI SDK `generateObject` → `{ highlightIds, filters, rationale }`; prompt-cache the corpus; stream rationale into the prompt bar
+Architecture, prompts, caching and fallback behaviour: [`AI.md`](./AI.md).
+
+- ✅ `/api/match` (Vercel function, Anthropic SDK structured output) → `{ matches: [{ id, score, reason }], summary }`. Unknown ids are dropped and the corpus block is prompt-cached. The summary shows under the prompt bar and each match's reason in the side panel. With no backend it falls back silently to local scoring
+- ◻︎ `/api/match` follow-ups: return suggested `filters`; stream the summary; cache responses by profile + dataset hash
 - ◻︎ LLM AI-fit classifier: score each solicitation from its full text; keep reasons; cache by EPIN + hash
-- ◻︎ Response Studio agent: chat UI (AI Elements or assistant-ui), PDF/DOCX ingestion of the RFP plus user documents, requirement extraction into a compliance matrix, section drafting, missing-info prompts, export to DOCX/PDF
+- ✅ Response Studio drafting: "Draft with Claude" streams a cited markdown draft (whole proposal or one section) from the intake and `.txt`/`.md` files, marks gaps as `[NEEDS INPUT: …]`, can be stopped, and keeps the template outline as the fallback
+- ◻︎ Response Studio agent, remaining: chat UI (AI Elements or assistant-ui), PDF/DOCX ingestion of the RFP plus user documents (TODO in `app/src/lib/ai.ts`), requirement extraction into a compliance matrix, export to DOCX/PDF
 - ◻︎ Accounts (Clerk or Supabase Auth) and saved drafts (Postgres)
-- ◻︎ Guardrails: cite RFP sections, flag unverifiable claims, never auto-submit
+- ◻︎ Guardrails: cite RFP sections (needs the full solicitation text), flag unverifiable claims automatically. Done so far: drafts cite their inputs, mark gaps, and nothing is auto-submitted
+- ◻︎ Rate limiting and abuse protection on `/api/*` before a public launch (see [`AI.md`](./AI.md))
 
 **Gate:** 3 pilot vendors produce a draft they'd actually submit; at least 80% of extracted requirements are correct against a hand-labelled set.
 

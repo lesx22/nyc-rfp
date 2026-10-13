@@ -10,9 +10,11 @@
     "preview": "vite preview",
     "scrape": "node scripts/scrape-passport.mjs",
     "typecheck": "tsc -b",
+    "test": "node --test --experimental-strip-types --no-warnings=ExperimentalWarning tests/*.test.ts",
     "test:smoke": "node scripts/smoke.mjs"
   },
   "dependencies": {
+    "@anthropic-ai/sdk": "^0.133.0",
     "@react-three/drei": "^10.7.9",
     "@react-three/fiber": "^9.8.1",
     "@react-three/postprocessing": "^3.2.0",

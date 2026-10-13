@@ -68,7 +68,8 @@ export const PHASES: Phase[] = [
     name: 'AI layer',
     goal: 'Claude matching & drafting',
     tasks: [
-      ['/api/match with Claude', false],
+      ['/api/match with Claude', true],
+      ['Streaming drafts with Claude (/api/draft)', true],
       ['LLM AI-fit classifier', false],
       ['Response Studio agent (chat + docs)', false],
       ['Accounts & saved drafts', false],

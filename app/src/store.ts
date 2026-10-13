@@ -26,6 +26,10 @@ interface State {
   setQuery: (q: string) => void
   relevance: Map<string, number>
   setRelevance: (m: Map<string, number>) => void
+  /** Per-node one-line reasons and a one-line summary from /api/match; empty when local scoring is in use. */
+  matchReasons: Map<string, string>
+  matchSummary: string | null
+  setMatchInfo: (reasons: Map<string, string>, summary: string | null) => void
   selected: { kind: 'node' | 'cluster'; id: string } | null
   select: (s: State['selected']) => void
   hovered: string | null
@@ -51,6 +55,9 @@ export const useStore = create<State>((set) => ({
   setQuery: (query) => set({ query }),
   relevance: new Map(),
   setRelevance: (relevance) => set((s) => ({ relevance, focusNonce: s.focusNonce + 1 })),
+  matchReasons: new Map(),
+  matchSummary: null,
+  setMatchInfo: (matchReasons, matchSummary) => set({ matchReasons, matchSummary }),
   selected: null,
   select: (selected) => set({ selected }),
   hovered: null,
