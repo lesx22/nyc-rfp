@@ -1,24 +1,17 @@
 import { AnimatePresence, motion } from 'motion/react'
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
+import { aiAvailable, projectDraftRfp, readTextFiles, streamDraft } from '../lib/ai'
 import { countdown, cx, date, passportUrl, usd } from '../lib/format'
+import { type Intake, OUTLINE_SECTIONS, outline } from '../lib/outline'
 import { useStore } from '../store'
 import type { RfpNode } from '../types'
 
 /**
- * Response Studio v0: a guided, local-only intake → outline generator.
- * Phase 3 swaps the template for a Claude-backed agent (see docs/ROADMAP.md):
- * chat, document parsing, requirement extraction from the RFP PDF, and compliance checks.
+ * Response Studio: guided intake → draft. The template outline is always available locally;
+ * "Draft with Claude" streams a cited draft from /api/draft when the backend is configured
+ * (docs/AI.md). Still to come: chat, PDF/DOCX parsing, requirement extraction, compliance checks.
  */
 const STEPS = ['Brief', 'About you', 'Documents', 'Draft', 'Submit'] as const
-
-interface Intake {
-  org: string
-  team: string
-  capabilities: string
-  pastWork: string
-  mwbe: boolean
-  approach: string
-}
 
 export default function ResponseStudio() {
   const id = useStore((s) => s.studioFor)
@@ -51,7 +44,9 @@ function Studio({ n, onClose }: { n: RfpNode; onClose: () => void }) {
   const [step, setStep] = useState(0)
   const [files, setFiles] = useState<File[]>([])
   const [f, setF] = useState<Intake>({ org: '', team: '', capabilities: '', pastWork: '', mwbe: false, approach: '' })
-  const draft = useMemo(() => outline(n, f, files), [n, f, files])
+  const template = useMemo(() => outline(n, f, files.map((x) => x.name)), [n, f, files])
+  const ai = useClaudeDraft(n, f, files)
+  const draft = ai.text ?? template
 
   return (
     <>
@@ -128,11 +123,42 @@ function Studio({ n, onClose }: { n: RfpNode; onClose: () => void }) {
           )}
           {step === 3 && (
             <div className="space-y-3">
-              <div className="flex items-center justify-between">
-                <h3 className="text-[17px] font-semibold">Draft outline</h3>
-                <button onClick={() => download(`${n.epin ?? n.id}-response.md`, draft)} className="rounded-[2px] border border-white/15 px-3 py-1.5 text-[12px] hover:bg-white/5">Download .md</button>
+              <div className="flex flex-wrap items-center gap-2">
+                <h3 className="mr-auto text-[17px] font-semibold">{ai.text != null ? 'Draft' : 'Draft outline'}</h3>
+                {ai.available && (
+                  <>
+                    <label className="sr-only" htmlFor="draft-section">Section to draft</label>
+                    <select
+                      id="draft-section"
+                      value={ai.section}
+                      onChange={(e) => ai.setSection(e.target.value)}
+                      disabled={ai.streaming}
+                      className="h-8 max-w-48 rounded-[2px] border border-line bg-ink px-2 text-[12px] text-text outline-none focus:border-phosphor/60"
+                    >
+                      <option value="">Whole proposal</option>
+                      {OUTLINE_SECTIONS.map((x) => (
+                        <option key={x} value={x}>{x}</option>
+                      ))}
+                    </select>
+                    {ai.streaming ? (
+                      <button onClick={ai.stop} className="h-8 rounded-[2px] border border-phosphor/60 px-3 text-[12px] text-phosphor hover:bg-phosphor/10">Stop</button>
+                    ) : (
+                      <button onClick={ai.start} className="h-8 rounded-[2px] bg-phosphor px-3 text-[12px] font-semibold text-ink transition-transform duration-150 ease-[var(--ease-out)] active:scale-[.97]">
+                        {ai.text != null ? 'Redraft with Claude' : 'Draft with Claude'}
+                      </button>
+                    )}
+                    {ai.text != null && !ai.streaming && (
+                      <button onClick={ai.reset} className="h-8 rounded-[2px] px-2 text-[12px] text-mute hover:text-text">Use template</button>
+                    )}
+                  </>
+                )}
+                <button onClick={() => download(`${n.epin ?? n.id}-response.md`, draft)} disabled={ai.streaming} className="h-8 rounded-[2px] border border-white/15 px-3 text-[12px] enabled:hover:bg-white/5 disabled:opacity-40">Download .md</button>
               </div>
-              <pre className="whitespace-pre-wrap rounded-[2px] border border-line bg-black/50 p-4 font-mono text-[12px] leading-relaxed text-white/80">{draft}</pre>
+              <p aria-live="polite" className="text-[11px] leading-snug text-mute empty:hidden">{ai.note}</p>
+              <pre aria-busy={ai.streaming} className="whitespace-pre-wrap rounded-[2px] border border-line bg-black/50 p-4 font-mono text-[12px] leading-relaxed text-white/80">
+                {draft}
+                {ai.streaming && <span aria-hidden="true" className="text-phosphor">▍</span>}
+              </pre>
             </div>
           )}
           {step === 4 && (
@@ -149,7 +175,7 @@ function Studio({ n, onClose }: { n: RfpNode; onClose: () => void }) {
         </main>
       </div>
       <footer className="flex items-center justify-between border-t border-line px-5 py-3">
-        <span className="text-[11px] text-mute">Chat with Claude to write sections: coming in Phase 3</span>
+        <span className="text-[11px] text-mute">{ai.available ? 'Claude drafts from your intake and .txt/.md files. You verify every claim.' : 'Template outline. Claude drafting appears when the server is configured.'}</span>
         <div className="flex gap-2">
           <button disabled={step === 0} onClick={() => setStep(step - 1)} className="h-9 rounded-[2px] px-3 text-[13px] text-mute enabled:hover:text-white disabled:opacity-30">Back</button>
           <button onClick={() => (step < STEPS.length - 1 ? setStep(step + 1) : onClose())} className="h-9 rounded-[2px] bg-white px-4 text-[13px] font-medium text-black">{step < STEPS.length - 1 ? 'Continue' : 'Done'}</button>
@@ -178,42 +204,55 @@ function Field({ label, v, on, area }: { label: string; v: string; on: (v: strin
   )
 }
 
-function outline(n: RfpNode, f: Intake, files: File[]): string {
-  const or = (s: string, ph: string) => s.trim() || `[${ph}]`
-  return `# Proposal: ${n.title}
-Submitted to: ${n.agency}${n.epin ? `\nEPIN: ${n.epin}` : ''}
-Proposer: ${or(f.org, 'Organization name')}
-Due: ${date(n.dueDate)}
+/** Streaming Claude draft state for the Draft step. Falls back to the template on any failure. */
+function useClaudeDraft(n: RfpNode, f: Intake, files: File[]) {
+  const [available, setAvailable] = useState(false)
+  const [text, setText] = useState<string | null>(null)
+  const [streaming, setStreaming] = useState(false)
+  const [note, setNote] = useState('')
+  const [section, setSection] = useState('')
+  const ac = useRef<AbortController | null>(null)
 
-## 1. Executive summary
-${or(f.org, 'We')} proposes to ${or(f.approach, 'describe the core approach in two to three sentences')}.
+  useEffect(() => {
+    let live = true
+    void aiAvailable().then((ok) => live && setAvailable(ok))
+    return () => {
+      live = false
+      ac.current?.abort()
+    }
+  }, [])
 
-## 2. Understanding of the need
-${n.description ?? '[Restate the agency need in your own words, citing the RFP scope section.]'}
-
-## 3. Proposed approach & work plan
-- Discovery & requirements (weeks 1–3)
-- Design & prototyping with agency users (weeks 3–8)
-- Build, test, accessibility (WCAG 2.2 AA) & security review
-- Launch, training, and handoff
-[Map each activity to the RFP's scope-of-services items.]
-
-## 4. Organizational capability
-Team: ${or(f.team, 'roles, size, key personnel')}
-Capabilities: ${or(f.capabilities, 'relevant capabilities')}
-
-## 5. Relevant experience & references
-${or(f.pastWork, 'three comparable engagements with outcomes and a reference contact for each')}
-
-## 6. M/WBE participation
-${f.mwbe ? 'Proposer is a certified M/WBE.' : '[Utilization plan or waiver request]'}
-
-## 7. Price proposal
-[Use the agency's pricing form. Do not include pricing in the narrative unless instructed.]
-
-## Attachments
-${files.length ? files.map((x) => `- ${x.name}`).join('\n') : '- [Capability statement, résumés, insurance, forms]'}
-`
+  const start = async () => {
+    const prev = text // restored if this attempt produces nothing
+    ac.current?.abort()
+    const ctl = new AbortController()
+    ac.current = ctl
+    setStreaming(true)
+    setNote('Reading your files…')
+    const { texts, skipped } = await readTextFiles(files)
+    const used = texts.length ? `Using ${texts.length} file${texts.length === 1 ? '' : 's'}.` : 'No readable files; drafting from your intake only.'
+    const skip = skipped.length ? ` Skipped: ${skipped.map((x) => `${x.name} (${x.why})`).join(', ')}.` : ''
+    setNote(`Drafting with Claude. ${used}${skip}`)
+    setText('')
+    const out = await streamDraft({ rfp: projectDraftRfp(n), intake: f, files: texts, section: section || undefined }, setText, { signal: ctl.signal })
+    if (ac.current !== ctl) return
+    setStreaming(false)
+    if (out.ok) setNote(`Draft from Claude. Check every [NEEDS INPUT] and citation before you submit.${skip}`)
+    else if (out.reason === 'aborted') setNote(out.text.trim() ? 'Stopped. Partial draft kept.' : prev != null ? 'Stopped. Previous draft kept.' : 'Stopped.')
+    else if (out.text.trim()) setNote('Connection lost. Partial draft kept; use the template or redraft.')
+    else {
+      const kept = prev != null ? 'Previous draft kept.' : 'Showing the template outline.'
+      setNote(`${out.reason === 'too_large' ? 'Files too large to send.' : out.reason === 'unavailable' ? 'Claude is not available here.' : "Couldn't reach Claude."} ${kept}`)
+      if (out.reason === 'unavailable') setAvailable(false)
+    }
+    if (!out.ok && !out.text.trim()) setText(prev)
+  }
+  const stop = () => ac.current?.abort()
+  const reset = () => {
+    setText(null)
+    setNote('')
+  }
+  return { available, text, streaming, note, section, setSection, start, stop, reset }
 }
 
 function download(name: string, text: string) {

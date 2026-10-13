@@ -1,5 +1,6 @@
 import { AnimatePresence, motion } from 'motion/react'
 import { useEffect, useMemo, useRef, useState } from 'react'
+import { aiAvailable, matchRemote } from '../lib/ai'
 import { relevance } from '../lib/score'
 import { useStore } from '../store'
 
@@ -14,15 +15,25 @@ function readProfile(): string {
   }
 }
 
-/** "Tell it about you" → local relevance scoring → graph rotates & re-highlights. */
+/**
+ * "Tell it about you" → instant local relevance → graph re-highlights. If the AI backend is
+ * available, Claude's ranking then replaces the local one (with reasons and a summary line).
+ * Any failure silently keeps the local result (docs/AI.md).
+ */
 export default function PromptBar() {
   const nodes = useStore((s) => s.nodes)
   const setRelevance = useStore((s) => s.setRelevance)
   const rel = useStore((s) => s.relevance)
   const select = useStore((s) => s.select)
+  const setMatchInfo = useStore((s) => s.setMatchInfo)
+  const summary = useStore((s) => s.matchSummary)
   const [q, setQ] = useState(readProfile)
   const [asked, setAsked] = useState(readProfile())
+  const [pending, setPending] = useState(false)
   const input = useRef<HTMLInputElement>(null)
+  const inflight = useRef<AbortController | null>(null)
+
+  useEffect(() => () => inflight.current?.abort(), [])
 
   const run = (text: string) => {
     setQ(text)
@@ -33,7 +44,24 @@ export default function PromptBar() {
       /* private mode: fine */
     }
     select(null)
+    // Local first: instant, and what stays on screen if the backend is absent or fails.
     setRelevance(relevance(nodes, text || 'software ai digital data'))
+    setMatchInfo(new Map(), null)
+    inflight.current?.abort()
+    setPending(false)
+    if (!text) return
+    const ac = new AbortController()
+    inflight.current = ac
+    void aiAvailable().then(async (ok) => {
+      if (!ok || ac.signal.aborted) return
+      setPending(true)
+      const m = await matchRemote(text, nodes, { signal: ac.signal })
+      if (ac.signal.aborted) return
+      setPending(false)
+      if (!m) return
+      setRelevance(m.relevance)
+      setMatchInfo(m.reasons, m.summary || null)
+    })
   }
 
   // Cover state: highlight a few "for you" picks on first load.
@@ -99,6 +127,9 @@ export default function PromptBar() {
         
         <button className="h-10 rounded-[3px] bg-phosphor px-4 text-[13px] font-semibold text-ink transition-transform duration-150 active:scale-[.97]">Match</button>
       </form>
+      <p aria-live="polite" className="pointer-events-auto max-w-2xl px-2 text-center text-[11px] leading-snug text-mute empty:hidden">
+        {pending ? 'Refining with Claude…' : summary}
+      </p>
       <div className="pointer-events-auto flex flex-wrap justify-center gap-1.5">
         {SUGGESTIONS.map((s) => (
           <button key={s} onClick={() => run(s)} className="rounded-[2px] border border-line px-2.5 py-1 text-[11px] text-text/60 transition-colors duration-150 hover:border-phosphor/50 hover:text-text">

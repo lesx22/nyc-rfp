@@ -34,7 +34,14 @@ function encoder(file) {
     done: () => new Promise((r) => { ff.on('close', r); ff.stdin.end() }),
   }
 }
-const shot = (p) => p.screenshot({ type: 'jpeg', quality: 92 })
+// CDP capture: Playwright's screenshot waits for an animation frame, which never arrives under a fake clock.
+const cdpCache = new WeakMap()
+async function shot(p) {
+  let cdp = cdpCache.get(p)
+  if (!cdp) cdpCache.set(p, (cdp = await p.context().newCDPSession(p)))
+  const { data } = await cdp.send('Page.captureScreenshot', { format: 'jpeg', quality: 92 })
+  return Buffer.from(data, 'base64')
+}
 const serve = (args, cwd) => spawn(args[0], args.slice(1), { cwd, stdio: 'ignore' })
 
 /* ---------------- title scenes ---------------- */
@@ -85,7 +92,8 @@ async function app() {
     await enc.write(await shot(p))
     frame++
   }
-  const until = async (sec) => { while (frame < Math.round(sec * FPS)) await tick() }
+  const LIMIT = Number(process.env.MAX_SECONDS ?? Infinity)
+  const until = async (sec) => { while (frame < Math.round(Math.min(sec, LIMIT) * FPS)) await tick(); if (frame >= LIMIT * FPS) throw new Error('MAX_SECONDS reached (test run)') }
   const setCursor = (x, y, down = false) => p.evaluate(([x, y, down]) => { const c = document.getElementById('vc'); c.style.transform = `translate(${x}px,${y}px)`; c.classList.toggle('down', down) }, [x, y, down])
   const moveTo = async (locator, seconds = 0.7) => {
     const box = await locator.boundingBox()

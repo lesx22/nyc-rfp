@@ -14,9 +14,11 @@
     "validate": "node scripts/validate-data.mjs",
     "test:validate": "node --test scripts/validate-data.test.mjs",
     "scrape:solicitation": "node scripts/scrape-solicitation.mjs",
-    "test:unit": "node --test --experimental-strip-types scripts/ics.test.ts"
+    "test:unit": "node --test --experimental-strip-types scripts/ics.test.ts",
+    "test": "node --test --experimental-strip-types --no-warnings=ExperimentalWarning tests/*.test.ts"
   },
   "dependencies": {
+    "@anthropic-ai/sdk": "^0.133.0",
     "@react-three/drei": "^10.7.9",
     "@react-three/fiber": "^9.8.1",
     "@react-three/postprocessing": "^3.2.0",
