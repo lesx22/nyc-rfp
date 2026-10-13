@@ -47,13 +47,43 @@ await page.goto(URL, { waitUntil: 'networkidle', timeout: 90_000 })
 // Some PASSPort views require pressing "Search" before the grid renders.
 const search = page.getByRole('button', { name: /^search$/i })
 if (await search.count()) await search.first().click().catch(() => {})
-await page.waitForSelector('table tbody tr', { timeout: 60_000 })
+
+// On any failure, leave the page behind for diagnosis (CI uploads scrape-debug/ as an artifact).
+async function saveDebug(reason) {
+  try {
+    const dir = new globalThis.URL('../scrape-debug/', import.meta.url)
+    await mkdir(dir, { recursive: true })
+    await writeFile(new globalThis.URL('page.html', dir), await page.content())
+    await page.screenshot({ path: new globalThis.URL('page.png', dir).pathname, fullPage: true })
+    await writeFile(new globalThis.URL('reason.txt', dir), String(reason))
+    console.error(`Saved debug snapshot to scrape-debug/ (${reason})`)
+  } catch (e) {
+    console.error('Could not save debug snapshot:', e)
+  }
+}
+
+// Wait for the table that actually holds listings (rows with EPIN-shaped codes). The page also has
+// hidden layout tables, so "first visible row" is not a safe signal.
+const EPIN = '\\b\\d{3}\\d{2}[A-Z]\\d{4}\\b'
+try {
+  await page.waitForFunction(
+    (re) => [...document.querySelectorAll('table')].some((t) => (t.innerText.match(new RegExp(re, 'g')) ?? []).length >= 3),
+    EPIN,
+    { timeout: 90_000 },
+  )
+} catch (e) {
+  await saveDebug('No table with EPIN-shaped rows appeared within 90s')
+  await browser.close()
+  throw e
+}
 
 const rows = []
 for (let p = 1; p <= MAX_PAGES; p++) {
   const batch = await page.evaluate((colSrc) => {
     const cols = Object.fromEntries(Object.entries(colSrc).map(([k, v]) => [k, new RegExp(v, 'i')]))
-    const table = [...document.querySelectorAll('table')].sort((a, b) => b.querySelectorAll('tbody tr').length - a.querySelectorAll('tbody tr').length)[0]
+    // The listings table is the one with the most EPIN-shaped codes (not merely the most rows).
+    const epins = (t) => (t.innerText.match(/\b\d{3}\d{2}[A-Z]\d{4}\b/g) ?? []).length
+    const table = [...document.querySelectorAll('table')].sort((a, b) => epins(b) - epins(a) || b.querySelectorAll('tbody tr').length - a.querySelectorAll('tbody tr').length)[0]
     if (!table) return []
     const heads = [...table.querySelectorAll('thead th, tr:first-child th')].map((th) => th.textContent.trim())
     const idx = {}
@@ -94,6 +124,16 @@ const prevBy = new Map(prev.map((r) => [key(r), r]))
 if (prev.length && rows.length < prev.length * 0.5 && !process.env.FORCE) {
   console.error(`Refusing to write: scraped ${rows.length} rows vs ${prev.length} previously (<50%). Set FORCE=1 to override.`)
   process.exit(2)
+}
+
+// PASSPort prints the EPIN as a prefix of the procurement name ("00225P0002-City-wide …").
+// When there's no EPIN column, take it from there and keep the clean title.
+for (const r of rows) {
+  const m = r.title?.match(/^\s*(\d{3}\d{2}[A-Z]\d{4})\s*[-–:]?\s*(.*)$/)
+  if (m) {
+    r.epin ||= m[1]
+    if (m[2]) r.title = m[2]
+  }
 }
 
 // Paging can repeat a row (postback timing); EPINs are unique, so drop exact EPIN repeats.
