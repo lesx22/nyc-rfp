@@ -77,8 +77,6 @@ html = f"""<!doctype html>
 {chr(10).join(clips)}
       <div id="app-wrap"><video id="app" class="clip" src="assets/app.mp4" muted playsinline data-start="{APP_AT}" data-duration="{DUR - APP_AT:.1f}" data-media-start="0" data-track-index="1"></video></div>
       <audio id="vo" src="assets/vo.mp3" data-start="0" data-duration="71.0" data-volume="1" data-track-index="3"></audio>
-      <audio id="music" src="assets/music.mp3" data-start="0" data-duration="{DUR}" data-volume="0.1" data-track-index="4"
-        data-automation='{{"version":1,"lanes":[{{"target":"volume","points":[{{"t":0,"v":0}},{{"t":1.5,"v":0.1}},{{"t":{DUR - 3},"v":0.1}},{{"t":{DUR},"v":0}}]}}]}}'></audio>
 {sfx}
     </div>
     <script>

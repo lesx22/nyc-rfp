@@ -7,7 +7,7 @@ description: Cut a 60–90 s voice-over-led product walkthrough in HyperFrames f
 
 brag makes 15–25 s launch videos with music carrying the edit. This variant keeps brag's laws (hook first, show the real thing, readable, every frame postable, sound mixed as one piece). What changes:
 
-- **The voice-over is the spine.** The user's recorded VO sets the length (60–90 s) and every cut. Music is a bed under it, never the clock.
+- **The voice-over is the spine.** The user's recorded VO sets the length (60–90 s) and every cut. No music.
 - **Real footage over rebuilt UI.** Use the user's screen recordings for third-party sites (PASSPort, City Record, GitHub). The sandbox can't reach NYC hosts, so never fake those screens. Use `video/capture.mjs` (virtual-clock Playwright capture) for our own app.
 - **Graph time is the product.** Get to the graph as early as the VO allows. Keep it moving: camera pans and zooms, hub and node clicks with real mouse events.
 
@@ -34,11 +34,11 @@ Read the HyperFrames core/cli skills (github.com/heygen-com/hyperframes `skills/
 - One paused GSAP timeline registered at `window.__timelines.main`. Vendor GSAP locally (`assets/gsap.min.js`).
 - Each shot is a `<video>` with `data-start`, `data-duration`, `data-media-start` (and `data-playback-rate` for slow-mo) inside a `.inner` wrapper. Motion is tweened on `.inner`, never on the timed element.
 - Pre-transcode recordings to 1920-wide, 30 fps, keyframe every 15 frames (`-g 15`), so seeks are exact.
-- **Audio:** VO at volume 1. Music bed (if used) at about 0.12, fading in over 1 s and out over the last 2 s. UI clicks (CC0 Kenney SFX from brag) at about 0.25, only on on-screen clicks. Every `<audio>` needs an `id`.
+- **Audio:** VO at volume 1. No music (the user's call: the voice carries it). UI clicks (CC0 Kenney SFX from brag) at about 0.25, only on on-screen clicks. Every `<audio>` needs an `id`.
 - **Gate:** `npx hyperframes check` passes. Then `snapshot` at each beat midpoint and look at every still before `render`.
 
 ## 4. Deliver
 
 - Render to `video/out/opportunity-graph.mp4`. Bake the strongest settled frame in as frame 0 (replace it, don't add one).
 - Send it, with one line on what changed and the beat table.
-- **Licensing:** brag's SFX are CC0. Its bundled music (ende.app "Happy Beats / Business Moves") has unverified terms. Flag that before the user posts publicly, or render with `--no-music`.
+- **Licensing:** brag's SFX are CC0 (Kenney).
