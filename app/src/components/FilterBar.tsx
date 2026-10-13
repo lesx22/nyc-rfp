@@ -22,8 +22,7 @@ export default function FilterBar() {
       <div className="pointer-events-auto mr-2 flex items-center gap-2.5">
         <img src="./favicon.svg" alt="" className="size-7" />
         <div className="leading-tight">
-          <div className="font-display text-[14px] font-bold uppercase">Opportunity Graph</div>
-          <div className="eyebrow">NYC procurement scope</div>
+          <div className="font-display text-[14px] font-semibold">Opportunity Graph</div>
         </div>
       </div>
 
@@ -39,7 +38,7 @@ export default function FilterBar() {
           onChange={(dueWithin) => setFilters({ dueWithin } as Partial<Filters>)}
         />
         <Chip on={filters.digitalOnly} onClick={() => setFilters({ digitalOnly: !filters.digitalOnly })} title="AI-fit score ≥ 60">
-          ✦ AI-buildable
+          AI-buildable
         </Chip>
         {dirty && (
           <button className="px-2 text-[12px] text-mute hover:text-white" onClick={() => setFilters(emptyFilters)}>
@@ -49,7 +48,7 @@ export default function FilterBar() {
       </div>
 
       <div className="glass pointer-events-auto flex items-center gap-1 rounded-[2px] p-1">
-        <span className="eyebrow pl-2">Cluster</span>
+        <span className="pl-2 text-[12px] text-mute">Group</span>
         <Select label="" value={l1} options={(['industry', 'agency', 'method', 'mainCommodity'] as GroupKey[]).map((k) => [k, LABEL[k]])} onChange={(v) => setHierarchy(v as GroupKey, v === l2 ? l1 : l2)} />
         <span className="text-mute">→</span>
         <Select label="" value={l2} options={(['agency', 'industry', 'method', 'mainCommodity'] as GroupKey[]).filter((k) => k !== l1).map((k) => [k, LABEL[k]])} onChange={(v) => setHierarchy(l1, v as GroupKey)} />
@@ -65,7 +64,7 @@ export default function FilterBar() {
 
 function Chip({ on, children, ...p }: { on: boolean; children: React.ReactNode } & React.ButtonHTMLAttributes<HTMLButtonElement>) {
   return (
-    <button {...p} aria-pressed={on} className={cx('flex h-8 items-center gap-1.5 rounded-[2px] px-2.5 text-[11px] uppercase tracking-[0.08em] transition-colors duration-150', on ? 'bg-phosphor text-ink' : 'text-text/80 hover:bg-phosphor/10')}>
+    <button {...p} aria-pressed={on} className={cx('flex h-8 items-center gap-1.5 rounded-[3px] px-2.5 text-[12px] transition-colors duration-150', on ? 'bg-phosphor text-ink' : 'text-text/80 hover:bg-phosphor/10')}>
       {children}
     </button>
   )
@@ -115,7 +114,7 @@ function Multi({ label, values, sel, onChange }: { label: string; values: string
 
 function Select<T extends string | number | null>({ label, value, options, onChange }: { label: string; value: T; options: [T, string][]; onChange: (v: T) => void }) {
   return (
-    <label className="flex h-8 items-center gap-1 rounded-[2px] px-1.5 text-[11px] uppercase tracking-[0.08em] text-text/80 hover:bg-phosphor/10">
+    <label className="flex h-8 items-center gap-1 rounded-[3px] px-1.5 text-[12px] text-text/80 hover:bg-phosphor/10">
       {label && <span>{label}</span>}
       <select value={String(value)} onChange={(e) => onChange(options.find(([v]) => String(v) === e.target.value)![0])} className="cursor-pointer bg-transparent text-white outline-none [&>option]:bg-zinc-900">
         {options.map(([v, l]) => (

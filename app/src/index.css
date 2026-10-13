@@ -1,12 +1,12 @@
 @import "tailwindcss";
 
 /*
- * Brand kit v1: "Instrument Panel" (docs/BRAND.md).
- * Layout concept: a dark instrument with the network as the scope; chrome is hairline,
- * square-cornered, bracketed, and every number is set in mono.
+ * Brand kit v1.1: "Quiet Instrument" (docs/BRAND.md).
+ * Layout concept: the network is the subject; chrome is hairline and recedes,
+ * numbers in mono, everything else in Archivo.
  */
 @theme {
-  --font-sans: "JetBrains Mono", ui-monospace, "SF Mono", Menlo, monospace;
+  --font-sans: "Archivo", "Helvetica Neue", Arial, sans-serif;
   --font-mono: "JetBrains Mono", ui-monospace, "SF Mono", Menlo, monospace;
   --font-display: "Archivo", "Helvetica Neue", Arial, sans-serif;
 
@@ -52,34 +52,16 @@ body {
 :focus-visible { outline: 1px solid var(--color-phosphor); outline-offset: 2px; }
 
 .font-display { font-family: var(--font-display); font-stretch: 125%; letter-spacing: -0.01em; }
-.eyebrow { font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--color-mute); }
+.eyebrow { font-size: 11px; color: var(--color-mute); }
 
-/* Instrument panel: hairline frame, corner brackets, no frosted glass.
+/* Panels: hairline frame, near-black, no blur, no ornament.
    Lives in the components layer so Tailwind utilities (absolute, etc.) still win. */
 @layer components {
-.glass {
-  background: var(--color-panel);
-  border: 1px solid var(--color-line);
-  border-radius: 2px;
-  --bk: rgb(92 225 230 / 0.75);
-  background-image:
-    linear-gradient(var(--bk), var(--bk)), linear-gradient(var(--bk), var(--bk)),
-    linear-gradient(var(--bk), var(--bk)), linear-gradient(var(--bk), var(--bk)),
-    linear-gradient(var(--bk), var(--bk)), linear-gradient(var(--bk), var(--bk)),
-    linear-gradient(var(--bk), var(--bk)), linear-gradient(var(--bk), var(--bk));
-  background-repeat: no-repeat;
-  background-size: 8px 1px, 1px 8px, 8px 1px, 1px 8px, 8px 1px, 1px 8px, 8px 1px, 1px 8px;
-  background-position: 0 0, 0 0, 100% 0, 100% 0, 0 100%, 0 100%, 100% 100%, 100% 100%;
-}
-}
-/* Ruler ticks along the top edge of large panels. */
-.ruler::before {
-  content: "";
-  position: absolute;
-  inset: 0 12px auto 12px;
-  height: 4px;
-  background: repeating-linear-gradient(90deg, rgb(92 225 230 / 0.35) 0 1px, transparent 1px 8px);
-  pointer-events: none;
+  .glass {
+    background: var(--color-panel);
+    border: 1px solid var(--color-line);
+    border-radius: 4px;
+  }
 }
 
 .scroll-thin { scrollbar-width: thin; scrollbar-color: rgb(92 225 230 / 0.2) transparent; }
@@ -90,32 +72,19 @@ body {
   align-items: baseline;
   gap: 6px;
   white-space: nowrap;
-  font-family: var(--font-mono);
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
+  font-family: var(--font-display);
+  font-stretch: 100%;
   text-shadow: 0 0 10px #000, 0 0 2px #000;
   transition: opacity 200ms var(--ease-out);
 }
-.hud-label-l1 { font-size: 15px; color: var(--color-text); }
-.hud-label-l2 { font-size: 11px; color: rgb(216 238 240 / 0.75); }
-.hud-code {
-  padding: 0 4px;
-  border: 1px solid rgb(92 225 230 / 0.6);
-  color: var(--color-phosphor);
-  font-weight: 600;
-}
-.hud-count { color: var(--color-mute); }
-
-/* Boot log */
-@keyframes hud-fade-out { to { opacity: 0; visibility: hidden; } }
-.boot-log { animation: hud-fade-out 300ms var(--ease-out) 2.7s forwards; }
+.hud-label-l1 { font-size: 14px; font-weight: 500; color: var(--color-text); }
+.hud-label-l2 { font-size: 11px; color: rgb(216 238 240 / 0.7); }
+.hud-count { font-family: var(--font-mono); font-size: 0.8em; color: var(--color-mute); }
 
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: 0.01ms !important; animation-delay: 0ms !important; transition-duration: 0.01ms !important; }
 }
-@keyframes boot-line { to { opacity: 1; } }
-/* Phones: sector labels collapse to their code + count, like a compact instrument. */
+/* Phones: smaller sector labels. */
 @media (max-width: 640px) {
-  .hud-label-l1 .hud-name { display: none; }
-  .hud-label-l1 { font-size: 13px; }
+  .hud-label-l1 { font-size: 12px; }
 }

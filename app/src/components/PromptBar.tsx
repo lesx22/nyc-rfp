@@ -1,11 +1,10 @@
 import { AnimatePresence, motion } from 'motion/react'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { relevance } from '../lib/score'
-import { countdown } from '../lib/format'
 import { useStore } from '../store'
 
 const PROFILE_KEY = 'og.profile'
-const SUGGESTIONS = ['I run a small AI + design studio', 'Data dashboards & GIS', 'Youth & education programs', 'Websites and digital services', 'Climate and energy']
+const SUGGESTIONS = ['Small AI + design studio', 'Data dashboards & GIS', 'Websites & digital services']
 
 function readProfile(): string {
   try {
@@ -70,12 +69,11 @@ export default function PromptBar() {
       <AnimatePresence>
         {top.length > 0 && (
           <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 8 }} className="pointer-events-auto flex max-w-full gap-1.5 overflow-x-auto pb-1 scroll-thin">
-            <span className="eyebrow shrink-0 self-center px-1.5 py-1 text-phosphor">{asked ? 'Matches' : 'Picked for you'} ▸</span>
+            <span className="eyebrow shrink-0 self-center px-1.5 py-1 text-phosphor">{asked ? 'Matches' : 'For you'}</span>
             {top.map((n) => (
-              <button key={n.id} onClick={() => select({ kind: 'node', id: n.id })} className="glass group shrink-0 rounded-[2px] px-3 py-1 text-left text-[12px] hover:border-phosphor/50">
+              <button key={n.id} data-match onClick={() => select({ kind: 'node', id: n.id })} className="glass group shrink-0 rounded-[2px] px-3 py-1 text-left text-[12px] hover:border-phosphor/50">
                 <span className="mr-1.5 inline-block size-1.5 rounded-full bg-phosphor align-middle" />
                 <span className="inline-block max-w-56 truncate align-middle">{n.title}</span>
-                <span className="ml-2 font-mono text-[10px] text-mute">{countdown(n.daysLeft)}</span>
               </button>
             ))}
           </motion.div>
@@ -89,17 +87,17 @@ export default function PromptBar() {
         }}
         className="glass pointer-events-auto flex w-full max-w-2xl items-center gap-2 rounded-[2px] p-1.5 pl-4 shadow-[0_0_40px_-24px_rgba(92,225,230,.6)]"
       >
-        <span className="font-semibold text-phosphor" aria-hidden="true">&gt;</span>
+        <span className="text-phosphor" aria-hidden="true">✦</span>
         <input
           ref={input}
           value={q}
           onChange={(e) => setQ(e.target.value)}
-          placeholder="describe your team: skills, size, what you want to build for NYC"
+          placeholder="Describe your team and what you want to build"
           aria-label="Describe yourself to find matching opportunities"
           className="h-10 min-w-0 flex-1 bg-transparent text-[14px] outline-none placeholder:text-mute"
         />
-        <kbd className="hidden rounded border border-white/15 px-1.5 font-mono text-[10px] text-mute sm:block">⌘K</kbd>
-        <button className="h-10 rounded-[2px] bg-phosphor px-4 text-[11px] font-semibold uppercase tracking-[0.1em] text-ink transition-transform duration-150 active:scale-[.97]">Match ⏎</button>
+        
+        <button className="h-10 rounded-[3px] bg-phosphor px-4 text-[13px] font-semibold text-ink transition-transform duration-150 active:scale-[.97]">Match</button>
       </form>
       <div className="pointer-events-auto flex flex-wrap justify-center gap-1.5">
         {SUGGESTIONS.map((s) => (

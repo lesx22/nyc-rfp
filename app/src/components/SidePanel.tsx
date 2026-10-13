@@ -16,7 +16,7 @@ export default function SidePanel() {
           animate={{ x: 0, opacity: 1 }}
           exit={{ x: 40, opacity: 0 }}
           transition={{ type: 'spring', stiffness: 380, damping: 36 }}
-          className="glass ruler scroll-thin absolute inset-x-2 bottom-2 z-30 flex max-h-[72vh] flex-col overflow-y-auto rounded-[2px] sm:inset-x-auto sm:bottom-3 sm:right-3 sm:top-20 sm:max-h-none sm:w-[400px]"
+          className="glass scroll-thin absolute inset-x-2 bottom-2 z-30 flex max-h-[72vh] flex-col overflow-y-auto rounded-[2px] sm:inset-x-auto sm:bottom-3 sm:right-3 sm:top-20 sm:max-h-none sm:w-[400px]"
         >
           {selected.kind === 'node' ? <NodeView id={selected.id} /> : <ClusterView id={selected.id} />}
         </motion.aside>
@@ -52,8 +52,6 @@ function FitMeter({ v }: { v: number }) {
   )
 }
 
-const tMinus = (d: number | null) => (d == null ? 'T– —' : d < 0 ? 'CLOSED' : `T–${String(d).padStart(2, '0')}D`)
-
 function NodeView({ id }: { id: string }) {
   const n = useStore((s) => s.nodes.find((x) => x.id === id))
   const openStudio = useStore((s) => s.openStudio)
@@ -63,18 +61,14 @@ function NodeView({ id }: { id: string }) {
     <div className="flex flex-col gap-5 p-5">
       <div className="flex items-start gap-3">
         <div className="min-w-0 flex-1">
-          <div className="eyebrow mb-2 flex gap-2">
-            <span className="shrink-0 whitespace-nowrap text-phosphor">REC {n.epin ?? n.id}</span>
-            <span>//</span>
-            <span className="truncate">{n.agency}</span>
-          </div>
+          <div className="eyebrow mb-1.5 truncate">{n.agency}</div>
           <h2 className="font-display text-[18px] font-semibold leading-snug text-balance">{n.title}</h2>
         </div>
         <Close />
       </div>
 
       <div className="grid grid-cols-2 gap-px overflow-hidden rounded-[2px] border border-line bg-line text-[12px]">
-        <Cell k="Due" v={<span className={cx(urgent && 'text-heat-2')}>{date(n.dueDate)}<div className="text-[11px]">{tMinus(n.daysLeft)} · {countdown(n.daysLeft)}</div></span>} />
+        <Cell k="Due" v={<span className={cx(urgent && 'text-heat-2')}>{date(n.dueDate)}<div className="text-[11px]">{countdown(n.daysLeft)}</div></span>} />
         <Cell k="Released" v={date(n.releaseDate)} />
         <Cell k={n.industryInferred ? 'Industry (inferred)' : 'Industry'} v={n.industry} />
         <Cell k="Est. value" v={usd(n.estValueUSD)} />
@@ -88,7 +82,7 @@ function NodeView({ id }: { id: string }) {
       <section>
         <div className="mb-2 flex items-baseline justify-between">
           <h3 className="eyebrow">AI-buildable fit</h3>
-          <span className="font-mono text-[15px] text-phosphor">{String(n.aiFit).padStart(3, '0')}</span>
+          <span className="font-mono text-[15px] text-phosphor">{n.aiFit}</span>
         </div>
         <FitMeter v={n.aiFit} />
         <ul className="mt-2.5 space-y-1 text-[11px] text-mute">
@@ -106,8 +100,8 @@ function NodeView({ id }: { id: string }) {
       )}
 
       <div className="mt-auto flex flex-col gap-2 pt-2">
-        <button onClick={() => openStudio(n.id)} className="h-11 rounded-[2px] bg-phosphor text-[12px] font-semibold uppercase tracking-[0.1em] text-ink transition-transform duration-150 ease-[var(--ease-out)] active:scale-[.97]">
-          Generate RFP response →
+        <button onClick={() => openStudio(n.id)} className="h-11 rounded-[2px] bg-phosphor text-[13px] font-semibold text-ink transition-transform duration-150 ease-[var(--ease-out)] active:scale-[.97]">
+          Draft a response
         </button>
         <a href={passportUrl(n)} target="_blank" rel="noreferrer" className="grid h-11 place-items-center rounded-[2px] border border-white/15 text-[13px] hover:bg-white/5">
           {n.onPassport === false ? 'View source listing ↗' : 'View listing on PASSPort ↗'}
@@ -215,7 +209,7 @@ function Row({ n, onClick }: { n: RfpNode; onClick: () => void }) {
   return (
     <li>
       <button onClick={onClick} className="flex w-full items-center gap-3 py-2.5 text-left hover:bg-white/[.03]">
-        <span className="w-7 shrink-0 font-mono text-[12px] text-phosphor">{String(n.aiFit).padStart(3, '0')}</span>
+        <span className="w-7 shrink-0 font-mono text-[12px] text-phosphor">{n.aiFit}</span>
         <span className="min-w-0 flex-1">
           <span className="line-clamp-2 text-[12px] leading-snug">{n.title}</span>
           <span className="text-[10px] text-mute">{n.agency} · {countdown(n.daysLeft)}</span>
