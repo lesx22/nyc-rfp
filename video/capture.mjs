@@ -2,16 +2,34 @@
 /**
  * Render the video's two sources frame-by-frame at 30fps into H.264 files:
  *   out/film-a.mp4  title scenes 0–30s       (film.html, deterministic renderAt(t))
- *   out/app.mp4     real app footage, 32s     (production build under a fake clock)
+ *   out/app.mp4     real app footage, 32s     (production build under a virtual clock, see VIRTUAL_TIME)
  *   out/film-b.mp4  title scenes 62–82s
  * Each frame advances time by exactly 1/30s, so motion stays smooth no matter how slow the renderer is.
  *   node video/capture.mjs [film|app|all]
+ *   MAX_SECONDS=3 node video/capture.mjs app   # short test render
+ * The app capture serves app/dist, so run `npm run build` in app/ first.
  */
 import { spawn } from 'node:child_process'
 import { mkdirSync } from 'node:fs'
 import { dirname, join } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { chromium } from '../app/node_modules/playwright/index.mjs'
+
+/**
+ * App timeline, in seconds from the start of app.mp4. Each cue is when the cursor starts moving
+ * toward that control (the move takes ~0.7s, then the click). Re-time these to the voice-over.
+ */
+export const APP_CUES = {
+  aiOn: 4.2, // click AI-buildable (filter on)
+  aiOff: 9.3, // click AI-buildable again (off)
+  type: 11.2, // click the prompt input, then type APP_PROMPT (~3.2s)
+  match: 15.6, // click Match
+  openListing: 20, // click the E-Procurement match chip (listing 00225P0002)
+  draft: 25.6, // click "Draft a response"
+  draftStep: 28.2, // click the studio's Draft step
+  end: 32, // last frame
+}
+export const APP_PROMPT = 'PASSPort e-procurement performance optimization'
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..')
 const OUT = join(ROOT, 'video', 'out')
@@ -34,7 +52,7 @@ function encoder(file) {
     done: () => new Promise((r) => { ff.on('close', r); ff.stdin.end() }),
   }
 }
-// CDP capture: Playwright's screenshot waits for an animation frame, which never arrives under a fake clock.
+// CDP capture of the composited page, JPEG straight into the encoder.
 const cdpCache = new WeakMap()
 async function shot(p) {
   let cdp = cdpCache.get(p)
@@ -66,13 +84,102 @@ async function film() {
 }
 
 /* ---------------- app footage ---------------- */
+
+/**
+ * Injected before any app code runs (page.addInitScript). Replaces the page's clocks with a
+ * virtual one that only moves when the capture calls window.__step(ms):
+ *   performance.now, Date / Date.now, requestAnimationFrame, setTimeout / setInterval,
+ *   and every Web Animation (CSS transitions and keyframes, motion's WAAPI animations), which
+ *   are paused on first sight and then seeked by exactly the step.
+ * The browser's own rAF and compositor keep running in real time (saved on window.__real), so
+ * screenshots and input dispatch work normally; the app just sees exactly `ms` pass per step.
+ * Unlike page.clock.install(), nothing Playwright or CDP waits on is frozen.
+ */
+function VIRTUAL_TIME(epoch) {
+  const real = {
+    now: performance.now.bind(performance),
+    raf: window.requestAnimationFrame.bind(window),
+    setTimeout: window.setTimeout.bind(window),
+    Date: window.Date,
+  }
+  window.__real = real
+  let now = real.now()
+  const dateOffset = epoch - now
+
+  performance.now = () => now
+  class VDate extends real.Date {
+    constructor(...a) { a.length ? super(...a) : super(now + dateOffset) }
+    static now() { return Math.floor(now + dateOffset) }
+  }
+  window.Date = VDate
+
+  let rafId = 0
+  let raf = new Map()
+  window.requestAnimationFrame = (cb) => { raf.set(++rafId, cb); return rafId }
+  window.cancelAnimationFrame = (id) => { raf.delete(id) }
+
+  let timerId = 0
+  const timers = new Map()
+  const add = (fn, ms, args, every) => {
+    const id = ++timerId
+    const d = Math.max(0, Number(ms) || 0)
+    timers.set(id, { fn, at: now + d, every: every ? Math.max(1, d) : 0, args })
+    return id
+  }
+  window.setTimeout = (fn, ms, ...args) => add(fn, ms, args, false)
+  window.setInterval = (fn, ms, ...args) => add(fn, ms, args, true)
+  window.clearTimeout = window.clearInterval = (id) => { timers.delete(id) }
+  const run = (fn, args) => { try { typeof fn === 'function' ? fn(...args) : (0, eval)(fn) } catch (e) { console.error(e) } }
+
+  const seen = new WeakSet()
+  const tickAnimations = (ms) => {
+    for (const a of document.getAnimations()) {
+      if (!seen.has(a)) { seen.add(a); a.pause(); continue } // new since last step: holds at t=0 this frame
+      if (a.playState === 'finished') continue
+      a.currentTime = (a.currentTime ?? 0) + ms
+    }
+  }
+
+  const sub = (ms) => {
+    const end = now + ms
+    // Due timers fire in order, each seeing its own due time.
+    for (let guard = 0; guard < 10000; guard++) {
+      let next = null
+      for (const entry of timers) if (entry[1].at <= end && (!next || entry[1].at < next[1].at)) next = entry
+      if (!next) break
+      const [id, t] = next
+      now = Math.max(now, t.at)
+      if (t.every) t.at += t.every
+      else timers.delete(id)
+      run(t.fn, t.args)
+    }
+    now = end
+    tickAnimations(ms)
+    const q = raf
+    raf = new Map()
+    for (const cb of q.values()) { try { cb(now) } catch (e) { console.error(e) } }
+  }
+  /** Advance virtual time by `ms` in `n` equal rAF ticks; resolves once queued React work has run. */
+  window.__step = (ms, n = 1) => {
+    for (let i = 0; i < n; i++) sub(ms / n)
+    return new Promise((r) => real.setTimeout(r, 0))
+  }
+}
+class Stop extends Error {}
+
 async function app() {
   const srv = serve(['npx', 'vite', 'preview', '--port', '4301', '--strictPort'], join(ROOT, 'app'))
   await new Promise((r) => setTimeout(r, 3000))
+  const t0 = Date.now()
   const p = await browser.newPage({ viewport: { width: W, height: H } })
-  await p.clock.install({ time: new Date('2026-10-13T15:00:00') })
+  await p.addInitScript(VIRTUAL_TIME, new Date('2026-10-13T15:00:00').getTime())
+  p.on('pageerror', (e) => console.error('pageerror:', e.message))
   await p.goto('http://127.0.0.1:4301/', { waitUntil: 'networkidle' })
   await p.evaluate(() => document.fonts.ready)
+  // Two rAF ticks per video frame: drei's PerformanceMonitor then measures 60fps and keeps the post
+  // effects on (at 30 ticks/s it decides the GPU is struggling and drops the vignette mid-shot).
+  const SUB = Number(process.env.SUBSTEPS ?? 2)
+  const step = () => p.evaluate(([ms, n]) => window.__step(ms, n), [1000 / FPS, SUB])
   // A drawn cursor, since headless screenshots don't include the OS pointer.
   await p.addStyleTag({ content: `#vc{position:fixed;left:0;top:0;width:22px;height:22px;z-index:99999;pointer-events:none;transform:translate(960px,700px)} #vc svg{filter:drop-shadow(0 2px 6px rgba(0,0,0,.6))} #vc.down svg{transform:scale(.85)}` })
   await p.evaluate(() => {
@@ -81,64 +188,82 @@ async function app() {
     d.innerHTML = '<svg width="22" height="22" viewBox="0 0 22 22"><path d="M3 2l15 8.5-6.6 1.6L8.6 19z" fill="#fff" stroke="#020405" stroke-width="1.4" stroke-linejoin="round"/></svg>'
     document.body.appendChild(d)
   })
-  // Warm up: let the scene settle before recording.
-  for (let i = 0; i < 90; i++) await p.clock.runFor(1000 / FPS)
+  // Warm up: let the scene settle before recording. 4s of app time also passes the Rig's 3.5s
+  // idle wait, so the camera is already drifting on frame 0.
+  for (let i = 0; i < 4 * FPS; i++) await step()
 
   const enc = encoder(join(OUT, 'app.mp4'))
   let frame = 0
   let cur = { x: 960, y: 700 }
   const tick = async () => {
-    await p.clock.runFor(1000 / FPS)
+    await step()
     await enc.write(await shot(p))
     frame++
   }
   const LIMIT = Number(process.env.MAX_SECONDS ?? Infinity)
-  const until = async (sec) => { while (frame < Math.round(Math.min(sec, LIMIT) * FPS)) await tick(); if (frame >= LIMIT * FPS) throw new Error('MAX_SECONDS reached (test run)') }
+  const until = async (sec) => {
+    while (frame < Math.round(Math.min(sec, LIMIT) * FPS)) await tick()
+    if (frame >= LIMIT * FPS) throw new Stop()
+  }
   const setCursor = (x, y, down = false) => p.evaluate(([x, y, down]) => { const c = document.getElementById('vc'); c.style.transform = `translate(${x}px,${y}px)`; c.classList.toggle('down', down) }, [x, y, down])
-  const moveTo = async (locator, seconds = 0.7) => {
+  const centre = async (locator) => {
+    await locator.waitFor({ state: 'visible', timeout: 10000 })
     const box = await locator.boundingBox()
-    const to = { x: box.x + box.width / 2, y: box.y + box.height / 2 }
+    return { x: box.x + box.width / 2, y: box.y + box.height / 2 }
+  }
+  const moveTo = async (locator, seconds = 0.7) => {
+    const to = await centre(locator)
     const n = Math.round(seconds * FPS)
     for (let i = 1; i <= n; i++) {
       const k = 1 - Math.pow(1 - i / n, 3)
-      await setCursor(cur.x + (to.x - cur.x) * k, cur.y + (to.y - cur.y) * k)
+      const x = cur.x + (to.x - cur.x) * k, y = cur.y + (to.y - cur.y) * k
+      await setCursor(x, y)
+      await p.mouse.move(x, y) // real hover states follow the drawn cursor
       await tick()
     }
     cur = to
   }
+  // Clicks are raw CDP input at the cursor position: locator.click()'s actionability checks poll
+  // requestAnimationFrame, which only advances when we step.
   const click = async (locator) => {
     await moveTo(locator)
     await setCursor(cur.x, cur.y, true)
+    await p.mouse.down()
     await tick(); await tick()
-    await locator.click({ noWaitAfter: true })
+    await p.mouse.up()
     await setCursor(cur.x, cur.y, false)
   }
 
-  // 0–12s: the network drifts; AI-buildable filter on, then off.
-  await until(4.2)
-  await click(p.getByRole('button', { name: 'AI-buildable' }))
-  await until(9.3)
-  await click(p.getByRole('button', { name: 'AI-buildable' }))
-  // 12–20s: describe what you do; the graph turns toward the match.
-  await until(11.2)
-  const input = p.locator('input[aria-label^="Describe"]')
-  await click(input)
-  for (const ch of 'PASSPort e-procurement performance optimization') {
-    await p.keyboard.type(ch)
-    await tick(); await tick()
+  const C = APP_CUES
+  try {
+    // 0–12s: the network drifts; AI-buildable filter on, then off.
+    await until(C.aiOn)
+    await click(p.getByRole('button', { name: 'AI-buildable' }))
+    await until(C.aiOff)
+    await click(p.getByRole('button', { name: 'AI-buildable' }))
+    // 12–20s: describe what you do; the graph turns toward the match.
+    await until(C.type)
+    await click(p.locator('input[aria-label^="Describe"]'))
+    for (const ch of APP_PROMPT) {
+      await p.keyboard.type(ch)
+      await tick(); await tick()
+    }
+    await until(C.match)
+    await click(p.getByRole('button', { name: 'Match' }))
+    // 20–32s: open the listing, then start a response.
+    await until(C.openListing)
+    await click(p.locator('button[data-match]', { hasText: 'E-Procurement' }).first())
+    await until(C.draft)
+    await click(p.getByRole('button', { name: 'Draft a response' }))
+    await until(C.draftStep)
+    await click(p.getByRole('dialog').getByRole('button', { name: 'Draft', exact: false }).filter({ hasText: /^4?Draft$/ }).first())
+    await until(C.end)
+  } catch (e) {
+    if (!(e instanceof Stop)) throw e
+    console.log(`MAX_SECONDS=${LIMIT}: stopped early (test run)`)
   }
-  await until(15.6)
-  await click(p.getByRole('button', { name: 'Match' }))
-  // 20–32s: open the listing, then start a response.
-  await until(20)
-  await click(p.locator('button[data-match]', { hasText: 'E-Procurement' }).first())
-  await until(25.6)
-  await click(p.getByRole('button', { name: 'Draft a response' }))
-  await until(28.2)
-  await click(p.getByRole('dialog').getByRole('button', { name: 'Draft', exact: false }).filter({ hasText: /^4?Draft$/ }).first())
-  await until(32)
   await enc.done()
-  console.log(`✓ app.mp4 (${frame} frames)`)
+  console.log(`✓ app.mp4 (${frame} frames, ${((Date.now() - t0) / 1000).toFixed(0)}s wall)`)
   await p.close()
   srv.kill()
 }
