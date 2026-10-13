@@ -2,8 +2,8 @@
 # Join film-a + app + film-b, add the voice-over if present, burn nothing (captions ship as captions.srt).
 #   bash video/assemble.sh [path/to/voiceover.(wav|mp3|m4a)]
 set -euo pipefail
+VO="${1:+$(realpath "$1")}"
 cd "$(dirname "$0")/out"
-VO="${1:-}"
 # Fade the app footage in and out so it meets the title scenes cleanly.
 ffmpeg -y -loglevel error -i app.mp4 -vf "fade=t=in:st=0:d=0.5,fade=t=out:st=31.2:d=0.5" -c:v libx264 -crf 17 -pix_fmt yuv420p app-faded.mp4
 printf "file 'film-a.mp4'\nfile 'app-faded.mp4'\nfile 'film-b.mp4'\n" > list.txt

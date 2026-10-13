@@ -10,6 +10,7 @@
  * The app capture serves app/dist, so run `npm run build` in app/ first.
  */
 import { spawn } from 'node:child_process'
+import { createServer } from 'node:net'
 import { mkdirSync } from 'node:fs'
 import { dirname, join } from 'node:path'
 import { fileURLToPath } from 'node:url'
@@ -65,14 +66,24 @@ async function shot(p) {
   const { data } = await cdp.send('Page.captureScreenshot', { format: 'jpeg', quality: 92 })
   return Buffer.from(data, 'base64')
 }
+const freePort = () =>
+  new Promise((resolve, reject) => {
+    const srv = createServer()
+    srv.once('error', reject)
+    srv.listen(0, '127.0.0.1', () => {
+      const { port } = srv.address()
+      srv.close(() => resolve(port))
+    })
+  })
 const serve = (args, cwd) => spawn(args[0], args.slice(1), { cwd, stdio: 'ignore' })
 
 /* ---------------- title scenes ---------------- */
 async function film() {
-  const srv = serve(['python3', '-m', 'http.server', '4300', '--bind', '127.0.0.1'], ROOT)
+  const port = await freePort()
+  const srv = serve(['python3', '-m', 'http.server', String(port), '--bind', '127.0.0.1'], ROOT)
   await new Promise((r) => setTimeout(r, 1200))
   const p = await browser.newPage({ viewport: { width: W, height: H } })
-  await p.goto('http://127.0.0.1:4300/video/film.html', { waitUntil: 'networkidle' })
+  await p.goto(`http://127.0.0.1:${port}/video/film.html`, { waitUntil: 'networkidle' })
   await p.evaluate(async () => { await window.ready; await document.fonts.ready })
   for (const [name, a, b] of [['film-a', 0, 26.1], ['film-b', 57.8, 72.5]]) {
     const enc = encoder(join(OUT, `${name}.mp4`))
@@ -173,13 +184,15 @@ function VIRTUAL_TIME(epoch) {
 class Stop extends Error {}
 
 async function app() {
-  const srv = serve(['npx', 'vite', 'preview', '--port', '4301', '--strictPort'], join(ROOT, 'app'))
+  // A fresh free port every run: a leftover server on a fixed port once served a stale build.
+  const port = await freePort()
+  const srv = serve(['npx', 'vite', 'preview', '--host', '127.0.0.1', '--port', String(port), '--strictPort'], join(ROOT, 'app'))
   await new Promise((r) => setTimeout(r, 3000))
   const t0 = Date.now()
   const p = await browser.newPage({ viewport: { width: W, height: H } })
   await p.addInitScript(VIRTUAL_TIME, new Date('2026-10-13T15:00:00').getTime())
   p.on('pageerror', (e) => console.error('pageerror:', e.message))
-  await p.goto('http://127.0.0.1:4301/', { waitUntil: 'networkidle' })
+  await p.goto(`http://127.0.0.1:${port}/`, { waitUntil: 'networkidle' })
   await p.evaluate(() => document.fonts.ready)
   // Two rAF ticks per video frame: drei's PerformanceMonitor then measures 60fps and keeps the post
   // effects on (at 30 ticks/s it decides the GPU is struggling and drops the vignette mid-shot).

@@ -88,7 +88,8 @@ Phases ship in order. Each phase ends with an explicit **validation gate**. Don'
 - ◻︎ Side panel: show requirement counts and key dates from `requirements.json` when present
 - ◻︎ Response Studio: load the listing's real checklist and evaluation criteria; draft each required section against its requirement; compliance matrix
 - ◻︎ Export a submission package (narrative .docx/.md, forms list, attachments index)
-- ◻︎ Video: re-cut the response segment with the real requirements on screen
+- ✅ Video: 72s walkthrough cut to the recorded voice-over; the listing panel shows the extracted requirements and the studio writes the sample first draft (`video/`)
+- ✅ Listing panel and Response Studio use `requirements.json` (requirement counts, key dates, evaluation areas, submission checklist); sample first draft for 00225P0002
 
 **Gate:** every requirement in `requirements.json` cites its source, and the draft shows each required section mapped to a requirement or marked `[NEEDS INPUT]`.
 
