@@ -11,19 +11,20 @@ import pathlib
 HERE = pathlib.Path(__file__).parent
 # Cues are written on the ORIGINAL voice-over clock (BEATS.md); vo-map.json (from ../vo_edit.py) maps
 # them onto the tightened VO. A time inside a removed span lands where speech resumes.
-_map = json.loads((HERE.parent / "vo-map.json").read_text())["segments"] if (HERE.parent / "vo-map.json").exists() else None
+_map = json.loads((HERE.parent / "vo-map.json").read_text())["anchors"] if (HERE.parent / "vo-map.json").exists() else None
 
 
 def remap(t):
+    """[original-clock, new-clock] anchors from vo-map.json; linear between them, slope 1 outside, never below 0."""
     if not _map:
         return t
-    for a, b, n in _map:
-        if t < a:
-            return n
-        if t <= b:
-            return n + t - a
-    a, b, n = _map[-1]
-    return n + (b - a) + (t - b)
+    if t <= _map[0][0]:
+        return max(0.0, _map[0][1] + t - _map[0][0])
+    for (a0, n0), (a1, n1) in zip(_map, _map[1:]):
+        if t <= a1:
+            return n0 + (t - a0) * (n1 - n0) / (a1 - a0)
+    a, n = _map[-1]
+    return n + t - a
 
 
 DUR = round(remap(71.5), 2)  # app capture runs to (old) VO 71.5
@@ -41,20 +42,21 @@ SHOTS = [
     ("docs", 11.7, 13.2, "r2", 9.0, 1.0, (1.4, 1.5), "0% 75%", "0% 80%"),
     ("filtered", 13.2, 14.2, "r1", 10.5, 1.0, (1.3, 1.35), "0% 45%", "0% 45%"),
     # 4 "Then I was pleasantly surprised to find this listing."
-    ("search", 14.2, 16.2, "r2", 0.8, 1.0, (1.55, 1.6), "0% 30%", "0% 32%"),
+    ("search", 14.2, 16.2, "r2", 1.3, 1.0, (1.55, 1.6), "0% 30%", "0% 32%"),
     ("result", 16.2, 18.1, "r2", 2.9, 0.75, (1.55, 1.75), "15% 58%", "18% 60%"),
     # 5 "The city was actually asking for help rebuilding PASSPort itself."
     ("title", 18.1, 19.8, "r2", 5.0, 0.55, (1.55, 1.7), "27% 0%", "27% 0%"),
     ("about", 19.8, 20.99, "r2", 8.0, 0.5, (1.45, 1.55), "8% 30%", "8% 30%"),
 ]
 
-# On-screen clicks in the recordings (old VO clock), for UI click SFX.
-CLICKS = [8.6, 10.5, 15.6, 17.75]
-# App-section clicks (old VO clock), from the app capture's cue table.
+# On-screen clicks in the recordings, as (shot start on the old clock, seconds into the shot): the
+# recordings play at their own speed, so a click stays at its offset however the shot is retimed.
+REC_CLICKS = [(8.2, 0.4), (10.2, 0.3), (14.2, 1.0), (16.2, 1.27)]
+CLICKS = [remap(a) + off for a, off in REC_CLICKS]
+# App-section clicks (old VO clock), from the app capture's cue table; the capture is retimed the same way.
 cues_file = HERE / "app-clicks.json"
 if cues_file.exists():
-    CLICKS += json.loads(cues_file.read_text())
-CLICKS = [remap(t) for t in CLICKS]
+    CLICKS += [remap(t) for t in json.loads(cues_file.read_text())]
 
 clips, tweens = [], []
 for i, (sid, a, b, src, ms, rate, (s0, s1), o0, o1) in enumerate(SHOTS):
@@ -102,7 +104,7 @@ html = f"""<!doctype html>
     <div id="root" data-composition-id="main" data-start="0" data-width="1920" data-height="1080" data-duration="{DUR}">
 {chr(10).join(clips)}
       <div id="app-wrap"><video id="app" class="clip" src="assets/app.mp4" muted playsinline data-start="{APP_AT}" data-duration="{DUR - APP_AT:.1f}" data-media-start="0" data-track-index="1"></video></div>
-      <audio id="vo" src="assets/vo.wav" data-start="0" data-duration="{VO_LEN}" data-volume="1" data-track-index="3"></audio>
+      <audio id="vo" src="assets/vo.mp3" data-start="0" data-duration="{VO_LEN}" data-volume="1" data-track-index="3"></audio>
 {sfx}
     </div>
     <script>

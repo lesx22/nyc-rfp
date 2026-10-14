@@ -28,12 +28,16 @@ const MAP_FILE = join(dirname(fileURLToPath(import.meta.url)), 'vo-map.json')
 const VO_MAP = existsSync(MAP_FILE) ? JSON.parse(readFileSync(MAP_FILE, 'utf8')) : null
 const remap = (t) => {
   if (!VO_MAP) return t
-  for (const [a, b, n] of VO_MAP.segments) {
-    if (t < a) return n
-    if (t <= b) return n + (t - a)
+  // Anchors: [original-clock, new-clock] pairs; linear between them, slope 1 outside, never below 0.
+  const A = VO_MAP.anchors
+  if (t <= A[0][0]) return Math.max(0, A[0][1] + t - A[0][0])
+  for (let i = 1; i < A.length; i++) {
+    const [a0, n0] = A[i - 1]
+    const [a1, n1] = A[i]
+    if (t <= a1) return n0 + ((t - a0) * (n1 - n0)) / (a1 - a0)
   }
-  const [, b, n] = VO_MAP.segments.at(-1)
-  return n + (b - VO_MAP.segments.at(-1)[0]) + (t - b)
+  const [a, n] = A.at(-1)
+  return n + t - a
 }
 /** app.mp4 frame 0 is this voice-over time (edited clock when vo-map.json exists). */
 export const APP_START = remap(21.2)
@@ -518,10 +522,10 @@ async function record(port) {
     await until(C.type)
     await click(p.locator('input[aria-label^="Describe"]'))
     await p.keyboard.press('Control+A')
-    // Human typing speed (~10 characters a second), not one character per frame.
+    // Human typing speed (~15 characters a second), not one character per frame.
     for (const ch of APP_PROMPT) {
       await p.keyboard.type(ch)
-      for (let k = 0; k < 3; k++) await tick()
+      for (let k = 0; k < 2; k++) await tick()
     }
     /* 10 · match: the graph turns to the matches, then a quick zoom onto the lit nodes */
     await until(C.match)
